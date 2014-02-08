@@ -7,83 +7,23 @@ namespace Orchestrate.Net
 {
     internal static class Communication
     {
-        internal static string Get(string url, string apiKey)
+        internal static string CallWebRequest(string apiKey, string url, string method, object payload)
         {
             var request = WebRequest.Create(url);
-            request.Method = "GET";
+            request.Method = method;
             request.Credentials = GetCredentials(apiKey, url);
             request.ContentType = "application/json";
 
-            String result = null;
-
-            using (var response = (HttpWebResponse)request.GetResponse())
+            if (payload != null)
             {
-                Stream dataStream = response.GetResponseStream();
+                var json = JsonConvert.SerializeObject(payload);
+                var data = StringToByteArray(json);
 
-                if (dataStream != null)
+                request.ContentLength = data.Length;
+                using (var dataStream = request.GetRequestStream())
                 {
-                    var reader = new StreamReader(dataStream);
-                    result = reader.ReadToEnd();
-                    reader.Close();
+                    dataStream.Write(data, 0, data.Length);
                 }
-
-                if (dataStream != null)
-                    dataStream.Close();
-            }
-
-            return result;
-        }
-
-        internal static string Put(string url, string apiKey, object dataPayload)
-        {
-            var request = WebRequest.Create(url);
-            request.Method = "PUT";
-            request.Credentials = GetCredentials(apiKey, url);
-            request.ContentType = "application/json";
-
-            var json = JsonConvert.SerializeObject(dataPayload);
-            var data = StringToByteArray(json);
-
-            request.ContentLength = data.Length;
-            using (var dataStream = request.GetRequestStream())
-            {
-                dataStream.Write(data, 0, data.Length);
-            }
-
-            String result = null;
-
-            using (var response = (HttpWebResponse)request.GetResponse())
-            {
-                Stream dataStream = response.GetResponseStream();
-
-                if (dataStream != null)
-                {
-                    var reader = new StreamReader(dataStream);
-                    result = reader.ReadToEnd();
-                    reader.Close();
-                }
-
-                if (dataStream != null)
-                    dataStream.Close();
-            }
-
-            return result;
-        }
-
-        internal static string Delete(string url, string apiKey, object dataPayload)
-        {
-            var request = WebRequest.Create(url);
-            request.Method = "DELETE";
-            request.Credentials = GetCredentials(apiKey, url);
-            request.ContentType = "application/json";
-
-            var json = JsonConvert.SerializeObject(dataPayload);
-            var data = StringToByteArray(json);
-
-            request.ContentLength = data.Length;
-            using (var dataStream = request.GetRequestStream())
-            {
-                dataStream.Write(data, 0, data.Length);
             }
 
             String result = null;

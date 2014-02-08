@@ -11,20 +11,20 @@ namespace Orchestrate.Net
         {
             _apiKey = apiKey;
         }
-
-        public void CreateCollection(string collectionName, string key)
+        
+        public string CreateCollection(string collectionName, string key)
         {
             var url = UrlBase + collectionName + "/" + key;
-            Communication.Put(url, _apiKey, new object());
+            return Communication.CallWebRequest(_apiKey, url, "PUT", new object());
         }
 
-        public void DeleteCollection(string collectionName)
+        public string DeleteCollection(string collectionName)
         {
             var url = UrlBase + collectionName + "?force=true";
-            Communication.Delete(url, _apiKey, new object());
+            return Communication.CallWebRequest(_apiKey, url, "DELETE", null);
         }
 
-        public void Search(string collectionName, string query, int limit, int offset)
+        public string Search(string collectionName, string query, int limit, int offset)
         {
             if (limit < 1 || limit > 100)
                 throw new ArgumentOutOfRangeException("limit", limit, "limit must be between 1 and 100");
@@ -33,7 +33,7 @@ namespace Orchestrate.Net
                 throw new ArgumentOutOfRangeException("offset", offset, "offset must be at least 0");
 
             var url = UrlBase + collectionName + "?query=" + query + "&limit=" + limit + "&offset=" + offset;
-            Communication.Get(url, _apiKey);
+            return Communication.CallWebRequest(_apiKey, url, "GET", null);
         }
     }
 }
