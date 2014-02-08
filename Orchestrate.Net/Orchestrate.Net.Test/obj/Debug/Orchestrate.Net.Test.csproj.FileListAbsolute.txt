@@ -1,0 +1,9 @@
+C:\Users\Robert\Documents\Orchestrate.NET\Orchestrate.Net\Orchestrate.Net.Test\bin\Debug\Orchestrate.Net.Test.dll
+C:\Users\Robert\Documents\Orchestrate.NET\Orchestrate.Net\Orchestrate.Net.Test\bin\Debug\Orchestrate.Net.Test.pdb
+C:\Users\Robert\Documents\Orchestrate.NET\Orchestrate.Net\Orchestrate.Net.Test\obj\Debug\Orchestrate.Net.Test.csprojResolveAssemblyReference.cache
+C:\Users\Robert\Documents\Orchestrate.NET\Orchestrate.Net\Orchestrate.Net.Test\obj\Debug\Orchestrate.Net.Test.dll
+C:\Users\Robert\Documents\Orchestrate.NET\Orchestrate.Net\Orchestrate.Net.Test\obj\Debug\Orchestrate.Net.Test.pdb
+C:\Users\Robert\Documents\Orchestrate.NET\Orchestrate.Net\Orchestrate.Net.Test\bin\Debug\Orchestrate.Net.dll
+C:\Users\Robert\Documents\Orchestrate.NET\Orchestrate.Net\Orchestrate.Net.Test\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Robert\Documents\Orchestrate.NET\Orchestrate.Net\Orchestrate.Net.Test\bin\Debug\Orchestrate.Net.pdb
+C:\Users\Robert\Documents\Orchestrate.NET\Orchestrate.Net\Orchestrate.Net.Test\bin\Debug\Newtonsoft.Json.xml
