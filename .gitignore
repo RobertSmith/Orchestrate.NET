@@ -154,3 +154,9 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+/Orchestrate.Net/packages
+/Orchestrate.Net/Orchestrate.Net.Test/obj
+/Orchestrate.Net/Orchestrate.Net.Test/bin
+/Orchestrate.Net/Orchestrate.Net/obj
+/Orchestrate.Net/Orchestrate.Net/bin
+Orchestrate.Net/Orchestrate.Net.jmconfig
