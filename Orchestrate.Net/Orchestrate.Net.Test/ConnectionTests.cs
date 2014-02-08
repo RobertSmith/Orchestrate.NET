@@ -8,7 +8,7 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void CreateCollection()
         {
-            const string apiKey = "04266802-c2e2-40f4-bf6c-390f62383bc4";
+            const string apiKey = "<API KEY>";
             const string collectionName = "TestCollection";
             var orchestraton = new Orchestrate(apiKey);
 
@@ -20,7 +20,7 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void DeleteCollection()
         {
-            const string apiKey = "04266802-c2e2-40f4-bf6c-390f62383bc4";
+            const string apiKey = "<API KEY>";
             const string collectionName = "TestCollection";
             var orchestraton = new Orchestrate(apiKey);
 
@@ -32,7 +32,7 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void SearchCollection()
         {
-            const string apiKey = "04266802-c2e2-40f4-bf6c-390f62383bc4";
+            const string apiKey = "<API KEY>";
             const string collectionName = "PostalCodes";
             var orchestraton = new Orchestrate(apiKey);
 
