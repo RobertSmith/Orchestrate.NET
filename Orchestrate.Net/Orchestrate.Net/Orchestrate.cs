@@ -24,6 +24,12 @@ namespace Orchestrate.Net
             return Communication.CallWebRequest(_apiKey, url, "DELETE", null);
         }
 
+        public string Get(string collectionName, string key)
+        {
+            var url = UrlBase + collectionName + "/" + key;
+            return Communication.CallWebRequest(_apiKey, url, "GET", null);
+        }
+
         public string Search(string collectionName, string query, int limit, int offset)
         {
             if (limit < 1 || limit > 100)

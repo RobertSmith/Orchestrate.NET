@@ -30,6 +30,17 @@ namespace Orchestrate.Net.Test
         }
 
         [TestMethod]
+        public void CollectionGet()
+        {
+            const string apiKey = "<API KEY>";
+            const string collectionName = "PostalCodes";
+            var orchestraton = new Orchestrate(apiKey);
+
+            var result = orchestraton.Get(collectionName, "1");
+
+            Assert.IsTrue(result.Length > 0);
+        }
+        [TestMethod]
         public void SearchCollection()
         {
             const string apiKey = "<API KEY>";
