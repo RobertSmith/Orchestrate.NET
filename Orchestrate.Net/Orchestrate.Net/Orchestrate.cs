@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Orchestrate.Net
@@ -111,6 +110,42 @@ namespace Orchestrate.Net
         {
             var url = UrlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, null, true);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
+        public Result Delete(string collectionName, string key)
+        {
+            var url = UrlBase + collectionName + "/" + key;
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
+        public Result DeleteIfMatch(string collectionName, string key, string ifMatch)
+        {
+            var url = UrlBase + collectionName + "/" + key;
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null, ifMatch);
 
             return new Result
             {

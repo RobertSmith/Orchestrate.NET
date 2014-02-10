@@ -9,6 +9,8 @@
         Result Put(string collectionName, string key, object item);
         Result PutIfMatch(string collectionName, string key, object item, string ifMatch);
         Result PutIfNoneMatch(string collectionName, string key, object item);
+        Result Delete(string collectionName, string key);
+        Result DeleteIfMatch(string collectionName, string key, string ifMatch);
 
         SearchResult Search(string collectionName, string query, int limit, int offset);
     }

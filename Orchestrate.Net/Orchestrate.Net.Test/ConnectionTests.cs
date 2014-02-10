@@ -7,7 +7,7 @@ namespace Orchestrate.Net.Test
     public class ConnectionTests
     {
         const string CollectionName = "TestCollection";
-        const string ApiKey = "<API KEY>;
+        const string ApiKey = "<API KEY";
 
         static readonly object TurnStile = new object();
         static Orchestrate _orchestration;
@@ -92,10 +92,10 @@ namespace Orchestrate.Net.Test
         {
             lock (TurnStile)
             {
-                var getResult = _orchestration.Get(CollectionName, "2");
+                var match = _orchestration.Get(CollectionName, "2");
                 var item = new TestData {Id = 2, Value = "Test Value 2a"};
 
-                var result = _orchestration.PutIfMatch(CollectionName, "2", item, getResult.Path.Ref);
+                var result = _orchestration.PutIfMatch(CollectionName, "2", item, match.Path.Ref);
 
                 Assert.IsTrue(result.Value.Length == 0);
             }
@@ -106,12 +106,12 @@ namespace Orchestrate.Net.Test
         {
             lock (TurnStile)
             {
-                var getResult = _orchestration.Get(CollectionName, "1");
+                var match = _orchestration.Get(CollectionName, "1");
                 var item = new TestData {Id = 2, Value = "Test Value 2b"};
 
                 try
                 {
-                    _orchestration.PutIfMatch(CollectionName, "2", item, getResult.Path.Ref);
+                    _orchestration.PutIfMatch(CollectionName, "2", item, match.Path.Ref);
                 }
                 catch (Exception ex)
                 {
@@ -148,6 +148,54 @@ namespace Orchestrate.Net.Test
                 {
                     Assert.IsTrue(ex.Message.Contains("412"));
                 }
+            }
+        }
+
+        [TestMethod]
+        public void D01_CollectionDeleteSuccess()
+        {
+            lock (TurnStile)
+            {
+                var result = _orchestration.Delete(CollectionName, "3");
+                Assert.IsTrue(result.Value.Length == 0);
+            }
+        }
+
+        [TestMethod]
+        public void D02_CollectionDeleteNotFound()
+        {
+            lock (TurnStile)
+            {
+                var result = _orchestration.Delete(CollectionName, "9999");
+                Assert.IsTrue(result.Value.Length == 0);
+            }
+        }
+
+        [TestMethod]
+        public void D03_CollectionDeleteIfMatchFail()
+        {
+            lock (TurnStile)
+            {
+                var match = _orchestration.Get(CollectionName, "1");
+                try
+                {
+                    _orchestration.DeleteIfMatch(CollectionName, "2", match.Path.Ref);
+                }
+                catch (Exception ex)
+                {
+                    Assert.IsTrue(ex.Message.Contains("412"));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void D04_CollectionDeleteIfMatchSucced()
+        {
+            lock (TurnStile)
+            {
+                var match = _orchestration.Get(CollectionName, "2");
+                var result = _orchestration.DeleteIfMatch(CollectionName, "2", match.Path.Ref);
+                Assert.IsTrue(result.Value.Length == 0);
             }
         }
 
