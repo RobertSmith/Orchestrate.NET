@@ -6,6 +6,6 @@ namespace Orchestrate.Net
     {
         public int Count { get; set; }
         public string Next { get; set; }
-        public IEnumerable<Result> Results { get; set; }
+        public IEnumerable<ValueResult> Results { get; set; }
     }
 }

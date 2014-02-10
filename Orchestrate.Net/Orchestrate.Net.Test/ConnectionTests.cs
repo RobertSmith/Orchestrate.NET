@@ -7,7 +7,7 @@ namespace Orchestrate.Net.Test
     public class ConnectionTests
     {
         const string CollectionName = "TestCollection";
-        const string ApiKey = "<API KEY";
+        const string ApiKey = "<API KEY>";
 
         static readonly object TurnStile = new object();
         static Orchestrate _orchestration;
@@ -196,6 +196,68 @@ namespace Orchestrate.Net.Test
                 var match = _orchestration.Get(CollectionName, "2");
                 var result = _orchestration.DeleteIfMatch(CollectionName, "2", match.Path.Ref);
                 Assert.IsTrue(result.Value.Length == 0);
+            }
+        }
+
+        [TestMethod]
+        public void E01_CollectionList()
+        {
+            lock (TurnStile)
+            {
+                var result = _orchestration.List(CollectionName, 10, null, null);
+                Assert.IsTrue(result.Count > 0);
+            }
+        }
+
+        [TestMethod]
+        public void E02_CollectionListWithStartKey()
+        {
+            lock (TurnStile)
+            {
+                var result = _orchestration.List(CollectionName, 10, "1", null);
+                Assert.IsTrue(result.Count > 0);
+            }
+        }
+
+        [TestMethod]
+        public void E03_CollectionListWithAfterKey()
+        {
+            lock (TurnStile)
+            {
+                var result = _orchestration.List(CollectionName, 10, null, "1");
+                Assert.IsTrue(result.Count == 0);
+            }
+        }
+
+        [TestMethod]
+        public void E04_CollectionListInvlaidLimit()
+        {
+            lock (TurnStile)
+            {
+                try
+                {
+                    _orchestration.List(CollectionName, -10, null, null);
+                }
+                catch (Exception ex)
+                {
+                    Assert.IsTrue(ex.Message.Contains("limit"));
+                }
+            }
+        }
+
+        [TestMethod]
+        public void E05_CollectionListStartAndAfter()
+        {
+            lock (TurnStile)
+            {
+                try
+                {
+                    _orchestration.List(CollectionName, 10, "start", "after");
+                }
+                catch (Exception ex)
+                {
+                    Assert.IsTrue(ex.Message.Contains("startKey"));
+                }
             }
         }
 

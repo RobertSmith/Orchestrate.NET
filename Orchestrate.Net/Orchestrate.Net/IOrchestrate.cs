@@ -12,6 +12,8 @@
         Result Delete(string collectionName, string key);
         Result DeleteIfMatch(string collectionName, string key, string ifMatch);
 
+        ListResult List(string collectionName, int limit, string startKey, string afterKey);
+
         SearchResult Search(string collectionName, string query, int limit, int offset);
     }
 }

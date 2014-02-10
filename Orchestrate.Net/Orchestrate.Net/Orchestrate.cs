@@ -142,6 +142,25 @@ namespace Orchestrate.Net
             };
         }
 
+        public ListResult List(string collectionName, int limit, string startKey, string afterKey)
+        {
+            if (limit < 1 || limit > 100)
+                throw new ArgumentOutOfRangeException("limit", limit, "limit must be between 1 and 100");
+
+            if (!string.IsNullOrEmpty(startKey) && !string.IsNullOrEmpty(afterKey))
+                throw new ArgumentException("May only specify either a startKey or an afterKey");
+
+            var url = UrlBase + collectionName + "?limit=" + limit;
+
+            if (!string.IsNullOrEmpty(startKey))
+                url += "&startKey=" + startKey;
+
+            if (!string.IsNullOrEmpty(afterKey))
+                url += "&afterKey=" + afterKey;
+
+            return JsonConvert.DeserializeObject<ListResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
+        }
+
         public Result DeleteIfMatch(string collectionName, string key, string ifMatch)
         {
             var url = UrlBase + collectionName + "/" + key;
