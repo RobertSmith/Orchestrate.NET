@@ -7,12 +7,17 @@ namespace Orchestrate.Net
 {
     internal static class Communication
     {
-        internal static string CallWebRequest(string apiKey, string url, string method, object payload)
+        internal static BaseResult CallWebRequest(string apiKey, string url, string method, object payload, string ifMatch = null, bool ifNoneMatch = false)
         {
             var request = WebRequest.Create(url);
             request.Method = method;
             request.Credentials = GetCredentials(apiKey, url);
             request.ContentType = "application/json";
+
+            if (!string.IsNullOrEmpty(ifMatch))
+                request.Headers.Add(HttpRequestHeader.IfMatch, ifMatch);
+            else if (ifNoneMatch)
+                request.Headers.Add(HttpRequestHeader.IfNoneMatch, "\"*\"");
 
             if (payload != null)
             {
@@ -26,16 +31,19 @@ namespace Orchestrate.Net
                 }
             }
 
-            String result = null;
+            var result = new BaseResult();
 
             using (var response = (HttpWebResponse)request.GetResponse())
             {
+                result.Location = response.Headers["location"];
+                result.ETag = response.Headers["eTag"];
+
                 Stream dataStream = response.GetResponseStream();
 
                 if (dataStream != null)
                 {
                     var reader = new StreamReader(dataStream);
-                    result = reader.ReadToEnd();
+                    result.Payload = reader.ReadToEnd();
                     reader.Close();
                 }
 

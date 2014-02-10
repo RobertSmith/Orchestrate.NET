@@ -2,10 +2,14 @@
 {
     public interface IOrchestrate
     {
-        string CreateCollection(string collectionName, string key);
-        string DeleteCollection(string collectionName);
+        Result CreateCollection(string collectionName, string key, object item);
+        Result DeleteCollection(string collectionName);
 
-        string Get(string collectionName, string key);
-        string Search(string collectionName, string query, int limit, int offset);
+        Result Get(string collectionName, string key);
+        Result Put(string collectionName, string key, object item);
+        Result PutIfMatch(string collectionName, string key, object item, string ifMatch);
+        Result PutIfNoneMatch(string collectionName, string key, object item);
+
+        SearchResult Search(string collectionName, string query, int limit, int offset);
     }
 }
