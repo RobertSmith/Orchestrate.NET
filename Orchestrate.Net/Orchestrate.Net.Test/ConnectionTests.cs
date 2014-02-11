@@ -8,7 +8,7 @@ namespace Orchestrate.Net.Test
     public class ConnectionTests
     {
         const string CollectionName = "TestCollection";
-        const string ApiKey = "0ad9fa6a-96cd-44fd-818e-061fe40fca2d";
+        const string ApiKey = "<API KEY>";
 
         static readonly object TurnStile = new object();
         static Orchestrate _orchestration;
