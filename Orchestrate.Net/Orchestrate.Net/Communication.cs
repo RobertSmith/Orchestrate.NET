@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Net;
-using Newtonsoft.Json;
 
 namespace Orchestrate.Net
 {
     internal static class Communication
     {
-        internal static BaseResult CallWebRequest(string apiKey, string url, string method, object payload, string ifMatch = null, bool ifNoneMatch = false)
+        internal static BaseResult CallWebRequest(string apiKey, string url, string method, string jsonPayload, string ifMatch = null, bool ifNoneMatch = false)
         {
             var request = WebRequest.Create(url);
             request.Method = method;
@@ -19,10 +18,9 @@ namespace Orchestrate.Net
             else if (ifNoneMatch)
                 request.Headers.Add(HttpRequestHeader.IfNoneMatch, "\"*\"");
 
-            if (payload != null)
+            if (!string.IsNullOrEmpty(jsonPayload))
             {
-                var json = JsonConvert.SerializeObject(payload);
-                var data = StringToByteArray(json);
+                var data = StringToByteArray(jsonPayload);
 
                 request.ContentLength = data.Length;
                 using (var dataStream = request.GetRequestStream())

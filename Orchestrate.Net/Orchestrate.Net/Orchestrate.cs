@@ -13,14 +13,14 @@ namespace Orchestrate.Net
         {
             _apiKey = apiKey;
         }
-        
-        public Result CreateCollection(string collectionName, string key, object item)
+
+        public Result CreateCollection(string collectionName, string key, string json)
         {
-            if (item == null)
-                throw new ArgumentNullException("item", "item cannot be null");
+            if (string.IsNullOrEmpty(json))
+                throw new ArgumentNullException("json", "json cannot be empty");
 
             var url = UrlBase + collectionName + "/" + key;
-            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item);
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", json);
 
             return new Result
             {
@@ -33,6 +33,15 @@ namespace Orchestrate.Net
                 Score = 1,
                 Value = baseResult.Payload
             };
+        }
+
+        public Result CreateCollection(string collectionName, string key, object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+            return CreateCollection(collectionName, key, json);
         }
 
         public Result DeleteCollection(string collectionName)
@@ -89,10 +98,46 @@ namespace Orchestrate.Net
             };
         }
 
+        public Result Put(string collectionName, string key, string json)
+        {
+            if (string.IsNullOrEmpty(json))
+                throw new ArgumentNullException("json", "json cannot be empty");
+
+            var url = UrlBase + collectionName + "/" + key;
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", json);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
         public Result Put(string collectionName, string key, object item)
         {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+            return Put(collectionName, key, json);
+        }
+
+        public Result PutIfMatch(string collectionName, string key, string json, string ifMatch)
+        {
+            if (string.IsNullOrEmpty(json))
+                throw new ArgumentNullException("json", "json cannot be empty");
+
+            if (string.IsNullOrEmpty(ifMatch))
+                throw new ArgumentNullException("ifMatch", "ifMatch cannot be empty");
+
             var url = UrlBase + collectionName + "/" + key;
-            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item);
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", json, ifMatch);
 
             return new Result
             {
@@ -109,8 +154,20 @@ namespace Orchestrate.Net
 
         public Result PutIfMatch(string collectionName, string key, object item, string ifMatch)
         {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+            return PutIfMatch(collectionName, key, json, ifMatch);
+        }
+
+        public Result PutIfNoneMatch(string collectionName, string key, string json)
+        {
+            if (string.IsNullOrEmpty(json))
+                throw new ArgumentNullException("json", "json cannot be empty");
+
             var url = UrlBase + collectionName + "/" + key;
-            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, ifMatch);
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", json, null, true);
 
             return new Result
             {
@@ -127,20 +184,11 @@ namespace Orchestrate.Net
 
         public Result PutIfNoneMatch(string collectionName, string key, object item)
         {
-            var url = UrlBase + collectionName + "/" + key;
-            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, null, true);
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            var json = JsonConvert.SerializeObject(item);
+            return PutIfNoneMatch(collectionName, key, json);
         }
 
         public Result Delete(string collectionName, string key)
@@ -234,8 +282,9 @@ namespace Orchestrate.Net
                 url += "?timestamp=" + ConvertToUnixTimestamp(timeStamp.Value);
 
             var message = new EventMessage { Msg = msg };
+            var json = JsonConvert.SerializeObject(message);
 
-            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", message);
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", json);
 
             return new Result
             {
@@ -279,12 +328,6 @@ namespace Orchestrate.Net
         }
         
         #region Helper Functions
-
-        private static DateTime ConvertFromUnixTimestamp(double timestamp)
-        {
-            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            return origin.AddMilliseconds(timestamp);
-        }
         
         private static double ConvertToUnixTimestamp(DateTime date)
         {
@@ -292,6 +335,10 @@ namespace Orchestrate.Net
             TimeSpan diff = date.ToUniversalTime() - origin;
             return Math.Floor(diff.TotalMilliseconds);
         }
+
+        #endregion
+
+        #region IOrchestrate Members
 
         #endregion
     }
