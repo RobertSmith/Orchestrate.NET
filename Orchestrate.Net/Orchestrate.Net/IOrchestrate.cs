@@ -1,4 +1,6 @@
-﻿namespace Orchestrate.Net
+﻿using System;
+
+namespace Orchestrate.Net
 {
     public interface IOrchestrate
     {
@@ -16,5 +18,8 @@
         ListResult List(string collectionName, int limit, string startKey, string afterKey);
 
         SearchResult Search(string collectionName, string query, int limit, int offset);
+
+        EventResultList GetEvents(string collectionName, string key, string type, DateTime? start, DateTime? end);
+        Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, string msg);
     }
 }

@@ -10,6 +10,6 @@ namespace Orchestrate.Net
         [JsonProperty("total_count")]
         public int TotalCount { get; set; }
         [JsonProperty("results")]
-        public IEnumerable<ValueResult> Results { get; set; } 
+        public IEnumerable<Result> Results { get; set; } 
     }
 }

@@ -209,5 +209,61 @@ namespace Orchestrate.Net
 
             return JsonConvert.DeserializeObject<SearchResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
         }
+
+        public EventResultList GetEvents(string collectionName, string key, string type, DateTime? start, DateTime? end)
+        {
+            var url = UrlBase + collectionName + "/" + key + "/events/" + type;
+
+            if (start != null)
+                url += "?start=" + ConvertToUnixTimestamp(start.Value);
+
+            if (end != null && start != null)
+                url += "&end=" + ConvertToUnixTimestamp(end.Value);
+            else if (end != null)
+                url += "?end=" + ConvertToUnixTimestamp(end.Value);
+
+            return JsonConvert.DeserializeObject<EventResultList>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
+        }
+
+        public Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, string msg)
+        {
+            var url = UrlBase + collectionName + "/" + key + "/events/" + type;
+
+            if (timeStamp != null)
+                url += "?timestamp=" + ConvertToUnixTimestamp(timeStamp.Value);
+
+            var message = new EventMessage { Msg = msg };
+
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", message);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
+        #region Helper Functions
+
+        private static DateTime ConvertFromUnixTimestamp(double timestamp)
+        {
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return origin.AddMilliseconds(timestamp);
+        }
+        
+        private static double ConvertToUnixTimestamp(DateTime date)
+        {
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            TimeSpan diff = date.ToUniversalTime() - origin;
+            return Math.Floor(diff.TotalMilliseconds);
+        }
+
+        #endregion
     }
 }

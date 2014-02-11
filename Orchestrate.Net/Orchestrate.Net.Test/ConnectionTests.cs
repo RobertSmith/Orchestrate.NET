@@ -8,7 +8,7 @@ namespace Orchestrate.Net.Test
     public class ConnectionTests
     {
         const string CollectionName = "TestCollection";
-        const string ApiKey = "API KEY";
+        const string ApiKey = "<API KEY>";
 
         static readonly object TurnStile = new object();
         static Orchestrate _orchestration;
@@ -33,7 +33,7 @@ namespace Orchestrate.Net.Test
         }
 
         [TestMethod]
-        public void A01_CreateCollectionFail()
+        public void A02_CreateCollectionFail()
         {
             lock (TurnStile)
             {
@@ -55,7 +55,7 @@ namespace Orchestrate.Net.Test
             {
                 var result = _orchestration.Get(CollectionName, "1");
 
-                Assert.IsTrue(result.Value.Length > 0);
+                Assert.IsTrue(result.Value != null);
             }
         }
 
@@ -84,7 +84,7 @@ namespace Orchestrate.Net.Test
                 var match = list.Results.First();
                 var result = _orchestration.Get(CollectionName, "1", match.Path.Ref);
 
-                Assert.IsTrue(result.Value.Length > 0);
+                Assert.IsTrue(result.Value != null);
             }
         }
 
@@ -111,12 +111,12 @@ namespace Orchestrate.Net.Test
 
                 var result = _orchestration.PutIfMatch(CollectionName, "2", item, match.Path.Ref);
 
-                Assert.IsTrue(result.Value.Length == 0);
+                Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
             }
         }
 
         [TestMethod]
-        public void C02_CollectionPutIfMatchFail()
+        public void C03_CollectionPutIfMatchFail()
         {
             lock (TurnStile)
             {
@@ -135,7 +135,7 @@ namespace Orchestrate.Net.Test
         }
 
         [TestMethod]
-        public void C03_CollectionPutIfNoneMatchSucess()
+        public void C04_CollectionPutIfNoneMatchSucess()
         {
             lock (TurnStile)
             {
@@ -143,12 +143,12 @@ namespace Orchestrate.Net.Test
 
                 var result = _orchestration.PutIfNoneMatch(CollectionName, "3", item);
 
-                Assert.IsTrue(result.Value.Length == 0);
+                Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
             }
         }
 
         [TestMethod]
-        public void C04_CollectionPutIfNoneMatchFail()
+        public void C05_CollectionPutIfNoneMatchFail()
         {
             lock (TurnStile)
             {
@@ -171,7 +171,7 @@ namespace Orchestrate.Net.Test
             lock (TurnStile)
             {
                 var result = _orchestration.Delete(CollectionName, "3");
-                Assert.IsTrue(result.Value.Length == 0);
+                Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
             }
         }
 
@@ -181,7 +181,7 @@ namespace Orchestrate.Net.Test
             lock (TurnStile)
             {
                 var result = _orchestration.Delete(CollectionName, "9999");
-                Assert.IsTrue(result.Value.Length == 0);
+                Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
             }
         }
 
@@ -209,7 +209,7 @@ namespace Orchestrate.Net.Test
             {
                 var match = _orchestration.Get(CollectionName, "2");
                 var result = _orchestration.DeleteIfMatch(CollectionName, "2", match.Path.Ref);
-                Assert.IsTrue(result.Value.Length == 0);
+                Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
             }
         }
 
@@ -287,7 +287,7 @@ namespace Orchestrate.Net.Test
         }
 
         [TestMethod]
-        public void G01_SearchCollectionNotFound()
+        public void G02_SearchCollectionNotFound()
         {
             lock (TurnStile)
             {
@@ -298,7 +298,7 @@ namespace Orchestrate.Net.Test
         }
 
         [TestMethod]
-        public void G01_SearchCollectionBadKey()
+        public void G03_SearchCollectionBadKey()
         {
             lock (TurnStile)
             {
@@ -309,13 +309,57 @@ namespace Orchestrate.Net.Test
         }
 
         [TestMethod]
+        public void H01_CollectionAddEventNoTimeStamp()
+        {
+            lock (TurnStile)
+            {
+                var result = _orchestration.PutEvent(CollectionName, "1", "comment", null, "This is the first comment.");
+
+                Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+            }
+        }
+
+        [TestMethod]
+        public void H02_CollectionAddEventWithTimeStamp()
+        {
+            lock (TurnStile)
+            {
+                var result = _orchestration.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow.AddDays(1), "This is the second comment.");
+
+                Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+            }
+        }
+
+        [TestMethod]
+        public void H03_CollectionGetEventsNoStartEnd()
+        {
+            lock (TurnStile)
+            {
+                var result = _orchestration.GetEvents(CollectionName, "1", "comment", null, null);
+
+                Assert.IsTrue(result.Count == 2);
+            }
+        }
+
+        [TestMethod]
+        public void H04_CollectionGetEventsWithStartAndEndDate()
+        {
+            lock (TurnStile)
+            {
+                var result = _orchestration.GetEvents(CollectionName, "1", "comment", DateTime.UtcNow.AddHours(-1), DateTime.UtcNow.AddHours(1));
+
+                Assert.IsTrue(result.Count == 1);
+            }
+        }
+
+        [TestMethod]
         public void Z01_DeleteCollection()
         {
             lock (TurnStile)
             {
                 var result = _orchestration.DeleteCollection(CollectionName);
 
-                Assert.IsTrue(result.Value.Length == 0);
+                Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
             }
         }
 
@@ -326,7 +370,7 @@ namespace Orchestrate.Net.Test
             {
                 var result = _orchestration.DeleteCollection("ThisCollectionDoesNotExist");
 
-                Assert.IsTrue(result.Value.Length == 0);
+                Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
             }
         }
     }

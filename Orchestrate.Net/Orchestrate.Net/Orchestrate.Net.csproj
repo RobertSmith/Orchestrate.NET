@@ -46,6 +46,9 @@
     <Compile Include="Communication.cs" />
     <Compile Include="IOrchestrate.cs" />
     <Compile Include="Models\BaseResult.cs" />
+    <Compile Include="Models\EventMessage.cs" />
+    <Compile Include="Models\EventResult.cs" />
+    <Compile Include="Models\EventResultList.cs" />
     <Compile Include="Models\ListResult.cs" />
     <Compile Include="Orchestrate.cs" />
     <Compile Include="Models\OrchestratePath.cs" />
