@@ -1,6 +1,6 @@
 ﻿namespace Orchestrate.Net
 {
-    public class BaseResult
+    internal class BaseResult
     {
         public string Location { get; set; }
         public string ETag { get; set; }

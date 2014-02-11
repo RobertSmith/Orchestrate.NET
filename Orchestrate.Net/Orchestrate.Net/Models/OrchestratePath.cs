@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-namespace Orchestrate.Net
+﻿namespace Orchestrate.Net
 {
     public class OrchestratePath
     {
