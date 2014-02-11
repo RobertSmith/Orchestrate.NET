@@ -21,5 +21,8 @@ namespace Orchestrate.Net
 
         EventResultList GetEvents(string collectionName, string key, string type, DateTime? start, DateTime? end);
         Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, string msg);
+
+        ListResult GetGraph(string collectionName, string key, string[] kinds);
+        Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Orchestrate.Net
@@ -249,6 +250,34 @@ namespace Orchestrate.Net
             };
         }
 
+        public ListResult GetGraph(string collectionName, string key, string[] kinds)
+        {
+            var url = UrlBase + collectionName + "/" + key + "/relations";
+
+            url = kinds.Aggregate(url, (current, kind) => current + ("/" + kind));
+
+            return JsonConvert.DeserializeObject<ListResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
+        }
+
+        public Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey)
+        {
+            var url = UrlBase + collectionName + "/" + key + "/relation/" + kind +"/" + toCollectionName + "/" + toKey;
+
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", null);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+        
         #region Helper Functions
 
         private static DateTime ConvertFromUnixTimestamp(double timestamp)

@@ -353,6 +353,47 @@ namespace Orchestrate.Net.Test
         }
 
         [TestMethod]
+        public void I01_CollectionAddGraph()
+        {
+            lock (TurnStile)
+            {
+                var data = new TestData {Id = 99, Value = "Olaf"};
+                _orchestration.CreateCollection("Snowmen", "99", data);
+                var result = _orchestration.PutGraph(CollectionName, "1", "snowman", "Snowmen", "99");
+
+                Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+            }
+        }
+
+        [TestMethod]
+        public void I02_CollectionGetSingleGraph()
+        {
+            lock (TurnStile)
+            {
+                var kinds = new[]{ "snowman" };
+                var result = _orchestration.GetGraph(CollectionName, "1", kinds);
+
+                Assert.IsTrue(result.Count == 1);
+            }
+        }
+
+        [TestMethod]
+        public void I03_CollectionGetMultipleGraph()
+        {
+            lock (TurnStile)
+            {
+                var data = new TestData { Id = 66, Value = "Sven" };
+                _orchestration.CreateCollection("IceMerchants", "66", data);
+                _orchestration.PutGraph("Snowmen", "99", "icemerchant", "IceMerchants", "66");
+                var kinds = new[] { "snowman", "icemerchant" };
+                
+                var result = _orchestration.GetGraph(CollectionName, "1", kinds);
+
+                Assert.IsTrue(result.Count == 1);
+            }
+        }
+
+        [TestMethod]
         public void Z01_DeleteCollection()
         {
             lock (TurnStile)
@@ -369,6 +410,18 @@ namespace Orchestrate.Net.Test
             lock (TurnStile)
             {
                 var result = _orchestration.DeleteCollection("ThisCollectionDoesNotExist");
+
+                Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+            }
+        }
+
+        [TestMethod]
+        public void Z03_DeleteGraphCollections()
+        {
+            lock (TurnStile)
+            {
+                _orchestration.DeleteCollection("Snowmen");
+                var result = _orchestration.DeleteCollection("IceMerchants");
 
                 Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
             }
