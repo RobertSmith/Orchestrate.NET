@@ -8,7 +8,7 @@ namespace Orchestrate.Net.Test
     public class ConnectionTests
     {
         const string CollectionName = "TestCollection";
-        const string ApiKey = "<API KEY>";
+        const string ApiKey = "0ad9fa6a-96cd-44fd-818e-061fe40fca2d";
 
         static readonly object TurnStile = new object();
         static Orchestrate _orchestration;
@@ -43,7 +43,7 @@ namespace Orchestrate.Net.Test
                 }
                 catch (ArgumentNullException ex)
                 {
-                    Assert.IsTrue(ex.Message.Contains("item cannot be null"));
+                    Assert.IsTrue(ex.Message.Contains("json cannot be empty"));
                 }
             }
         }
