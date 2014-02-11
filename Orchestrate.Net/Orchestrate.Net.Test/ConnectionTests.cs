@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Orchestrate.Net.Test
@@ -7,7 +8,7 @@ namespace Orchestrate.Net.Test
     public class ConnectionTests
     {
         const string CollectionName = "TestCollection";
-        const string ApiKey = "<API KEY>";
+        const string ApiKey = "API KEY";
 
         static readonly object TurnStile = new object();
         static Orchestrate _orchestration;
@@ -59,7 +60,7 @@ namespace Orchestrate.Net.Test
         }
 
         [TestMethod]
-        public void B01_CollectionGetDoesNotExist()
+        public void B02_CollectionGetDoesNotExist()
         {
             lock (TurnStile)
             {
@@ -71,6 +72,19 @@ namespace Orchestrate.Net.Test
                 {
                     Assert.IsTrue(ex.Message.Contains("404"));
                 }
+            }
+        }
+
+        [TestMethod]
+        public void B03_CollectionGetByRef()
+        {
+            lock (TurnStile)
+            {
+                var list = _orchestration.List(CollectionName, 10, null, null);
+                var match = list.Results.First();
+                var result = _orchestration.Get(CollectionName, "1", match.Path.Ref);
+
+                Assert.IsTrue(result.Value.Length > 0);
             }
         }
 

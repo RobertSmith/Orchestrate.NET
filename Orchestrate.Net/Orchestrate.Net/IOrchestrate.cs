@@ -6,6 +6,7 @@
         Result DeleteCollection(string collectionName);
 
         Result Get(string collectionName, string key);
+        Result Get(string collectionName, string key, string reference);
         Result Put(string collectionName, string key, object item);
         Result PutIfMatch(string collectionName, string key, object item, string ifMatch);
         Result PutIfNoneMatch(string collectionName, string key, object item);

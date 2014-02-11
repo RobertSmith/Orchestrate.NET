@@ -70,6 +70,24 @@ namespace Orchestrate.Net
             };
         }
 
+        public Result Get(string collectionName, string key, string reference)
+        {
+            var url = UrlBase + collectionName + "/" + key + "/refs/" + reference;
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "GET", null);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
         public Result Put(string collectionName, string key, object item)
         {
             var url = UrlBase + collectionName + "/" + key;
