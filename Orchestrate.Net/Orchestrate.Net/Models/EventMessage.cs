@@ -1,10 +1,7 @@
-﻿using Newtonsoft.Json;
-
-namespace Orchestrate.Net
+﻿namespace Orchestrate.Net
 {
     public class EventMessage
     {
-        [JsonProperty("msg")]
         public string Msg { get; set; }
     }
 }
