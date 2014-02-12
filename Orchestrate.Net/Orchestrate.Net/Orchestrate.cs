@@ -16,8 +16,14 @@ namespace Orchestrate.Net
 
         public Result CreateCollection(string collectionName, string key, string json)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
             if (string.IsNullOrEmpty(json))
-                throw new ArgumentNullException("json", "json cannot be empty");
+                throw new ArgumentNullException("json", "json cannot be null or empty");
 
             var url = UrlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", json);
@@ -37,6 +43,12 @@ namespace Orchestrate.Net
 
         public Result CreateCollection(string collectionName, string key, object item)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
             if (item == null)
                 throw new ArgumentNullException("item", "item cannot be null");
 
@@ -46,6 +58,9 @@ namespace Orchestrate.Net
 
         public Result DeleteCollection(string collectionName)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
             var url = UrlBase + collectionName + "?force=true";
             var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null);
 
@@ -64,6 +79,12 @@ namespace Orchestrate.Net
 
         public Result Get(string collectionName, string key)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
             var url = UrlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "GET", null);
 
@@ -82,6 +103,15 @@ namespace Orchestrate.Net
 
         public Result Get(string collectionName, string key, string reference)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(reference))
+                throw new ArgumentNullException("reference", "reference cannot be null or empty");
+
             var url = UrlBase + collectionName + "/" + key + "/refs/" + reference;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "GET", null);
 
@@ -100,6 +130,12 @@ namespace Orchestrate.Net
 
         public Result Put(string collectionName, string key, string json)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
             if (string.IsNullOrEmpty(json))
                 throw new ArgumentNullException("json", "json cannot be empty");
 
@@ -121,6 +157,12 @@ namespace Orchestrate.Net
 
         public Result Put(string collectionName, string key, object item)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
             if (item == null)
                 throw new ArgumentNullException("item", "item cannot be null");
 
@@ -130,6 +172,12 @@ namespace Orchestrate.Net
 
         public Result PutIfMatch(string collectionName, string key, string json, string ifMatch)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
             if (string.IsNullOrEmpty(json))
                 throw new ArgumentNullException("json", "json cannot be empty");
 
@@ -154,8 +202,17 @@ namespace Orchestrate.Net
 
         public Result PutIfMatch(string collectionName, string key, object item, string ifMatch)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
             if (item == null)
                 throw new ArgumentNullException("item", "item cannot be null");
+
+            if (string.IsNullOrEmpty(ifMatch))
+                throw new ArgumentNullException("ifMatch", "ifMatch cannot be empty");
 
             var json = JsonConvert.SerializeObject(item);
             return PutIfMatch(collectionName, key, json, ifMatch);
@@ -163,6 +220,12 @@ namespace Orchestrate.Net
 
         public Result PutIfNoneMatch(string collectionName, string key, string json)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
             if (string.IsNullOrEmpty(json))
                 throw new ArgumentNullException("json", "json cannot be empty");
 
@@ -184,6 +247,12 @@ namespace Orchestrate.Net
 
         public Result PutIfNoneMatch(string collectionName, string key, object item)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
             if (item == null)
                 throw new ArgumentNullException("item", "item cannot be null");
 
@@ -193,6 +262,12 @@ namespace Orchestrate.Net
 
         public Result Delete(string collectionName, string key)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
             var url = UrlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null);
 
@@ -211,6 +286,9 @@ namespace Orchestrate.Net
 
         public ListResult List(string collectionName, int limit, string startKey, string afterKey)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
             if (limit < 1 || limit > 100)
                 throw new ArgumentOutOfRangeException("limit", limit, "limit must be between 1 and 100");
 
@@ -230,6 +308,15 @@ namespace Orchestrate.Net
 
         public Result DeleteIfMatch(string collectionName, string key, string ifMatch)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(ifMatch))
+                throw new ArgumentNullException("ifMatch", "ifMatch cannot be null or empty");
+
             var url = UrlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null, ifMatch);
 
@@ -248,6 +335,12 @@ namespace Orchestrate.Net
 
         public SearchResult Search(string collectionName, string query, int limit, int offset)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(query))
+                throw new ArgumentNullException("query", "query cannot be null or empty");
+
             if (limit < 1 || limit > 100)
                 throw new ArgumentOutOfRangeException("limit", limit, "limit must be between 1 and 100");
 
@@ -261,6 +354,15 @@ namespace Orchestrate.Net
 
         public EventResultList GetEvents(string collectionName, string key, string type, DateTime? start, DateTime? end)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(type))
+                throw new ArgumentNullException("type", "type cannot be null or empty");
+
             var url = UrlBase + collectionName + "/" + key + "/events/" + type;
 
             if (start != null)
@@ -276,6 +378,15 @@ namespace Orchestrate.Net
 
         public Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, string msg)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(type))
+                throw new ArgumentNullException("type", "type cannot be null or empty");
+
             var url = UrlBase + collectionName + "/" + key + "/events/" + type;
 
             if (timeStamp != null)
@@ -301,6 +412,15 @@ namespace Orchestrate.Net
 
         public ListResult GetGraph(string collectionName, string key, string[] kinds)
         {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (kinds == null || kinds.Length == 0)
+                throw new ArgumentNullException("kinds", "kinds cannot be null or empty");
+
             var url = UrlBase + collectionName + "/" + key + "/relations";
 
             url = kinds.Aggregate(url, (current, kind) => current + ("/" + kind));
@@ -310,7 +430,22 @@ namespace Orchestrate.Net
 
         public Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey)
         {
-            var url = UrlBase + collectionName + "/" + key + "/relation/" + kind +"/" + toCollectionName + "/" + toKey;
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(kind))
+                throw new ArgumentNullException("kind", "kind cannot be null or empty");
+
+            if (string.IsNullOrEmpty(toCollectionName))
+                throw new ArgumentNullException("toCollectionName", "toCollectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(toKey))
+                throw new ArgumentNullException("toKey", "toKey cannot be null or empty");
+
+            var url = UrlBase + collectionName + "/" + key + "/relation/" + kind + "/" + toCollectionName + "/" + toKey;
 
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", null);
 

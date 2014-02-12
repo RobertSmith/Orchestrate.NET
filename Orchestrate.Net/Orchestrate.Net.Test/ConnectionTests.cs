@@ -43,7 +43,7 @@ namespace Orchestrate.Net.Test
                 }
                 catch (ArgumentNullException ex)
                 {
-                    Assert.IsTrue(ex.Message.Contains("json cannot be empty"));
+                    Assert.IsTrue(ex.Message.Contains("json cannot be null or empty"));
                 }
             }
         }
