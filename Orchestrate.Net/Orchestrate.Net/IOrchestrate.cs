@@ -5,17 +5,17 @@ namespace Orchestrate.Net
     public interface IOrchestrate
     {
         Result CreateCollection(string collectionName, string key, object item);
-        Result CreateCollection(string collectionName, string key, string json);
+        Result CreateCollection(string collectionName, string key, string item);
         Result DeleteCollection(string collectionName);
 
         Result Get(string collectionName, string key);
         Result Get(string collectionName, string key, string reference);
         Result Put(string collectionName, string key, object item);
-        Result Put(string collectionName, string key, string json);
+        Result Put(string collectionName, string key, string item);
         Result PutIfMatch(string collectionName, string key, object item, string ifMatch);
-        Result PutIfMatch(string collectionName, string key, string json, string ifMatch);
+        Result PutIfMatch(string collectionName, string key, string item, string ifMatch);
         Result PutIfNoneMatch(string collectionName, string key, object item);
-        Result PutIfNoneMatch(string collectionName, string key, string json);
+        Result PutIfNoneMatch(string collectionName, string key, string item);
         Result Delete(string collectionName, string key);
         Result DeleteIfMatch(string collectionName, string key, string ifMatch);
 
