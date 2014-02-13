@@ -35,6 +35,7 @@ Get
 You can retrieve items by key with the Get method:
 
 Result result = orchestrate.Get(collectionName, key);
+
 var item = result.Value;
 
 Put
@@ -53,7 +54,7 @@ Searching a collection is as simple as defining a Lucene query string. (http://l
 
 SearchResult result = orchestrate.Search(collectionName, query, limit, offset);
 
-Refs, Events and Graphs
+Lists, Refs, Events and Graphs
 -----------------------
 Are all supported, see the docs on the Orchestrate.io website for details.
 
