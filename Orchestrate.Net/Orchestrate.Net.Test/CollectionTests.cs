@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 namespace Orchestrate.Net.Test
 {
     [TestClass]
-    public class ColectionTests
+    public class CollectionTests
     {
         const string ApiKey = "<API KEY>";
 
