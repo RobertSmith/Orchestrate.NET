@@ -15,16 +15,9 @@ namespace Orchestrate.Net.Test
         public static void ClassInitialize(TestContext context)
         {
             var orchestrate = new Orchestrate(ApiKey);
-
             var item = new TestData { Id = 1, Value = "Inital Test Item" };
-            var item2 = new TestData { Id = 2, Value = "Inital Test Item #2" };
-            var item3 = new TestData { Id = 3, Value = "Inital Test Item #3" };
 
             orchestrate.CreateCollection(CollectionName, "1", item);
-            orchestrate.Put(CollectionName, "2", item2);
-            orchestrate.Put(CollectionName, "3", item3);
-
-            context.Properties.Add("Orchestrate", orchestrate);
         }
 
         [ClassCleanup]
@@ -192,12 +185,12 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void PutIfMatchFail()
         {
-            var match = _orchestrate.Get(CollectionName, "2");
-            var item = new TestData { Id = 2, Value = "Value, now with more moxie!" };
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new TestData { Id = 1, Value = "Value, now with more moxie!" };
 
             try
             {
-                _orchestrate.PutIfMatch(CollectionName, "1", item, match.Path.Ref);
+                _orchestrate.PutIfMatch(CollectionName, "2", item, match.Path.Ref);
             }
             catch (Exception ex)
             {
@@ -208,12 +201,12 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void PutIfMatchWithNoCollectionName()
         {
-            var match = _orchestrate.Get(CollectionName, "2");
-            var item = new TestData { Id = 2, Value = "Value, now with more moxie!" };
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new TestData { Id = 1, Value = "Value, now with more moxie!" };
 
             try
             {
-                _orchestrate.PutIfMatch(string.Empty, "1", item, match.Path.Ref);
+                _orchestrate.PutIfMatch(string.Empty, "2", item, match.Path.Ref);
             }
             catch (ArgumentNullException ex)
             {
@@ -227,12 +220,12 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void PutIfMatchWithNoKey()
         {
-            var match = _orchestrate.Get(CollectionName, "2");
-            var item = new TestData { Id = 2, Value = "Value, now with more moxie!" };
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new TestData { Id = 1, Value = "Value, now with more moxie!" };
 
             try
             {
-                _orchestrate.PutIfMatch(CollectionName, "", item, match.Path.Ref);
+                _orchestrate.PutIfMatch(CollectionName, string.Empty, item, match.Path.Ref);
             }
             catch (ArgumentNullException ex)
             {
@@ -246,11 +239,11 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void PutIfMatchWithNoItem()
         {
-            var match = _orchestrate.Get(CollectionName, "2");
+            var match = _orchestrate.Get(CollectionName, "1");
 
             try
             {
-                _orchestrate.PutIfMatch(CollectionName, "1", null, match.Path.Ref);
+                _orchestrate.PutIfMatch(CollectionName, "2", null, match.Path.Ref);
             }
             catch (ArgumentNullException ex)
             {
@@ -264,11 +257,11 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void PutIfMatchWithNoIfMatch()
         {
-            var item = new TestData { Id = 2, Value = "Value, now with more moxie!" };
+            var item = new TestData { Id = 1, Value = "Value, now with more moxie!" };
 
             try
             {
-                _orchestrate.PutIfMatch(CollectionName, "1", item, string.Empty);
+                _orchestrate.PutIfMatch(CollectionName, "2", item, string.Empty);
             }
             catch (ArgumentNullException ex)
             {
@@ -292,11 +285,11 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void PutIfNoneMatchFail()
         {
-            var item = new TestData { Id = 3, Value = "Test Value 3" };
+            var item = new TestData { Id = 1, Value = "Test Value 1" };
 
             try
             {
-                _orchestrate.PutIfNoneMatch(CollectionName, "3", item);
+                _orchestrate.PutIfNoneMatch(CollectionName, "1", item);
             }
             catch (Exception ex)
             {
@@ -363,8 +356,8 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void DeleteSuccess()
         {
-            var match = _orchestrate.Get(CollectionName, "3");
-            var item = JsonConvert.DeserializeObject<TestData>(match.Value.ToString());
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+            _orchestrate.Put(CollectionName, "3", item);
 
             var result = _orchestrate.Delete(CollectionName, "3");
             _orchestrate.Put(CollectionName, "3", item);
@@ -414,12 +407,11 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void DeleteIfMatchSucced()
         {
-            var match = _orchestrate.Get(CollectionName, "2");
-            var item = JsonConvert.DeserializeObject<TestData>(match.Value.ToString());
+            var item = new TestData { Id = 4, Value = "A successful object PUT" };
+            _orchestrate.Put(CollectionName, "4", item);
+            var match = _orchestrate.Get(CollectionName, "4");
 
-            var result = _orchestrate.DeleteIfMatch(CollectionName, "2", match.Path.Ref);
-
-            _orchestrate.Put(CollectionName, "2", item);
+            var result = _orchestrate.DeleteIfMatch(CollectionName, "4", match.Path.Ref);
 
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
         }
@@ -442,7 +434,7 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void DeleteIfMatchNoCollectionName()
         {
-            var match = _orchestrate.Get(CollectionName, "2");
+            var match = _orchestrate.Get(CollectionName, "1");
 
             try
             {
@@ -460,7 +452,7 @@ namespace Orchestrate.Net.Test
         [TestMethod]
         public void DeleteIfMatchNoKey()
         {
-            var match = _orchestrate.Get(CollectionName, "2");
+            var match = _orchestrate.Get(CollectionName, "1");
 
             try
             {

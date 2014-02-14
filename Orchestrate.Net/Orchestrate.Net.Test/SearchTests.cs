@@ -22,8 +22,6 @@ namespace Orchestrate.Net.Test
             orchestrate.CreateCollection(CollectionName, "1", item);
             orchestrate.Put(CollectionName, "2", item2);
             orchestrate.Put(CollectionName, "3", item3);
-
-            context.Properties.Add("Orchestrate", orchestrate);
         }
 
         [ClassCleanup]

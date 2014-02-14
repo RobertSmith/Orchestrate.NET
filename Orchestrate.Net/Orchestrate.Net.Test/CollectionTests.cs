@@ -59,28 +59,6 @@ namespace Orchestrate.Net.Test
         }
 
         [TestMethod]
-        public void DeleteCollection()
-        {
-            // Set up
-            const string collectionName = "TestCollection03";
-            var orchestration = new Orchestrate(ApiKey);
-            var item = new TestData { Id = 1, Value = "DeleteCollection" };
-            var json = JsonConvert.SerializeObject(item);
-
-            try
-            {
-                orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), json);
-                var result = orchestration.DeleteCollection(collectionName);
-
-                Assert.IsTrue(result.Path.Collection.Length > 0);
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail(ex.Message);
-            }
-        }
-
-        [TestMethod]
         public void CreateCollectionNoCollectionName()
         {
             // Set up
@@ -141,6 +119,52 @@ namespace Orchestrate.Net.Test
             }
 
             orchestration.DeleteCollection(collectionName);
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [TestMethod]
+        public void DeleteCollection()
+        {
+            // Set up
+            const string collectionName = "TestCollection03";
+            var orchestration = new Orchestrate(ApiKey);
+            var item = new TestData { Id = 1, Value = "DeleteCollection" };
+            var json = JsonConvert.SerializeObject(item);
+
+            try
+            {
+                orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), json);
+                var result = orchestration.DeleteCollection(collectionName);
+
+                Assert.IsTrue(result.Path.Collection.Length > 0);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [TestMethod]
+        public void DeleteCollectionNoName()
+        {
+            // Set up
+            const string collectionName = "TestCollection04";
+            var orchestration = new Orchestrate(ApiKey);
+            var item = new TestData { Id = 1, Value = "DeleteCollection" };
+            var json = JsonConvert.SerializeObject(item);
+
+            try
+            {
+                orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), json);
+                orchestration.DeleteCollection(string.Empty);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "collectionName");
+                orchestration.DeleteCollection(collectionName);
+                return;
+            }
+
             Assert.Fail("No Exception Thrown");
         }
     }

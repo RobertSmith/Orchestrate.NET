@@ -352,7 +352,7 @@ namespace Orchestrate.Net
             return JsonConvert.DeserializeObject<SearchResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
         }
 
-        public EventResultList GetEvents(string collectionName, string key, string type, DateTime? start, DateTime? end)
+        public EventResultList GetEvents(string collectionName, string key, string type, DateTime? start = null, DateTime? end = null)
         {
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");

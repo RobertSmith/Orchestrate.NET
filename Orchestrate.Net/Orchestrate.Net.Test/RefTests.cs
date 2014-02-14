@@ -15,16 +15,9 @@ namespace Orchestrate.Net.Test
         public static void ClassInitialize(TestContext context)
         {
             var orchestrate = new Orchestrate(ApiKey);
-
             var item = new TestData { Id = 1, Value = "Inital Test Item" };
-            var item2 = new TestData { Id = 2, Value = "Inital Test Item #2" };
-            var item3 = new TestData { Id = 3, Value = "Inital Test Item #3" };
 
             orchestrate.CreateCollection(CollectionName, "1", item);
-            orchestrate.Put(CollectionName, "2", item2);
-            orchestrate.Put(CollectionName, "3", item3);
-
-            context.Properties.Add("Orchestrate", orchestrate);
         }
 
         [ClassCleanup]
