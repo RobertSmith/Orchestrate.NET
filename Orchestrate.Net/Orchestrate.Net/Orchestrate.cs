@@ -170,7 +170,7 @@ namespace Orchestrate.Net
             return Put(collectionName, key, json);
         }
 
-        public Result PutIfMatch(string collectionName, string key, string json, string ifMatch)
+        public Result PutIfMatch(string collectionName, string key, string item, string ifMatch)
         {
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
@@ -178,14 +178,14 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException("key", "key cannot be null or empty");
 
-            if (string.IsNullOrEmpty(json))
-                throw new ArgumentNullException("json", "json cannot be empty");
+            if (string.IsNullOrEmpty(item))
+                throw new ArgumentNullException("item", "json cannot be empty");
 
             if (string.IsNullOrEmpty(ifMatch))
                 throw new ArgumentNullException("ifMatch", "ifMatch cannot be empty");
 
             var url = UrlBase + collectionName + "/" + key;
-            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", json, ifMatch);
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, ifMatch);
 
             return new Result
             {
@@ -293,7 +293,7 @@ namespace Orchestrate.Net
                 throw new ArgumentOutOfRangeException("limit", limit, "limit must be between 1 and 100");
 
             if (!string.IsNullOrEmpty(startKey) && !string.IsNullOrEmpty(afterKey))
-                throw new ArgumentException("May only specify either a startKey or an afterKey");
+                throw new ArgumentException("May only specify either a startKey or an afterKey", "startKey");
 
             var url = UrlBase + collectionName + "?limit=" + limit;
 
