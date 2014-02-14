@@ -58,6 +58,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CollectionTests.cs" />
     <Compile Include="KeyValueTests.cs" />
+    <Compile Include="ListTests.cs" />
+    <Compile Include="RefTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchestrate.Net\Orchestrate.Net.csproj">
