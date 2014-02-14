@@ -60,6 +60,7 @@
     <Compile Include="KeyValueTests.cs" />
     <Compile Include="ListTests.cs" />
     <Compile Include="RefTests.cs" />
+    <Compile Include="SearchTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orchestrate.Net\Orchestrate.Net.csproj">
