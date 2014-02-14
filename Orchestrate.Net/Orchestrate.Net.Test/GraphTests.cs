@@ -24,6 +24,8 @@ namespace Orchestrate.Net.Test
         {
             var orchestrate = new Orchestrate(ApiKey);
             orchestrate.DeleteCollection(CollectionName);
+            orchestrate.DeleteCollection("GraphTestCollection2");
+            orchestrate.DeleteCollection("GraphTestCollection3");
         }
 
         [TestInitialize]
@@ -35,7 +37,6 @@ namespace Orchestrate.Net.Test
         [TestCleanup]
         public void TestCleanup()
         {
-            // nothing to see here...
         }
 
         [TestMethod]

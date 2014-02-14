@@ -145,6 +145,24 @@ namespace Orchestrate.Net.Test
         }
 
         [TestMethod]
+        public void DeleteNonExistantCollection()
+        {
+            // Set up
+            var orchestration = new Orchestrate(ApiKey);
+
+            try
+            {
+                var result = orchestration.DeleteCollection("NonExistantCollection");
+
+                Assert.IsTrue(result.Path.Collection.Length > 0);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [TestMethod]
         public void DeleteCollectionNoName()
         {
             // Set up
