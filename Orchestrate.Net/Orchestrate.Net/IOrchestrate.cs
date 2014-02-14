@@ -28,5 +28,6 @@ namespace Orchestrate.Net
 
         ListResult GetGraph(string collectionName, string key, string[] kinds);
         Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
+        Result DeleteGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
     }
 }

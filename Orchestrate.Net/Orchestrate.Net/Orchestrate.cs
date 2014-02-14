@@ -461,7 +461,41 @@ namespace Orchestrate.Net
                 Value = baseResult.Payload
             };
         }
-        
+
+        public Result DeleteGraph(string collectionName, string key, string kind, string toCollectionName, string toKey)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(kind))
+                throw new ArgumentNullException("kind", "kind cannot be null or empty");
+
+            if (string.IsNullOrEmpty(toCollectionName))
+                throw new ArgumentNullException("toCollectionName", "toCollectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(toKey))
+                throw new ArgumentNullException("toKey", "toKey cannot be null or empty");
+
+            var url = UrlBase + collectionName + "/" + key + "/relation/" + kind + "/" + toCollectionName + "/" + toKey + "?purge=true";
+
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
         #region Helper Functions
         
         private static double ConvertToUnixTimestamp(DateTime date)
