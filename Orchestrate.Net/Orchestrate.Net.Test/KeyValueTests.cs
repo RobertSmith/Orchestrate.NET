@@ -354,21 +354,44 @@ namespace Orchestrate.Net.Test
         #region Delete Tests
 
         [TestMethod]
-        public void DeleteSuccess()
+        public void DeleteSuccessNoPurge()
         {
             var item = new TestData { Id = 3, Value = "A successful object PUT" };
-            _orchestrate.Put(CollectionName, "3", item);
+            var put = _orchestrate.Put(CollectionName, "3", item);
 
-            var result = _orchestrate.Delete(CollectionName, "3");
-            _orchestrate.Put(CollectionName, "3", item);
+            var result = _orchestrate.Delete(CollectionName, "3", false);
 
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+
+            var graveyard = _orchestrate.Get(CollectionName, "3", put.Path.Ref.Replace("\"", string.Empty));
+
+            Assert.IsTrue(graveyard.Value != null);
+        }
+
+        [TestMethod]
+        public void DeleteSuccessPurge()
+        {
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+            var put = _orchestrate.Put(CollectionName, "3", item);
+
+            var result = _orchestrate.Delete(CollectionName, "3", true);
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+
+            try
+            {
+                _orchestrate.Get(CollectionName, "3", put.Path.Ref.Replace("\"", string.Empty));
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex.Message.Contains("404"));
+            }
         }
 
         [TestMethod]
         public void DeleteNotFound()
         {
-            var result = _orchestrate.Delete(CollectionName, "ABCD");
+            var result = _orchestrate.Delete(CollectionName, "ABCD", false);
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
         }
 
@@ -377,7 +400,7 @@ namespace Orchestrate.Net.Test
         {
             try
             {
-                _orchestrate.Delete(string.Empty, "ABCD");
+                _orchestrate.Delete(string.Empty, "ABCD", false);
             }
             catch (ArgumentNullException ex)
             {
@@ -393,7 +416,7 @@ namespace Orchestrate.Net.Test
         {
             try
             {
-                _orchestrate.Delete(CollectionName, string.Empty);
+                _orchestrate.Delete(CollectionName, string.Empty, false);
             }
             catch (ArgumentNullException ex)
             {
@@ -405,15 +428,19 @@ namespace Orchestrate.Net.Test
         }
 
         [TestMethod]
-        public void DeleteIfMatchSucced()
+        public void DeleteIfMatchSuccedNoPurge()
         {
             var item = new TestData { Id = 4, Value = "A successful object PUT" };
             _orchestrate.Put(CollectionName, "4", item);
             var match = _orchestrate.Get(CollectionName, "4");
 
-            var result = _orchestrate.DeleteIfMatch(CollectionName, "4", match.Path.Ref);
+            var result = _orchestrate.DeleteIfMatch(CollectionName, "4", match.Path.Ref, false);
 
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+
+            var graveyard = _orchestrate.Get(CollectionName, "4", match.Path.Ref.Replace("\"", string.Empty));
+
+            Assert.IsTrue(graveyard.Value != null);
         }
 
         [TestMethod]
@@ -423,7 +450,7 @@ namespace Orchestrate.Net.Test
 
             try
             {
-                _orchestrate.DeleteIfMatch(CollectionName, "2", match.Path.Ref);
+                _orchestrate.DeleteIfMatch(CollectionName, "2", match.Path.Ref, false);
             }
             catch (Exception ex)
             {
@@ -438,7 +465,7 @@ namespace Orchestrate.Net.Test
 
             try
             {
-                _orchestrate.DeleteIfMatch(string.Empty, "3", match.Path.Ref);
+                _orchestrate.DeleteIfMatch(string.Empty, "3", match.Path.Ref, false);
             }
             catch (ArgumentNullException ex)
             {
@@ -456,7 +483,7 @@ namespace Orchestrate.Net.Test
 
             try
             {
-                _orchestrate.DeleteIfMatch(CollectionName, string.Empty, match.Path.Ref);
+                _orchestrate.DeleteIfMatch(CollectionName, string.Empty, match.Path.Ref, false);
             }
             catch (ArgumentNullException ex)
             {
@@ -472,7 +499,7 @@ namespace Orchestrate.Net.Test
         {
             try
             {
-                _orchestrate.DeleteIfMatch(CollectionName, "3", string.Empty);
+                _orchestrate.DeleteIfMatch(CollectionName, "3", string.Empty, false);
             }
             catch (ArgumentNullException ex)
             {

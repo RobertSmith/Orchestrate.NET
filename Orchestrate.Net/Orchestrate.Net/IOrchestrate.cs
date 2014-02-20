@@ -16,8 +16,8 @@ namespace Orchestrate.Net
         Result PutIfMatch(string collectionName, string key, string item, string ifMatch);
         Result PutIfNoneMatch(string collectionName, string key, object item);
         Result PutIfNoneMatch(string collectionName, string key, string item);
-        Result Delete(string collectionName, string key);
-        Result DeleteIfMatch(string collectionName, string key, string ifMatch);
+        Result Delete(string collectionName, string key, bool purge);
+        Result DeleteIfMatch(string collectionName, string key, string ifMatch, bool purge);
 
         ListResult List(string collectionName, int limit, string startKey, string afterKey);
 

@@ -233,6 +233,25 @@ namespace Orchestrate.Net.Test
             var data = new TestData { Id = 2, Value = "This is collection 2 data" };
             _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
+            _orchestrate.DeleteGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
+            var kinds = new[] { "toplevelgraph" };
+
+            try
+            {
+                _orchestrate.GetGraph(CollectionName, "1", kinds);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex.Message.Contains("404"));
+            }
+        }
+
+        [TestMethod]
+        public void DeleteGraphPurge()
+        {
+            var data = new TestData { Id = 2, Value = "This is collection 2 data" };
+            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
 
             var result = _orchestrate.DeleteGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
 

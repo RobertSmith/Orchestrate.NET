@@ -260,7 +260,7 @@ namespace Orchestrate.Net
             return PutIfNoneMatch(collectionName, key, json);
         }
 
-        public Result Delete(string collectionName, string key)
+        public Result Delete(string collectionName, string key, bool purge)
         {
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
@@ -269,6 +269,12 @@ namespace Orchestrate.Net
                 throw new ArgumentNullException("key", "key cannot be null or empty");
 
             var url = UrlBase + collectionName + "/" + key;
+
+            if (purge)
+                url += "?purge=true";
+            else
+                url += "?purge=false";
+
             var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null);
 
             return new Result
@@ -306,7 +312,7 @@ namespace Orchestrate.Net
             return JsonConvert.DeserializeObject<ListResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
         }
 
-        public Result DeleteIfMatch(string collectionName, string key, string ifMatch)
+        public Result DeleteIfMatch(string collectionName, string key, string ifMatch, bool purge)
         {
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
@@ -318,6 +324,12 @@ namespace Orchestrate.Net
                 throw new ArgumentNullException("ifMatch", "ifMatch cannot be null or empty");
 
             var url = UrlBase + collectionName + "/" + key;
+
+            if (purge)
+                url += "?purge=true";
+            else 
+                url += "?purge=false";
+
             var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null, ifMatch);
 
             return new Result
