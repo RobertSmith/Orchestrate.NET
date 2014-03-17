@@ -1,16 +1,16 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace Orchestrate.Net.Test
+namespace Orchestrate.Net.Tests
 {
-    [TestClass]
+	[TestFixture]
     public class EventTests
     {
         const string ApiKey = "<API KEY>";
         private const string CollectionName = "EventTestCollection";
         private Orchestrate _orchestrate;
 
-        [ClassInitialize]
+		[TestFixtureSetUp]
         public static void ClassInitialize(TestContext context)
         {
             var orchestrate = new Orchestrate(ApiKey);
@@ -19,26 +19,26 @@ namespace Orchestrate.Net.Test
             orchestrate.CreateCollection(CollectionName, "1", item);
         }
 
-        [ClassCleanup]
+		[TestFixtureTearDown]
         public static void ClassCleanUp()
         {
             var orchestrate = new Orchestrate(ApiKey);
             orchestrate.DeleteCollection(CollectionName);
         }
 
-        [TestInitialize]
+		[SetUp]
         public void TestInitialize()
         {
             _orchestrate = new Orchestrate(ApiKey);
         }
 
-        [TestCleanup]
+		[TearDown]
         public void TestCleanup()
         {
             // nothing to see here...
         }
 
-        [TestMethod]
+        [Test]
         public void PutEventNowTimeStamp()
         {
             var result = _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the PutEventNowTimeStamp comment.");
@@ -46,7 +46,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
         }
 
-        [TestMethod]
+        [Test]
         public void PutEventNoTimeStamp()
         {
             var result = _orchestrate.PutEvent(CollectionName, "1", "comment", null, "This is the PutEventNoTimeStamp comment.");
@@ -54,7 +54,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
         }
 
-        [TestMethod]
+        [Test]
         public void PutEventWithNoCollectionName()
         {
             try
@@ -70,7 +70,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void PutEventWithNoKey()
         {
             try
@@ -86,7 +86,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void PutEventWithNoType()
         {
             try
@@ -102,7 +102,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void GetEventsNoStartEnd()
         {
             _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsNoStartEnd comment."); 
@@ -111,7 +111,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Count > 0);
         }
 
-        [TestMethod]
+        [Test]
         public void GetEventsWithStartDate()
         {
             _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithStartDate comment.");
@@ -120,7 +120,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Count > 0);
         }
 
-        [TestMethod]
+        [Test]
         public void GetEventsWithEndDate()
         {
             _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithEndDate comment.");
@@ -129,7 +129,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Count > 0);
         }
 
-        [TestMethod]
+        [Test]
         public void GetEventsWithStartAndEndDate()
         {
             _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithStartAndEndDate comment.");
@@ -138,7 +138,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Count > 0);
         }
 
-        [TestMethod]
+        [Test]
         public void GetEventsWithNoCollectionName()
         {
             try
@@ -154,7 +154,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void GetEventsWithNoKey()
         {
             try
@@ -170,7 +170,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void GetEventsWithNoType()
         {
             try

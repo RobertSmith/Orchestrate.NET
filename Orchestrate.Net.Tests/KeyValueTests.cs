@@ -1,17 +1,17 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Newtonsoft.Json;
 
-namespace Orchestrate.Net.Test
+namespace Orchestrate.Net.Tests
 {
-    [TestClass]
+	[TestFixture]
     public class KeyValueTests
     {
         const string ApiKey = "<API KEY>";
         private const string CollectionName = "KeyValueTestCollection";
         private Orchestrate _orchestrate;
 
-        [ClassInitialize]
+		[TestFixtureSetUp]
         public static void ClassInitialize(TestContext context)
         {
             var orchestrate = new Orchestrate(ApiKey);
@@ -20,20 +20,20 @@ namespace Orchestrate.Net.Test
             orchestrate.CreateCollection(CollectionName, "1", item);
         }
 
-        [ClassCleanup]
+		[TestFixtureTearDown]
         public static void ClassCleanUp()
         {
             var orchestrate = new Orchestrate(ApiKey);
             orchestrate.DeleteCollection(CollectionName);
         }
 
-        [TestInitialize]
+		[SetUp]
         public void TestInitialize()
         {
             _orchestrate = new Orchestrate(ApiKey);
         }
 
-        [TestCleanup]
+		[TearDown]
         public void TestCleanup()
         {
             // nothing to see here...
@@ -41,7 +41,7 @@ namespace Orchestrate.Net.Test
 
         #region Get Tests
 
-        [TestMethod]
+        [Test]
         public void GetByKey()
         {
             var result = _orchestrate.Get(CollectionName, "1");
@@ -49,7 +49,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Value != null);
         }
 
-        [TestMethod]
+        [Test]
         public void GetByNonExistantKey()
         {
             try
@@ -62,7 +62,7 @@ namespace Orchestrate.Net.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void GetWithNoCollectionName()
         {
             try
@@ -78,7 +78,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void GetWithNoKey()
         {
             try
@@ -98,7 +98,7 @@ namespace Orchestrate.Net.Test
 
         #region Put Tests
 
-        [TestMethod]
+        [Test]
         public void PutAsObject()
         {
             var item = new TestData {Id = 3, Value = "A successful object PUT"};
@@ -107,7 +107,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Path.Ref.Length > 0);
         }
 
-        [TestMethod]
+        [Test]
         public void PutAsString()
         {
             var item = new TestData { Id = 4, Value = "A successful string PUT" };
@@ -117,7 +117,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Path.Ref.Length > 0);
         }
 
-        [TestMethod]
+        [Test]
         public void PutWithNoCollectionName()
         {
             var item = new TestData { Id = 5, Value = "An  unsuccessful string PUT" };
@@ -136,7 +136,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void PutWithNoKey()
         {
             var item = new TestData { Id = 6, Value = "An  unsuccessful string PUT" };
@@ -155,7 +155,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void PutWithNoItem()
         {
             try
@@ -171,7 +171,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void PutIfMatchSuccess()
         {
             var match = _orchestrate.Get(CollectionName, "1");
@@ -182,7 +182,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
         }
 
-        [TestMethod]
+        [Test]
         public void PutIfMatchFail()
         {
             var match = _orchestrate.Get(CollectionName, "1");
@@ -198,7 +198,7 @@ namespace Orchestrate.Net.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void PutIfMatchWithNoCollectionName()
         {
             var match = _orchestrate.Get(CollectionName, "1");
@@ -217,7 +217,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void PutIfMatchWithNoKey()
         {
             var match = _orchestrate.Get(CollectionName, "1");
@@ -236,7 +236,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void PutIfMatchWithNoItem()
         {
             var match = _orchestrate.Get(CollectionName, "1");
@@ -254,7 +254,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void PutIfMatchWithNoIfMatch()
         {
             var item = new TestData { Id = 1, Value = "Value, now with more moxie!" };
@@ -272,7 +272,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void PutIfNoneMatchSucess()
         {
             var item = new TestData { Id = 88, Value = "Test Value 88" };
@@ -282,7 +282,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
         }
 
-        [TestMethod]
+        [Test]
         public void PutIfNoneMatchFail()
         {
             var item = new TestData { Id = 1, Value = "Test Value 1" };
@@ -297,7 +297,7 @@ namespace Orchestrate.Net.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void PutIfNoneMatchWithNoCollectionName()
         {
             var item = new TestData { Id = 77, Value = "Test Value 77" };
@@ -315,7 +315,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void PutIfNoneMatchWithNoKey()
         {
             var item = new TestData { Id = 77, Value = "Test Value 77" };
@@ -333,7 +333,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void PutIfNoneMatchWithNoItem()
         {
             try
@@ -353,7 +353,7 @@ namespace Orchestrate.Net.Test
 
         #region Delete Tests
 
-        [TestMethod]
+        [Test]
         public void DeleteSuccessNoPurge()
         {
             var item = new TestData { Id = 3, Value = "A successful object PUT" };
@@ -368,7 +368,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(graveyard.Value != null);
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteSuccessPurge()
         {
             var item = new TestData { Id = 3, Value = "A successful object PUT" };
@@ -388,14 +388,14 @@ namespace Orchestrate.Net.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteNotFound()
         {
             var result = _orchestrate.Delete(CollectionName, "ABCD", false);
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteWithNoCollectionName()
         {
             try
@@ -411,7 +411,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteWithNoKey()
         {
             try
@@ -427,7 +427,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteIfMatchSuccedNoPurge()
         {
             var item = new TestData { Id = 4, Value = "A successful object PUT" };
@@ -443,7 +443,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(graveyard.Value != null);
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteIfMatchFail()
         {
             var match = _orchestrate.Get(CollectionName, "1");
@@ -458,7 +458,7 @@ namespace Orchestrate.Net.Test
             }
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteIfMatchNoCollectionName()
         {
             var match = _orchestrate.Get(CollectionName, "1");
@@ -476,7 +476,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteIfMatchNoKey()
         {
             var match = _orchestrate.Get(CollectionName, "1");
@@ -494,7 +494,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void DeleteIfMatchNoIfMatch()
         {
             try

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace Orchestrate.Net.Test
+namespace Orchestrate.Net.Tests
 {
-    [TestClass]
+	[TestFixture]
     public class RefTests
     {
         const string ApiKey = "<API KEY>";
         private const string CollectionName = "RefTestCollection";
         private Orchestrate _orchestrate;
 
-        [ClassInitialize]
+		[TestFixtureSetUp]
         public static void ClassInitialize(TestContext context)
         {
             var orchestrate = new Orchestrate(ApiKey);
@@ -20,20 +20,20 @@ namespace Orchestrate.Net.Test
             orchestrate.CreateCollection(CollectionName, "1", item);
         }
 
-        [ClassCleanup]
+		[TestFixtureTearDown]
         public static void ClassCleanUp()
         {
             var orchestrate = new Orchestrate(ApiKey);
             orchestrate.DeleteCollection(CollectionName);
         }
 
-        [TestInitialize]
+		[SetUp]
         public void TestInitialize()
         {
             _orchestrate = new Orchestrate(ApiKey);
         }
 
-        [TestCleanup]
+		[TearDown]
         public void TestCleanup()
         {
             // nothing to see here...
@@ -41,7 +41,7 @@ namespace Orchestrate.Net.Test
 
         #region Ref Tests
 
-        [TestMethod]
+        [Test]
         public void GetByRef()
         {
             var list = _orchestrate.List(CollectionName, 10, null, null);
@@ -52,7 +52,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Value != null);
         }
 
-        [TestMethod]
+        [Test]
         public void GetByRefWithNoCollectionName()
         {
             try
@@ -68,7 +68,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void GetByRefWithNoKey()
         {
             try
@@ -84,7 +84,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void GetByRefWithNoRef()
         {
             try

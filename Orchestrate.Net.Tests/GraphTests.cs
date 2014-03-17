@@ -1,16 +1,16 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace Orchestrate.Net.Test
+namespace Orchestrate.Net.Tests
 {
-    [TestClass]
+	[TestFixture]
     public class GraphTests
     {
         const string ApiKey = "<API KEY>";
         private const string CollectionName = "GraphTestCollection";
         private Orchestrate _orchestrate;
 
-        [ClassInitialize]
+		[TestFixtureSetUp]
         public static void ClassInitialize(TestContext context)
         {
             var orchestrate = new Orchestrate(ApiKey);
@@ -19,7 +19,7 @@ namespace Orchestrate.Net.Test
             orchestrate.CreateCollection(CollectionName, "1", item);
         }
 
-        [ClassCleanup]
+		[TestFixtureTearDown]
         public static void ClassCleanUp()
         {
             var orchestrate = new Orchestrate(ApiKey);
@@ -28,18 +28,18 @@ namespace Orchestrate.Net.Test
             orchestrate.DeleteCollection("GraphTestCollection3");
         }
 
-        [TestInitialize]
+		[SetUp]
         public void TestInitialize()
         {
             _orchestrate = new Orchestrate(ApiKey);
         }
 
-        [TestCleanup]
+		[TearDown]
         public void TestCleanup()
         {
         }
 
-        [TestMethod]
+		[Test]
         public void AddGraph()
         {
             var data = new TestData { Id = 2, Value = "This is collection 2 data" };
@@ -50,7 +50,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
         }
 
-        [TestMethod]
+		[Test]
         public void AddGraphWithNoCollectionName()
         {
             try
@@ -67,7 +67,7 @@ namespace Orchestrate.Net.Test
         }
 
 
-        [TestMethod]
+		[Test]
         public void AddGraphWithNoKey()
         {
             try
@@ -84,7 +84,7 @@ namespace Orchestrate.Net.Test
         }
 
 
-        [TestMethod]
+		[Test]
         public void AddGraphWithNoKind()
         {
             try
@@ -101,7 +101,7 @@ namespace Orchestrate.Net.Test
         }
 
 
-        [TestMethod]
+		[Test]
         public void AddGraphWithNoToCollectionName()
         {
             try
@@ -118,7 +118,7 @@ namespace Orchestrate.Net.Test
         }
 
 
-        [TestMethod]
+		[Test]
         public void AddGraphWithNoToKey()
         {
             try
@@ -134,7 +134,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+		[Test]
         public void GetSingleGraph()
         {
             var data = new TestData { Id = 2, Value = "This is collection 2 data" };
@@ -147,7 +147,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Count == 1);
         }
 
-        [TestMethod]
+		[Test]
         public void GetMultipleLevleGraph()
         {
             var data = new TestData { Id = 2, Value = "This is collection 2 data" };
@@ -165,7 +165,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Count == 1);
         }
 
-        [TestMethod]
+		[Test]
         public void GetSingleGraphWithNoCollectionName()
         {
             var data = new TestData { Id = 2, Value = "This is collection 2 data" };
@@ -186,7 +186,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+		[Test]
         public void GetSingleGraphWithNoKey()
         {
             var data = new TestData { Id = 2, Value = "This is collection 2 data" };
@@ -207,7 +207,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+		[Test]
         public void GetSingleGraphWithNoKinds()
         {
             var data = new TestData { Id = 2, Value = "This is collection 2 data" };
@@ -227,7 +227,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+		[Test]
         public void DeleteGraph()
         {
             var data = new TestData { Id = 2, Value = "This is collection 2 data" };
@@ -246,7 +246,7 @@ namespace Orchestrate.Net.Test
             }
         }
 
-        [TestMethod]
+		[Test]
         public void DeleteGraphPurge()
         {
             var data = new TestData { Id = 2, Value = "This is collection 2 data" };
@@ -258,7 +258,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
         }
 
-        [TestMethod]
+		[Test]
         public void DeleteGraphWithNoCollectionName()
         {
             try
@@ -274,7 +274,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+		[Test]
         public void DeleteGraphWithNoKey()
         {
             try
@@ -291,7 +291,7 @@ namespace Orchestrate.Net.Test
         }
 
 
-        [TestMethod]
+		[Test]
         public void DeleteGraphWithNoKind()
         {
             try
@@ -308,7 +308,7 @@ namespace Orchestrate.Net.Test
         }
 
 
-        [TestMethod]
+		[Test]
         public void DeleteGraphWithNoToCollectionName()
         {
             try
@@ -325,7 +325,7 @@ namespace Orchestrate.Net.Test
         }
 
 
-        [TestMethod]
+		[Test]
         public void DeleteGraphWithNoToKey()
         {
             try

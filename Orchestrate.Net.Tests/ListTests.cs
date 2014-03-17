@@ -1,16 +1,16 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace Orchestrate.Net.Test
+namespace Orchestrate.Net.Tests
 {
-    [TestClass]
+	[TestFixture]
     public class ListTests
     {
         const string ApiKey = "<API KEY>";
         private const string CollectionName = "ListTestCollection";
         private Orchestrate _orchestrate;
 
-        [ClassInitialize]
+		[TestFixtureSetUp]
         public static void ClassInitialize(TestContext context)
         {
             var orchestrate = new Orchestrate(ApiKey);
@@ -24,20 +24,20 @@ namespace Orchestrate.Net.Test
             orchestrate.Put(CollectionName, "3", item3);
         }
 
-        [ClassCleanup]
+		[TestFixtureTearDown]
         public static void ClassCleanUp()
         {
             var orchestrate = new Orchestrate(ApiKey);
             orchestrate.DeleteCollection(CollectionName);
         }
 
-        [TestInitialize]
+		[SetUp]
         public void TestInitialize()
         {
             _orchestrate = new Orchestrate(ApiKey);
         }
 
-        [TestCleanup]
+		[TearDown]
         public void TestCleanup()
         {
             // nothing to see here...
@@ -45,28 +45,28 @@ namespace Orchestrate.Net.Test
 
         #region List Tests
 
-        [TestMethod]
+        [Test]
         public void List()
         {
             var result = _orchestrate.List(CollectionName, 10, null, null);
             Assert.IsTrue(result.Count > 0);
         }
 
-        [TestMethod]
+        [Test]
         public void ListWithStartKey()
         {
             var result = _orchestrate.List(CollectionName, 10, "1", null);
             Assert.IsTrue(result.Count > 0);
         }
 
-        [TestMethod]
+        [Test]
         public void ListWithAfterKey()
         {
             var result = _orchestrate.List(CollectionName, 10, null, "1");
             Assert.IsTrue(result.Count > 0);
         }
 
-        [TestMethod]
+        [Test]
         public void ListWithStartKeyAndAfterKey()
         {
             try
@@ -82,7 +82,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void ListWithNoCollectionName()
         {
             try
@@ -98,7 +98,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void ListWithLimitOutOfBounds()
         {
             try

@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30110.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
+VisualStudioVersion = {0}
+MinimumVisualStudioVersion = {0}
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestrate.Net", "Orchestrate.Net\Orchestrate.Net.csproj", "{1A65F6D2-EB27-4108-BBAB-B44E54CB0AE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestrate.Net.Test", "Orchestrate.Net.Test\Orchestrate.Net.Test.csproj", "{0BCAA586-3EC4-40D9-8F87-0D1BD4E0D356}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orchestrate.Net.Tests", "Orchestrate.Net.Tests\Orchestrate.Net.Tests.csproj", "{57C11553-CD56-4D10-B6DF-E286F885D02E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,13 @@ Global
 		{1A65F6D2-EB27-4108-BBAB-B44E54CB0AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A65F6D2-EB27-4108-BBAB-B44E54CB0AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A65F6D2-EB27-4108-BBAB-B44E54CB0AE5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0BCAA586-3EC4-40D9-8F87-0D1BD4E0D356}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0BCAA586-3EC4-40D9-8F87-0D1BD4E0D356}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0BCAA586-3EC4-40D9-8F87-0D1BD4E0D356}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0BCAA586-3EC4-40D9-8F87-0D1BD4E0D356}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57C11553-CD56-4D10-B6DF-E286F885D02E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57C11553-CD56-4D10-B6DF-E286F885D02E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57C11553-CD56-4D10-B6DF-E286F885D02E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57C11553-CD56-4D10-B6DF-E286F885D02E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Orchestrate.Net.Tests\Orchestrate.Net.Tests.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

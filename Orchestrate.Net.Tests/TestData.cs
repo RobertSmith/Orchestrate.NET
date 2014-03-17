@@ -1,4 +1,4 @@
-﻿namespace Orchestrate.Net.Test
+﻿namespace Orchestrate.Net.Tests
 {
     public class TestData
     {
