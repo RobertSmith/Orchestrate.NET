@@ -1,16 +1,16 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace Orchestrate.Net.Test
+namespace Orchestrate.Net.Tests
 {
-    [TestClass]
+	[TestFixture]
     public class SearchTests
     {
         const string ApiKey = "<API KEY>";
         private const string CollectionName = "SearchTestCollection";
         private Orchestrate _orchestrate;
 
-        [ClassInitialize]
+		[TestFixtureSetUp]
         public static void ClassInitialize(TestContext context)
         {
             var orchestrate = new Orchestrate(ApiKey);
@@ -24,26 +24,26 @@ namespace Orchestrate.Net.Test
             orchestrate.Put(CollectionName, "3", item3);
         }
 
-        [ClassCleanup]
+		[TestFixtureTearDown]
         public static void ClassCleanUp()
         {
             var orchestrate = new Orchestrate(ApiKey);
             orchestrate.DeleteCollection(CollectionName);
         }
 
-        [TestInitialize]
+		[SetUp]
         public void TestInitialize()
         {
             _orchestrate = new Orchestrate(ApiKey);
         }
 
-        [TestCleanup]
+		[TearDown]
         public void TestCleanup()
         {
             // nothing to see here...
         }
 
-        [TestMethod]
+        [Test]
         public void SearchSuccess()
         {
             var result = _orchestrate.Search(CollectionName, "*");
@@ -51,7 +51,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Count > 0);
         }
 
-        [TestMethod]
+        [Test]
         public void SearchNotFound()
         {
             var result = _orchestrate.Search(CollectionName, "Id:9999");
@@ -59,7 +59,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Count == 0);
         }
 
-        [TestMethod]
+        [Test]
         public void SearchBadKey()
         {
             var result = _orchestrate.Search(CollectionName, "NonExistantKey:9999");
@@ -67,7 +67,7 @@ namespace Orchestrate.Net.Test
             Assert.IsTrue(result.Count == 0);
         }
 
-        [TestMethod]
+        [Test]
         public void SearchWithNoCollectionName()
         {
             try
@@ -83,7 +83,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void SearchWithNoQuery()
         {
             try
@@ -99,7 +99,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void SearchWithBadLimit()
         {
             try
@@ -115,7 +115,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+        [Test]
         public void SearchWithBadOffset()
         {
             try

@@ -1,15 +1,15 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using NUnit.Framework;
 
-namespace Orchestrate.Net.Test
+namespace Orchestrate.Net.Tests
 {
-    [TestClass]
+	[TestFixture]
     public class CollectionTests
     {
         const string ApiKey = "<API KEY>";
 
-        [TestMethod]
+		[Test]
         public void CreateCollectionWithItemAsObject()
         {
             // Set up
@@ -33,7 +33,7 @@ namespace Orchestrate.Net.Test
             }
         }
 
-        [TestMethod]
+		[Test]
         public void CreateCollectionWithItemAsJsonString()
         {
             // Set up
@@ -58,7 +58,7 @@ namespace Orchestrate.Net.Test
             }
         }
 
-        [TestMethod]
+		[Test]
         public void CreateCollectionNoCollectionName()
         {
             // Set up
@@ -79,7 +79,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+		[Test]
         public void CreateCollectionNoKey()
         {
             // Set up
@@ -101,7 +101,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+		[Test]
         public void CreateCollectionNoItem()
         {
             // Set up
@@ -122,7 +122,7 @@ namespace Orchestrate.Net.Test
             Assert.Fail("No Exception Thrown");
         }
 
-        [TestMethod]
+		[Test]
         public void DeleteCollection()
         {
             // Set up
@@ -144,7 +144,7 @@ namespace Orchestrate.Net.Test
             }
         }
 
-        [TestMethod]
+		[Test]
         public void DeleteNonExistantCollection()
         {
             // Set up
@@ -162,7 +162,7 @@ namespace Orchestrate.Net.Test
             }
         }
 
-        [TestMethod]
+		[Test]
         public void DeleteCollectionNoName()
         {
             // Set up
