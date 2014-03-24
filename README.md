@@ -58,8 +58,9 @@ Lists, Refs, Events and Graphs
 -----------------------
 Are all supported, see the docs on the Orchestrate.io website for details.
 
+## Contributing
 
+#### Building the source
 
-
-
-
+For running tests, ensure to rename `appSettings.config.sample` to `appSettings.config` and 
+set your own Api Key in the test project. 

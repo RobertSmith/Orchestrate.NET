@@ -1,20 +1,20 @@
 ﻿using System;
 using NUnit.Framework;
 using Newtonsoft.Json;
+using Orchestrate.Net.Tests.Helpers;
 
 namespace Orchestrate.Net.Tests
 {
 	[TestFixture]
     public class KeyValueTests
     {
-        const string ApiKey = "<API KEY>";
-        private const string CollectionName = "KeyValueTestCollection";
+	      private const string CollectionName = "KeyValueTestCollection";
         private Orchestrate _orchestrate;
 
 		[TestFixtureSetUp]
-        public static void ClassInitialize(TestContext context)
+        public static void ClassInitialize()
         {
-            var orchestrate = new Orchestrate(ApiKey);
+					var orchestrate = new Orchestrate(TestHelper.ApiKey);
             var item = new TestData { Id = 1, Value = "Inital Test Item" };
 
             orchestrate.CreateCollection(CollectionName, "1", item);
@@ -23,14 +23,14 @@ namespace Orchestrate.Net.Tests
 		[TestFixtureTearDown]
         public static void ClassCleanUp()
         {
-            var orchestrate = new Orchestrate(ApiKey);
+					var orchestrate = new Orchestrate(TestHelper.ApiKey);
             orchestrate.DeleteCollection(CollectionName);
         }
 
 		[SetUp]
         public void TestInitialize()
         {
-            _orchestrate = new Orchestrate(ApiKey);
+					_orchestrate = new Orchestrate(TestHelper.ApiKey);
         }
 
 		[TearDown]

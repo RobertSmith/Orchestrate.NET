@@ -39,11 +39,13 @@
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CollectionTests.cs" />
     <Compile Include="EventTests.cs" />
     <Compile Include="GraphTests.cs" />
+    <Compile Include="Helpers\TestHelper.cs" />
     <Compile Include="KeyValueTests.cs" />
     <Compile Include="ListTests.cs" />
     <Compile Include="RefTests.cs" />
@@ -53,6 +55,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="appSettings.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

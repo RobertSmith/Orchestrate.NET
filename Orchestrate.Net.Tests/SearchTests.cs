@@ -1,19 +1,19 @@
 ﻿using System;
 using NUnit.Framework;
+using Orchestrate.Net.Tests.Helpers;
 
 namespace Orchestrate.Net.Tests
 {
 	[TestFixture]
     public class SearchTests
     {
-        const string ApiKey = "<API KEY>";
-        private const string CollectionName = "SearchTestCollection";
+		    private const string CollectionName = "SearchTestCollection";
         private Orchestrate _orchestrate;
 
 		[TestFixtureSetUp]
-        public static void ClassInitialize(TestContext context)
+        public static void ClassInitialize()
         {
-            var orchestrate = new Orchestrate(ApiKey);
+					var orchestrate = new Orchestrate(TestHelper.ApiKey);
 
             var item = new TestData { Id = 1, Value = "Inital Test Item" };
             var item2 = new TestData { Id = 2, Value = "Inital Test Item #2" };
@@ -27,14 +27,14 @@ namespace Orchestrate.Net.Tests
 		[TestFixtureTearDown]
         public static void ClassCleanUp()
         {
-            var orchestrate = new Orchestrate(ApiKey);
+            var orchestrate = new Orchestrate(TestHelper.ApiKey);
             orchestrate.DeleteCollection(CollectionName);
         }
 
 		[SetUp]
         public void TestInitialize()
         {
-            _orchestrate = new Orchestrate(ApiKey);
+					_orchestrate = new Orchestrate(TestHelper.ApiKey);
         }
 
 		[TearDown]

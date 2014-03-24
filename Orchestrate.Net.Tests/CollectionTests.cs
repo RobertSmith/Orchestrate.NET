@@ -1,20 +1,20 @@
 ﻿using System;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using Orchestrate.Net.Tests.Helpers;
 
 namespace Orchestrate.Net.Tests
 {
 	[TestFixture]
     public class CollectionTests
     {
-        const string ApiKey = "<API KEY>";
-
+		
 		[Test]
         public void CreateCollectionWithItemAsObject()
         {
             // Set up
             const string collectionName = "TestCollection01";
-            var orchestration = new Orchestrate(ApiKey);
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
             var item = new TestData {Id = 1, Value = "CreateCollectionWithItemAsObject"};
 
             try
@@ -38,7 +38,7 @@ namespace Orchestrate.Net.Tests
         {
             // Set up
             const string collectionName = "TestCollection02";
-            var orchestration = new Orchestrate(ApiKey);
+						var orchestration = new Orchestrate(TestHelper.ApiKey);
             var item = new TestData { Id = 1, Value = "CreateCollectionWithItemAsJsonString" };
             var json = JsonConvert.SerializeObject(item);
 
@@ -63,7 +63,7 @@ namespace Orchestrate.Net.Tests
         {
             // Set up
             const string collectionName = "";
-            var orchestration = new Orchestrate(ApiKey);
+						var orchestration = new Orchestrate(TestHelper.ApiKey);
             var item = new TestData { Id = 1, Value = "CreateCollectionNoCollectionName" };
 
             try
@@ -84,7 +84,7 @@ namespace Orchestrate.Net.Tests
         {
             // Set up
             const string collectionName = "TestCollection04";
-            var orchestration = new Orchestrate(ApiKey);
+						var orchestration = new Orchestrate(TestHelper.ApiKey);
             var item = new TestData { Id = 1, Value = "CreateCollectionNoCollectionName" };
 
             try
@@ -106,7 +106,7 @@ namespace Orchestrate.Net.Tests
         {
             // Set up
             const string collectionName = "TestCollection05";
-            var orchestration = new Orchestrate(ApiKey);
+						var orchestration = new Orchestrate(TestHelper.ApiKey);
 
             try
             {
@@ -127,7 +127,7 @@ namespace Orchestrate.Net.Tests
         {
             // Set up
             const string collectionName = "TestCollection03";
-            var orchestration = new Orchestrate(ApiKey);
+						var orchestration = new Orchestrate(TestHelper.ApiKey);
             var item = new TestData { Id = 1, Value = "DeleteCollection" };
             var json = JsonConvert.SerializeObject(item);
 
@@ -148,7 +148,7 @@ namespace Orchestrate.Net.Tests
         public void DeleteNonExistantCollection()
         {
             // Set up
-            var orchestration = new Orchestrate(ApiKey);
+					var orchestration = new Orchestrate(TestHelper.ApiKey);
 
             try
             {
@@ -167,7 +167,7 @@ namespace Orchestrate.Net.Tests
         {
             // Set up
             const string collectionName = "TestCollection04";
-            var orchestration = new Orchestrate(ApiKey);
+						var orchestration = new Orchestrate(TestHelper.ApiKey);
             var item = new TestData { Id = 1, Value = "DeleteCollection" };
             var json = JsonConvert.SerializeObject(item);
 
