@@ -1,4 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<applicationSettings>
-	<add key="Orchestrate:ApiKey" value="YOUR-API-KEY-GOES-HERE"/>
-</applicationSettings>
