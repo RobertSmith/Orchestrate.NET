@@ -63,4 +63,12 @@ Are all supported, see the docs on the Orchestrate.io website for details.
 #### Building the source
 
 For running tests, ensure to rename `appSettings.config.sample` to `appSettings.config` and 
-set your own Api Key in the test project. 
+set your own Api Key in the `appSettings.config` file or create a file by name `appSettings.config` in the path `Orchestrate.Net.Tests/` with the content below and replace **YOUR-API-KEY-GOES-HERE** with your api key.
+
+A sample `appSettings.config` looks like:
+
+`<?xml version="1.0" encoding="utf-8" ?>  `  
+`<applicationSettings>  `  
+ `<add key="Orchestrate:ApiKey" value="YOUR-API-KEY-GOES-HERE"/>  `  
+`</applicationSettings>  `
+
