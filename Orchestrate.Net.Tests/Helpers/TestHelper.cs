@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 
 namespace Orchestrate.Net.Tests.Helpers
 {
@@ -9,8 +10,14 @@ namespace Orchestrate.Net.Tests.Helpers
 		{
 			get
 			{
-				return _apiKey ?? (_apiKey = ConfigurationManager.AppSettings["Orchestrate:ApiKey"]);
+				return _apiKey ?? 
+					(
+						_apiKey = Environment.GetEnvironmentVariable("OrchestrateApiKey") ?? 
+											ConfigurationManager.AppSettings["Orchestrate:ApiKey"]
+					);
 			}
 		}
+
+		
 	}
 }

@@ -62,4 +62,9 @@ Are all supported, see the docs on the Orchestrate.io website for details.
 
 #### Building the source
 
-For running tests, be sure to update the `app.config` file in the path `Orchestrate.Net.Tests/` and replace **YOUR-API-KEY-GOES-HERE** with your api key.
+For running tests follow either of the approaches
+  - update the `app.config` file in the path `Orchestrate.Net.Tests/` and replace **YOUR-API-KEY-GOES-HERE** with your api key (remember to unset this value before you commit/push your code to repository).
+                                                                                                          
+  - set the environment variable `OrchestrateApiKey` value to match your api key (if you set this after you have opened Visual Studio, please restart Visual Studio, otherwise the environment variable will not be available).
+
+  If both the above settings are set, then the value set in environment variable will be used.
