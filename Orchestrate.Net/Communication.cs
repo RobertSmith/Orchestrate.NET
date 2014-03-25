@@ -1,12 +1,23 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Orchestrate.Net
 {
     internal static class Communication
     {
         internal static BaseResult CallWebRequest(string apiKey, string url, string method, string jsonPayload, string ifMatch = null, bool ifNoneMatch = false)
+        {
+            return CallOrchestrate(apiKey, url, method, jsonPayload, ifMatch, ifNoneMatch);
+        }
+
+        internal static Task<BaseResult> CallWebRequestAsync(string apiKey, string url, string method, string jsonPayload, string ifMatch = null, bool ifNoneMatch = false)
+        {
+            return Task.Run(() => CallOrchestrate(apiKey, url, method, jsonPayload, ifMatch, ifNoneMatch));
+        }
+
+        private static BaseResult CallOrchestrate(string apiKey, string url, string method, string jsonPayload, string ifMatch, bool ifNoneMatch)
         {
             var request = WebRequest.Create(url);
             request.Method = method;
