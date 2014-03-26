@@ -272,7 +272,7 @@ namespace Orchestrate.Net
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
 
             if (limit < 1 || limit > 100)
-                throw new ArgumentOutOfRangeException("limit", limit, "limit must be between 1 and 100");
+                throw new ArgumentOutOfRangeException("limit", "limit must be between 1 and 100");
 
             if (!string.IsNullOrEmpty(startKey) && !string.IsNullOrEmpty(afterKey))
                 throw new ArgumentException("May only specify either a startKey or an afterKey", "startKey");
@@ -330,10 +330,10 @@ namespace Orchestrate.Net
                 throw new ArgumentNullException("query", "query cannot be null or empty");
 
             if (limit < 1 || limit > 100)
-                throw new ArgumentOutOfRangeException("limit", limit, "limit must be between 1 and 100");
+                throw new ArgumentOutOfRangeException("limit", "limit must be between 1 and 100");
 
             if (offset < 0)
-                throw new ArgumentOutOfRangeException("offset", offset, "offset must be at least 0");
+                throw new ArgumentOutOfRangeException("offset", "offset must be at least 0");
 
             var url = UrlBase + collectionName + "?query=" + query + "&limit=" + limit + "&offset=" + offset;
 
@@ -776,7 +776,7 @@ namespace Orchestrate.Net
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
 
             if (limit < 1 || limit > 100)
-                throw new ArgumentOutOfRangeException("limit", limit, "limit must be between 1 and 100");
+                throw new ArgumentOutOfRangeException("limit", "limit must be between 1 and 100");
 
             if (!string.IsNullOrEmpty(startKey) && !string.IsNullOrEmpty(afterKey))
                 throw new ArgumentException("May only specify either a startKey or an afterKey", "startKey");
@@ -803,10 +803,10 @@ namespace Orchestrate.Net
                 throw new ArgumentNullException("query", "query cannot be null or empty");
 
             if (limit < 1 || limit > 100)
-                throw new ArgumentOutOfRangeException("limit", limit, "limit must be between 1 and 100");
+                throw new ArgumentOutOfRangeException("limit", "limit must be between 1 and 100");
 
             if (offset < 0)
-                throw new ArgumentOutOfRangeException("offset", offset, "offset must be at least 0");
+                throw new ArgumentOutOfRangeException("offset", "offset must be at least 0");
 
             var url = UrlBase + collectionName + "?query=" + query + "&limit=" + limit + "&offset=" + offset;
             var result = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);

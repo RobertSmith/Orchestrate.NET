@@ -55,10 +55,11 @@ namespace Orchestrate.Net.Tests
             try
             {
                 _orchestrate.Get(CollectionName, "9999");
-            }
+						}
             catch (Exception ex)
             {
-                Assert.IsTrue(ex.Message.Contains("404"));
+							//TODO: (CV) Should change this to rely on the result rather than exception.
+                Assert.IsTrue(ex.ToString().Contains("404"));
             }
         }
 
@@ -384,7 +385,8 @@ namespace Orchestrate.Net.Tests
             }
             catch (Exception ex)
             {
-                Assert.IsTrue(ex.Message.Contains("404"));
+							//TODO: (CV) Should change this to rely on the result rather than exception.
+                Assert.IsTrue(ex.ToString().Contains("404"));
             }
         }
 

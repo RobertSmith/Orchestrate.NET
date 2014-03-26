@@ -1,89 +1,74 @@
 ﻿using System;
-using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Orchestrate.Net
 {
-    internal static class Communication
-    {
-        internal static BaseResult CallWebRequest(string apiKey, string url, string method, string jsonPayload, string ifMatch = null, bool ifNoneMatch = false)
-        {
-            return CallOrchestrate(apiKey, url, method, jsonPayload, ifMatch, ifNoneMatch);
-        }
+	internal static class Communication
+	{
+		internal static BaseResult CallWebRequest(string apiKey, string url, string method, string jsonPayload, string ifMatch = null, bool ifNoneMatch = false)
+		{
+			return CallOrchestrate(apiKey, url, method, jsonPayload, ifMatch, ifNoneMatch);
+		}
 
-        internal static Task<BaseResult> CallWebRequestAsync(string apiKey, string url, string method, string jsonPayload, string ifMatch = null, bool ifNoneMatch = false)
-        {
-            return Task.Run(() => CallOrchestrate(apiKey, url, method, jsonPayload, ifMatch, ifNoneMatch));
-        }
+		internal static Task<BaseResult> CallWebRequestAsync(string apiKey, string url, string method, string jsonPayload, string ifMatch = null, bool ifNoneMatch = false)
+		{
+			var httpMethod = method.ToHttpMethod();
+			var httpClient = new HttpClient();
+			var request = new HttpRequestMessage(httpMethod, url);
 
-        private static BaseResult CallOrchestrate(string apiKey, string url, string method, string jsonPayload, string ifMatch, bool ifNoneMatch)
-        {
-            var request = WebRequest.Create(url);
-            request.Method = method;
-            request.Credentials = GetCredentials(apiKey, url);
-            request.ContentType = "application/json";
+			if (jsonPayload != null && httpMethod.CanHaveContent())
+			{
+				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+			}
+			if (!string.IsNullOrEmpty(ifMatch))
+			{
+				request.Headers.Add(HttpRequestHeader.IfMatch.ToString(), ifMatch);
+			}
+			else if (ifNoneMatch)
+			{
+				request.Headers.Add(HttpRequestHeader.IfNoneMatch.ToString(), "\"*\"");
+			}
 
-            if (!string.IsNullOrEmpty(ifMatch))
-                request.Headers.Add(HttpRequestHeader.IfMatch, ifMatch);
-            else if (ifNoneMatch)
-                request.Headers.Add(HttpRequestHeader.IfNoneMatch, "\"*\"");
+			var authorization =
+						Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}:", apiKey)));
 
-            if (!string.IsNullOrEmpty(jsonPayload))
-            {
-                var data = StringToByteArray(jsonPayload);
+			request.Headers.Authorization = new AuthenticationHeaderValue("Basic", authorization);
+			return httpClient.SendAsync(request).ContinueWith<BaseResult>(BuildResult);
+		}
 
-                request.ContentLength = data.Length;
-                using (var dataStream = request.GetRequestStream())
-                {
-                    dataStream.Write(data, 0, data.Length);
-                }
-            }
+		private static BaseResult BuildResult(Task<HttpResponseMessage> responseMessageTask)
+		{
+			var response = responseMessageTask.Result;
+			response.EnsureSuccessStatusCode();
 
-            var result = new BaseResult();
+			var payload = response.Content.ReadAsStringAsync().Result;
+			var location = (response.Headers.Location != null) ? response.Headers.Location.ToString() : string.Empty;
 
-            using (var response = (HttpWebResponse)request.GetResponse())
-            {
-                result.Location = response.Headers["location"];
-                result.ETag = response.Headers["eTag"];
+			var eTag = (response.Headers.ETag != null) ? response.Headers.ETag.Tag : string.Empty;
 
-                Stream dataStream = response.GetResponseStream();
+			var toReturn = new BaseResult
+			{
+				Location = location,
+				ETag = eTag,
+				Payload = payload
+			};
+			return toReturn;
+		}
 
-                if (dataStream != null)
-                {
-                    var reader = new StreamReader(dataStream);
-                    result.Payload = reader.ReadToEnd();
-                    reader.Close();
-                }
+		private static BaseResult CallOrchestrate(string apiKey, string url, string method, string jsonPayload, string ifMatch, bool ifNoneMatch)
+		{
+			return CallWebRequestAsync(apiKey, url, method, jsonPayload, ifMatch, ifNoneMatch).Result;
+		}
 
-                if (dataStream != null)
-                    dataStream.Close();
-            }
-
-            return result;
-        }
-
-        private static CredentialCache GetCredentials(string apiKey, string url)
-        {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
-
-            var credentialCache = new CredentialCache
-            {
-                {
-                    new Uri(url),
-                    "Basic",
-                    new NetworkCredential(apiKey, String.Empty)
-                }
-            };
-
-            return credentialCache;
-        }
-
-        private static byte[] StringToByteArray(string str)
-        {
-            var bytes = new byte[str.Length * sizeof(char)];
-            Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
-        }
-    }
+		private static byte[] StringToByteArray(string str)
+		{
+			var bytes = new byte[str.Length * sizeof(char)];
+			Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+			return bytes;
+		}
+	}
 }
