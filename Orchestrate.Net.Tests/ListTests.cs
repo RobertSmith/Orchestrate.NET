@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Orchestrate.Net.Tests.Helpers;
 
@@ -53,6 +54,13 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
+        public void ListAsync()
+        {
+            var result = _orchestrate.ListAsync(CollectionName, 10, null, null).Result;
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
         public void ListWithStartKey()
         {
             var result = _orchestrate.List(CollectionName, 10, "1", null);
@@ -60,9 +68,23 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
+        public void ListWithStartKeyAsync()
+        {
+            var result = _orchestrate.ListAsync(CollectionName, 10, "1", null).Result;
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
         public void ListWithAfterKey()
         {
             var result = _orchestrate.List(CollectionName, 10, null, "1");
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void ListWithAfterKeyAsync()
+        {
+            var result = _orchestrate.ListAsync(CollectionName, 10, null, "1").Result;
             Assert.IsTrue(result.Count > 0);
         }
 
@@ -76,6 +98,23 @@ namespace Orchestrate.Net.Tests
             catch (ArgumentException ex)
             {
                 Assert.IsTrue(ex.ParamName == "startKey");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void ListWithStartKeyAndAfterKeyAsync()
+        {
+            try
+            {
+                var result = _orchestrate.ListAsync(CollectionName, 10, "1", "2").Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentException;
+                Assert.IsTrue(inner.ParamName == "startKey");
                 return;
             }
 
@@ -99,6 +138,23 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
+        public void ListWithNoCollectionNameAsync()
+        {
+            try
+            {
+                var result = _orchestrate.ListAsync(string.Empty, 10, null, null).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
         public void ListWithLimitOutOfBounds()
         {
             try
@@ -108,6 +164,23 @@ namespace Orchestrate.Net.Tests
             catch (ArgumentOutOfRangeException ex)
             {
                 Assert.IsTrue(ex.ParamName == "limit");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void ListWithLimitOutOfBoundsAsync()
+        {
+            try
+            {
+                var result = _orchestrate.ListAsync(CollectionName, -110, null, null).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentOutOfRangeException;
+                Assert.IsTrue(inner.ParamName == "limit");
                 return;
             }
 
