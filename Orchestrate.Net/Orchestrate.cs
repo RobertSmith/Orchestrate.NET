@@ -814,7 +814,7 @@ namespace Orchestrate.Net
             return JsonConvert.DeserializeObject<SearchResult>(result.Payload);
         }
 
-        public async Task<EventResultList> GetEventsAsync(string collectionName, string key, string type, DateTime? start, DateTime? end)
+        public async Task<EventResultList> GetEventsAsync(string collectionName, string key, string type, DateTime? start = null, DateTime? end = null)
         {
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");

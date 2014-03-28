@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Orchestrate.Net.Tests.Helpers;
 
@@ -46,7 +47,15 @@ namespace Orchestrate.Net.Tests
 			Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
 		}
 
-		[Test]
+        [Test]
+        public void PutEventNowTimeStampAsync()
+        {
+            var result = _orchestrate.PutEventAsync(CollectionName, "1", "comment", DateTime.UtcNow, "This is the PutEventNowTimeStamp comment.").Result;
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
 		public void PutEventNoTimeStamp()
 		{
 			var result = _orchestrate.PutEvent(CollectionName, "1", "comment", null, "This is the PutEventNoTimeStamp comment.");
@@ -54,7 +63,15 @@ namespace Orchestrate.Net.Tests
 			Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
 		}
 
-		[Test]
+        [Test]
+        public void PutEventNoTimeStampAsync()
+        {
+            var result = _orchestrate.PutEventAsync(CollectionName, "1", "comment", null, "This is the PutEventNoTimeStamp comment.").Result;
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
 		public void PutEventWithNoCollectionName()
 		{
 			try
@@ -70,7 +87,24 @@ namespace Orchestrate.Net.Tests
 			Assert.Fail("No Exception Thrown");
 		}
 
-		[Test]
+        [Test]
+        public void PutEventWithNoCollectionNameAsync()
+        {
+            try
+            {
+                var result = _orchestrate.PutEventAsync(string.Empty, "1", "comment", null, "This is the PutEventWithNoCollectionName comment.").Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
 		public void PutEventWithNoKey()
 		{
 			try
@@ -86,7 +120,24 @@ namespace Orchestrate.Net.Tests
 			Assert.Fail("No Exception Thrown");
 		}
 
-		[Test]
+        [Test]
+        public void PutEventWithNoKeyAsync()
+        {
+            try
+            {
+                var result = _orchestrate.PutEventAsync(CollectionName, string.Empty, "comment", null, "This is the PutEventWithNoKey comment.").Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "key");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
 		public void PutEventWithNoType()
 		{
 			try
@@ -102,7 +153,24 @@ namespace Orchestrate.Net.Tests
 			Assert.Fail("No Exception Thrown");
 		}
 
-		[Test]
+        [Test]
+        public void PutEventWithNoTypeAsync()
+        {
+            try
+            {
+                var result = _orchestrate.PutEventAsync(CollectionName, "1", string.Empty, null, "This is the PutEventWithNoType comment.").Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "type");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
 		public void GetEventsNoStartEnd()
 		{
 			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsNoStartEnd comment.");
@@ -111,7 +179,16 @@ namespace Orchestrate.Net.Tests
 			Assert.IsTrue(result.Count > 0);
 		}
 
-		[Test]
+        [Test]
+        public void GetEventsNoStartEndAsync()
+        {
+            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsNoStartEnd comment.");
+            var result = _orchestrate.GetEventsAsync(CollectionName, "1", "comment").Result;
+
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
 		public void GetEventsWithStartDate()
 		{
 			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithStartDate comment.");
@@ -120,7 +197,16 @@ namespace Orchestrate.Net.Tests
 			Assert.IsTrue(result.Count > 0);
 		}
 
-		[Test]
+        [Test]
+        public void GetEventsWithStartDateAsync()
+        {
+            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithStartDate comment.");
+            var result = _orchestrate.GetEventsAsync(CollectionName, "1", "comment", DateTime.UtcNow.AddHours(-1)).Result;
+
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
 		public void GetEventsWithEndDate()
 		{
 			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithEndDate comment.");
@@ -129,7 +215,16 @@ namespace Orchestrate.Net.Tests
 			Assert.IsTrue(result.Count > 0);
 		}
 
-		[Test]
+        [Test]
+        public void GetEventsWithEndDateAsync()
+        {
+            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithEndDate comment.");
+            var result = _orchestrate.GetEventsAsync(CollectionName, "1", "comment", null, DateTime.UtcNow.AddHours(1)).Result;
+
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
 		public void GetEventsWithStartAndEndDate()
 		{
 			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithStartAndEndDate comment.");
@@ -138,7 +233,16 @@ namespace Orchestrate.Net.Tests
 			Assert.IsTrue(result.Count > 0);
 		}
 
-		[Test]
+        [Test]
+        public void GetEventsWithStartAndEndDateAsync()
+        {
+            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithStartAndEndDate comment.");
+            var result = _orchestrate.GetEventsAsync(CollectionName, "1", "comment", DateTime.UtcNow.AddHours(-1), DateTime.UtcNow.AddHours(1)).Result;
+
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
 		public void GetEventsWithNoCollectionName()
 		{
 			try
@@ -154,7 +258,24 @@ namespace Orchestrate.Net.Tests
 			Assert.Fail("No Exception Thrown");
 		}
 
-		[Test]
+        [Test]
+        public void GetEventsWithNoCollectionNameAsync()
+        {
+            try
+            {
+                var result = _orchestrate.GetEventsAsync(string.Empty, "1", "comment").Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
 		public void GetEventsWithNoKey()
 		{
 			try
@@ -170,7 +291,24 @@ namespace Orchestrate.Net.Tests
 			Assert.Fail("No Exception Thrown");
 		}
 
-		[Test]
+        [Test]
+        public void GetEventsWithNoKeyAsync()
+        {
+            try
+            {
+                var result = _orchestrate.GetEventsAsync(CollectionName, string.Empty, "comment").Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "key");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
 		public void GetEventsWithNoType()
 		{
 			try
@@ -185,5 +323,22 @@ namespace Orchestrate.Net.Tests
 
 			Assert.Fail("No Exception Thrown");
 		}
-	}
+
+        [Test]
+        public void GetEventsWithNoTypeAsync()
+        {
+            try
+            {
+                var result = _orchestrate.GetEventsAsync(CollectionName, "1", string.Empty).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "type");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+    }
 }
