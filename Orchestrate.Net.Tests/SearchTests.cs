@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Orchestrate.Net.Tests.Helpers;
 
@@ -52,6 +53,14 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
+        public void SearchSuccessAsync()
+        {
+            var result = _orchestrate.SearchAsync(CollectionName, "*").Result;
+
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
         public void SearchNotFound()
         {
             var result = _orchestrate.Search(CollectionName, "Id:9999");
@@ -60,9 +69,25 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
+        public void SearchNotFoundAsync()
+        {
+            var result = _orchestrate.SearchAsync(CollectionName, "Id:9999").Result;
+
+            Assert.IsTrue(result.Count == 0);
+        }
+
+        [Test]
         public void SearchBadKey()
         {
             var result = _orchestrate.Search(CollectionName, "NonExistantKey:9999");
+
+            Assert.IsTrue(result.Count == 0);
+        }
+
+        [Test]
+        public void SearchBadKeyAsync()
+        {
+            var result = _orchestrate.SearchAsync(CollectionName, "NonExistantKey:9999").Result;
 
             Assert.IsTrue(result.Count == 0);
         }
@@ -77,6 +102,23 @@ namespace Orchestrate.Net.Tests
             catch (ArgumentNullException ex)
             {
                 Assert.IsTrue(ex.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void SearchWithNoCollectionNameAsync()
+        {
+            try
+            {
+                var result = _orchestrate.SearchAsync(string.Empty, "9999").Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "collectionName");
                 return;
             }
 
@@ -100,6 +142,23 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
+        public void SearchWithNoQueryAsync()
+        {
+            try
+            {
+                var result = _orchestrate.SearchAsync(CollectionName, string.Empty).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "query");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
         public void SearchWithBadLimit()
         {
             try
@@ -116,6 +175,23 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
+        public void SearchWithBadLimitAsync()
+        {
+            try
+            {
+                var result = _orchestrate.SearchAsync(CollectionName, "*", -100).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentOutOfRangeException;
+                Assert.IsTrue(inner.ParamName == "limit");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
         public void SearchWithBadOffset()
         {
             try
@@ -125,6 +201,23 @@ namespace Orchestrate.Net.Tests
             catch (ArgumentOutOfRangeException ex)
             {
                 Assert.IsTrue(ex.ParamName == "offset");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void SearchWithBadOffsetAsync()
+        {
+            try
+            {
+                var result = _orchestrate.SearchAsync(CollectionName, "*", 10, -1).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentOutOfRangeException;
+                Assert.IsTrue(inner.ParamName == "offset");
                 return;
             }
 

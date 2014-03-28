@@ -794,7 +794,7 @@ namespace Orchestrate.Net
             return JsonConvert.DeserializeObject<ListResult>(result.Payload);
         }
 
-        public async Task<SearchResult> SearchAsync(string collectionName, string query, int limit, int offset)
+        public async Task<SearchResult> SearchAsync(string collectionName, string query, int limit = 10, int offset = 0)
         {
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");

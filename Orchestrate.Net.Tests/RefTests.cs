@@ -53,6 +53,17 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
+        public void GetByRefAsync()
+        {
+            var list = _orchestrate.List(CollectionName, 10, null, null);
+            var match = list.Results.Single(x => x.Path.Key == "1");
+
+            var result = _orchestrate.GetAsync(CollectionName, "1", match.Path.Ref).Result;
+
+            Assert.IsTrue(result.Value != null);
+        }
+
+        [Test]
         public void GetByRefWithNoCollectionName()
         {
             try
@@ -62,6 +73,23 @@ namespace Orchestrate.Net.Tests
             catch (ArgumentNullException ex)
             {
                 Assert.IsTrue(ex.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void GetByRefWithNoCollectionNameAsync()
+        {
+            try
+            {
+                var result = _orchestrate.GetAsync(string.Empty, "9999", "refernce#").Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "collectionName");
                 return;
             }
 
@@ -85,6 +113,23 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
+        public void GetByRefWithNoKeyAsync()
+        {
+            try
+            {
+                var result = _orchestrate.GetAsync(CollectionName, string.Empty, "refernce#").Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "key");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
         public void GetByRefWithNoRef()
         {
             try
@@ -94,6 +139,23 @@ namespace Orchestrate.Net.Tests
             catch (ArgumentNullException ex)
             {
                 Assert.IsTrue(ex.ParamName == "reference");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void GetByRefWithNoRefAsync()
+        {
+            try
+            {
+                var result = _orchestrate.GetAsync(CollectionName, "9999", string.Empty).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "reference");
                 return;
             }
 
