@@ -17,7 +17,5 @@ namespace Orchestrate.Net.Tests.Helpers
 					);
 			}
 		}
-
-		
 	}
 }

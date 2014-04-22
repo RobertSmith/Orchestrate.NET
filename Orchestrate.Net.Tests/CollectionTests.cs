@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using Orchestrate.Net.Tests.Helpers;
@@ -10,7 +9,6 @@ namespace Orchestrate.Net.Tests
 	[TestFixture]
     public class CollectionTests
     {
-		
 		[Test]
         public void CreateCollectionWithItemAsObject()
         {
