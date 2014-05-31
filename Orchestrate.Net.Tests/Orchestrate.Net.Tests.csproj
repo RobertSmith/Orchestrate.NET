@@ -82,7 +82,7 @@
     <ProjectReference Include="..\Orchestrate.Net\Orchestrate.Net.csproj">
       <Project>{1A65F6D2-EB27-4108-BBAB-B44E54CB0AE5}</Project>
       <Name>Orchestrate.Net</Name>
-      <Private>False</Private>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
