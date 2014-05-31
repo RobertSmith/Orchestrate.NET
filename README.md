@@ -3,6 +3,7 @@ Orchestrate.NET
 
 .NET Library for Orchestrate
 
+[![Build status](https://ci.appveyor.com/api/projects/status/c40ejfyfohxjblet)](https://ci.appveyor.com/project/RobertSmith/orchestrate-net)
 
 Installation
 ------------
