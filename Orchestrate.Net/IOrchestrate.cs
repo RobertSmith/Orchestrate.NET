@@ -25,7 +25,8 @@ namespace Orchestrate.Net
         SearchResult Search(string collectionName, string query, int limit, int offset);
 
         EventResultList GetEvents(string collectionName, string key, string type, DateTime? start, DateTime? end);
-        Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, string msg);
+        Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, string item);
+        Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, object item);
 
         ListResult GetGraph(string collectionName, string key, string[] kinds);
         Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
@@ -51,7 +52,8 @@ namespace Orchestrate.Net
         Task<SearchResult> SearchAsync(string collectionName, string query, int limit, int offset);
 
         Task<EventResultList> GetEventsAsync(string collectionName, string key, string type, DateTime? start, DateTime? end);
-        Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime? timeStamp, string msg);
+        Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime? timeStamp, string item);
+        Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime? timeStamp, object item);
 
         Task<ListResult> GetGraphAsync(string collectionName, string key, string[] kinds);
         Task<Result> PutGraphAsync(string collectionName, string key, string kind, string toCollectionName, string toKey);

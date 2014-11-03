@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
+using Newtonsoft.Json;
 using Orchestrate.Net.Tests.Helpers;
 
 namespace Orchestrate.Net.Tests
@@ -40,17 +41,39 @@ namespace Orchestrate.Net.Tests
 		}
 
 		[Test]
-		public void PutEventNowTimeStamp()
+		public void PutEventNowTimeStampAsObject()
 		{
-			var result = _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the PutEventNowTimeStamp comment.");
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+            var result = _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
 
 			Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
 		}
 
         [Test]
-        public void PutEventNowTimeStampAsync()
+        public void PutEventNowTimeStampAsString()
         {
-            var result = _orchestrate.PutEventAsync(CollectionName, "1", "comment", DateTime.UtcNow, "This is the PutEventNowTimeStamp comment.").Result;
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+            var str = JsonConvert.SerializeObject(item);
+            var result = _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, str);
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
+        public void PutEventNowTimeStampAsyncAsObject()
+        {
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+            var result = _orchestrate.PutEventAsync(CollectionName, "1", "comment", DateTime.UtcNow, item).Result;
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
+        public void PutEventNowTimeStampAsyncAsString()
+        {
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+            var str = JsonConvert.SerializeObject(item);
+            var result = _orchestrate.PutEventAsync(CollectionName, "1", "comment", DateTime.UtcNow, str).Result;
 
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
         }
@@ -58,7 +81,8 @@ namespace Orchestrate.Net.Tests
         [Test]
 		public void PutEventNoTimeStamp()
 		{
-			var result = _orchestrate.PutEvent(CollectionName, "1", "comment", null, "This is the PutEventNoTimeStamp comment.");
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+            var result = _orchestrate.PutEvent(CollectionName, "1", "comment", null, item);
 
 			Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
 		}
@@ -66,7 +90,8 @@ namespace Orchestrate.Net.Tests
         [Test]
         public void PutEventNoTimeStampAsync()
         {
-            var result = _orchestrate.PutEventAsync(CollectionName, "1", "comment", null, "This is the PutEventNoTimeStamp comment.").Result;
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+            var result = _orchestrate.PutEventAsync(CollectionName, "1", "comment", null, item).Result;
 
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
         }
@@ -76,7 +101,8 @@ namespace Orchestrate.Net.Tests
 		{
 			try
 			{
-				_orchestrate.PutEvent(string.Empty, "1", "comment", null, "This is the PutEventWithNoCollectionName comment.");
+                var item = new TestData { Id = 3, Value = "A successful object PUT" };
+				_orchestrate.PutEvent(string.Empty, "1", "comment", null, item);
 			}
 			catch (ArgumentNullException ex)
 			{
@@ -92,7 +118,8 @@ namespace Orchestrate.Net.Tests
         {
             try
             {
-                var result = _orchestrate.PutEventAsync(string.Empty, "1", "comment", null, "This is the PutEventWithNoCollectionName comment.").Result;
+                var item = new TestData { Id = 3, Value = "A successful object PUT" };
+                var result = _orchestrate.PutEventAsync(string.Empty, "1", "comment", null, item).Result;
             }
             catch (AggregateException ex)
             {
@@ -109,7 +136,8 @@ namespace Orchestrate.Net.Tests
 		{
 			try
 			{
-				_orchestrate.PutEvent(CollectionName, string.Empty, "comment", null, "This is the PutEventWithNoKey comment.");
+                var item = new TestData { Id = 3, Value = "A successful object PUT" };
+				_orchestrate.PutEvent(CollectionName, string.Empty, "comment", null, item);
 			}
 			catch (ArgumentNullException ex)
 			{
@@ -125,7 +153,8 @@ namespace Orchestrate.Net.Tests
         {
             try
             {
-                var result = _orchestrate.PutEventAsync(CollectionName, string.Empty, "comment", null, "This is the PutEventWithNoKey comment.").Result;
+                var item = new TestData { Id = 3, Value = "A successful object PUT" };
+                var result = _orchestrate.PutEventAsync(CollectionName, string.Empty, "comment", null, item).Result;
             }
             catch (AggregateException ex)
             {
@@ -142,7 +171,8 @@ namespace Orchestrate.Net.Tests
 		{
 			try
 			{
-				_orchestrate.PutEvent(CollectionName, "1", string.Empty, null, "This is the PutEventWithNoType comment.");
+                var item = new TestData { Id = 3, Value = "A successful object PUT" };
+				_orchestrate.PutEvent(CollectionName, "1", string.Empty, null, item);
 			}
 			catch (ArgumentNullException ex)
 			{
@@ -158,7 +188,8 @@ namespace Orchestrate.Net.Tests
         {
             try
             {
-                var result = _orchestrate.PutEventAsync(CollectionName, "1", string.Empty, null, "This is the PutEventWithNoType comment.").Result;
+                var item = new TestData { Id = 3, Value = "A successful object PUT" };
+                var result = _orchestrate.PutEventAsync(CollectionName, "1", string.Empty, null, item).Result;
             }
             catch (AggregateException ex)
             {
@@ -173,7 +204,8 @@ namespace Orchestrate.Net.Tests
         [Test]
 		public void GetEventsNoStartEnd()
 		{
-			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsNoStartEnd comment.");
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
 			var result = _orchestrate.GetEvents(CollectionName, "1", "comment");
 
 			Assert.IsTrue(result.Count > 0);
@@ -182,7 +214,8 @@ namespace Orchestrate.Net.Tests
         [Test]
         public void GetEventsNoStartEndAsync()
         {
-            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsNoStartEnd comment.");
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
             var result = _orchestrate.GetEventsAsync(CollectionName, "1", "comment").Result;
 
             Assert.IsTrue(result.Count > 0);
@@ -191,7 +224,8 @@ namespace Orchestrate.Net.Tests
         [Test]
 		public void GetEventsWithStartDate()
 		{
-			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithStartDate comment.");
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
 			var result = _orchestrate.GetEvents(CollectionName, "1", "comment", DateTime.UtcNow.AddHours(-1));
 
 			Assert.IsTrue(result.Count > 0);
@@ -200,7 +234,8 @@ namespace Orchestrate.Net.Tests
         [Test]
         public void GetEventsWithStartDateAsync()
         {
-            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithStartDate comment.");
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
             var result = _orchestrate.GetEventsAsync(CollectionName, "1", "comment", DateTime.UtcNow.AddHours(-1)).Result;
 
             Assert.IsTrue(result.Count > 0);
@@ -209,7 +244,8 @@ namespace Orchestrate.Net.Tests
         [Test]
 		public void GetEventsWithEndDate()
 		{
-			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithEndDate comment.");
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
 			var result = _orchestrate.GetEvents(CollectionName, "1", "comment", null, DateTime.UtcNow.AddHours(1));
 
 			Assert.IsTrue(result.Count > 0);
@@ -218,7 +254,8 @@ namespace Orchestrate.Net.Tests
         [Test]
         public void GetEventsWithEndDateAsync()
         {
-            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithEndDate comment.");
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
             var result = _orchestrate.GetEventsAsync(CollectionName, "1", "comment", null, DateTime.UtcNow.AddHours(1)).Result;
 
             Assert.IsTrue(result.Count > 0);
@@ -227,7 +264,8 @@ namespace Orchestrate.Net.Tests
         [Test]
 		public void GetEventsWithStartAndEndDate()
 		{
-			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithStartAndEndDate comment.");
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
 			var result = _orchestrate.GetEvents(CollectionName, "1", "comment", DateTime.UtcNow.AddHours(-1), DateTime.UtcNow.AddHours(1));
 
 			Assert.IsTrue(result.Count > 0);
@@ -236,7 +274,8 @@ namespace Orchestrate.Net.Tests
         [Test]
         public void GetEventsWithStartAndEndDateAsync()
         {
-            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, "This is the GetEventsWithStartAndEndDate comment.");
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
+            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
             var result = _orchestrate.GetEventsAsync(CollectionName, "1", "comment", DateTime.UtcNow.AddHours(-1), DateTime.UtcNow.AddHours(1)).Result;
 
             Assert.IsTrue(result.Count > 0);

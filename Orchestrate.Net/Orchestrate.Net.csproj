@@ -73,7 +73,6 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="IOrchestrate.cs" />
     <Compile Include="Models\BaseResult.cs" />
-    <Compile Include="Models\EventMessage.cs" />
     <Compile Include="Models\EventResult.cs" />
     <Compile Include="Models\EventResultList.cs" />
     <Compile Include="Models\ListResult.cs" />
