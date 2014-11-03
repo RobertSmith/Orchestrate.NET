@@ -6,48 +6,48 @@ using Orchestrate.Net.Tests.Helpers;
 
 namespace Orchestrate.Net.Tests
 {
-	[TestFixture]
-	public class EventTests
-	{
-		private const string CollectionName = "EventTestCollection";
-		private Orchestrate _orchestrate;
+    [TestFixture]
+    public class EventTests
+    {
+        private const string CollectionName = "EventTestCollection";
+        private Orchestrate _orchestrate;
 
-		[TestFixtureSetUp]
-		public static void ClassInitialize()
-		{
-			var orchestrate = new Orchestrate(TestHelper.ApiKey);
-			var item = new TestData { Id = 1, Value = "Inital Test Item" };
+        [TestFixtureSetUp]
+        public static void ClassInitialize()
+        {
+            var orchestrate = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData { Id = 1, Value = "Inital Test Item" };
 
-			orchestrate.CreateCollection(CollectionName, "1", item);
-		}
+            orchestrate.CreateCollection(CollectionName, "1", item);
+        }
 
-		[TestFixtureTearDown]
-		public static void ClassCleanUp()
-		{
-			var orchestrate = new Orchestrate(TestHelper.ApiKey);
-			orchestrate.DeleteCollection(CollectionName);
-		}
+        [TestFixtureTearDown]
+        public static void ClassCleanUp()
+        {
+            var orchestrate = new Orchestrate(TestHelper.ApiKey);
+            orchestrate.DeleteCollection(CollectionName);
+        }
 
-		[SetUp]
-		public void TestInitialize()
-		{
-			_orchestrate = new Orchestrate(TestHelper.ApiKey);
-		}
+        [SetUp]
+        public void TestInitialize()
+        {
+            _orchestrate = new Orchestrate(TestHelper.ApiKey);
+        }
 
-		[TearDown]
-		public void TestCleanup()
-		{
-			// nothing to see here...
-		}
+        [TearDown]
+        public void TestCleanup()
+        {
+            // nothing to see here...
+        }
 
-		[Test]
-		public void PutEventNowTimeStampAsObject()
-		{
+        [Test]
+        public void PutEventNowTimeStampAsObject()
+        {
             var item = new TestData { Id = 3, Value = "A successful object PUT" };
             var result = _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
 
-			Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
-		}
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
 
         [Test]
         public void PutEventNowTimeStampAsString()
@@ -79,13 +79,13 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-		public void PutEventNoTimeStamp()
-		{
+        public void PutEventNoTimeStamp()
+        {
             var item = new TestData { Id = 3, Value = "A successful object PUT" };
             var result = _orchestrate.PutEvent(CollectionName, "1", "comment", null, item);
 
-			Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
-		}
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
 
         [Test]
         public void PutEventNoTimeStampAsync()
@@ -97,21 +97,21 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-		public void PutEventWithNoCollectionName()
-		{
-			try
-			{
+        public void PutEventWithNoCollectionName()
+        {
+            try
+            {
                 var item = new TestData { Id = 3, Value = "A successful object PUT" };
-				_orchestrate.PutEvent(string.Empty, "1", "comment", null, item);
-			}
-			catch (ArgumentNullException ex)
-			{
-				Assert.IsTrue(ex.ParamName == "collectionName");
-				return;
-			}
+                _orchestrate.PutEvent(string.Empty, "1", "comment", null, item);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "collectionName");
+                return;
+            }
 
-			Assert.Fail("No Exception Thrown");
-		}
+            Assert.Fail("No Exception Thrown");
+        }
 
         [Test]
         public void PutEventWithNoCollectionNameAsync()
@@ -132,21 +132,21 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-		public void PutEventWithNoKey()
-		{
-			try
-			{
+        public void PutEventWithNoKey()
+        {
+            try
+            {
                 var item = new TestData { Id = 3, Value = "A successful object PUT" };
-				_orchestrate.PutEvent(CollectionName, string.Empty, "comment", null, item);
-			}
-			catch (ArgumentNullException ex)
-			{
-				Assert.IsTrue(ex.ParamName == "key");
-				return;
-			}
+                _orchestrate.PutEvent(CollectionName, string.Empty, "comment", null, item);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "key");
+                return;
+            }
 
-			Assert.Fail("No Exception Thrown");
-		}
+            Assert.Fail("No Exception Thrown");
+        }
 
         [Test]
         public void PutEventWithNoKeyAsync()
@@ -167,21 +167,21 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-		public void PutEventWithNoType()
-		{
-			try
-			{
+        public void PutEventWithNoType()
+        {
+            try
+            {
                 var item = new TestData { Id = 3, Value = "A successful object PUT" };
-				_orchestrate.PutEvent(CollectionName, "1", string.Empty, null, item);
-			}
-			catch (ArgumentNullException ex)
-			{
-				Assert.IsTrue(ex.ParamName == "type");
-				return;
-			}
+                _orchestrate.PutEvent(CollectionName, "1", string.Empty, null, item);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "type");
+                return;
+            }
 
-			Assert.Fail("No Exception Thrown");
-		}
+            Assert.Fail("No Exception Thrown");
+        }
 
         [Test]
         public void PutEventWithNoTypeAsync()
@@ -202,14 +202,14 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-		public void GetEventsNoStartEnd()
-		{
+        public void GetEventsNoStartEnd()
+        {
             var item = new TestData { Id = 3, Value = "A successful object PUT" };
-			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
-			var result = _orchestrate.GetEvents(CollectionName, "1", "comment");
+            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
+            var result = _orchestrate.GetEvents(CollectionName, "1", "comment");
 
-			Assert.IsTrue(result.Count > 0);
-		}
+            Assert.IsTrue(result.Count > 0);
+        }
 
         [Test]
         public void GetEventsNoStartEndAsync()
@@ -222,14 +222,14 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-		public void GetEventsWithStartDate()
-		{
+        public void GetEventsWithStartDate()
+        {
             var item = new TestData { Id = 3, Value = "A successful object PUT" };
-			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
-			var result = _orchestrate.GetEvents(CollectionName, "1", "comment", DateTime.UtcNow.AddHours(-1));
+            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
+            var result = _orchestrate.GetEvents(CollectionName, "1", "comment", DateTime.UtcNow.AddHours(-1));
 
-			Assert.IsTrue(result.Count > 0);
-		}
+            Assert.IsTrue(result.Count > 0);
+        }
 
         [Test]
         public void GetEventsWithStartDateAsync()
@@ -242,14 +242,14 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-		public void GetEventsWithEndDate()
-		{
+        public void GetEventsWithEndDate()
+        {
             var item = new TestData { Id = 3, Value = "A successful object PUT" };
-			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
-			var result = _orchestrate.GetEvents(CollectionName, "1", "comment", null, DateTime.UtcNow.AddHours(1));
+            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
+            var result = _orchestrate.GetEvents(CollectionName, "1", "comment", null, DateTime.UtcNow.AddHours(1));
 
-			Assert.IsTrue(result.Count > 0);
-		}
+            Assert.IsTrue(result.Count > 0);
+        }
 
         [Test]
         public void GetEventsWithEndDateAsync()
@@ -262,14 +262,14 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-		public void GetEventsWithStartAndEndDate()
-		{
+        public void GetEventsWithStartAndEndDate()
+        {
             var item = new TestData { Id = 3, Value = "A successful object PUT" };
-			_orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
-			var result = _orchestrate.GetEvents(CollectionName, "1", "comment", DateTime.UtcNow.AddHours(-1), DateTime.UtcNow.AddHours(1));
+            _orchestrate.PutEvent(CollectionName, "1", "comment", DateTime.UtcNow, item);
+            var result = _orchestrate.GetEvents(CollectionName, "1", "comment", DateTime.UtcNow.AddHours(-1), DateTime.UtcNow.AddHours(1));
 
-			Assert.IsTrue(result.Count > 0);
-		}
+            Assert.IsTrue(result.Count > 0);
+        }
 
         [Test]
         public void GetEventsWithStartAndEndDateAsync()
@@ -282,20 +282,20 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-		public void GetEventsWithNoCollectionName()
-		{
-			try
-			{
-				_orchestrate.GetEvents(string.Empty, "1", "comment");
-			}
-			catch (ArgumentNullException ex)
-			{
-				Assert.IsTrue(ex.ParamName == "collectionName");
-				return;
-			}
+        public void GetEventsWithNoCollectionName()
+        {
+            try
+            {
+                _orchestrate.GetEvents(string.Empty, "1", "comment");
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "collectionName");
+                return;
+            }
 
-			Assert.Fail("No Exception Thrown");
-		}
+            Assert.Fail("No Exception Thrown");
+        }
 
         [Test]
         public void GetEventsWithNoCollectionNameAsync()
@@ -315,20 +315,20 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-		public void GetEventsWithNoKey()
-		{
-			try
-			{
-				_orchestrate.GetEvents(CollectionName, string.Empty, "comment");
-			}
-			catch (ArgumentNullException ex)
-			{
-				Assert.IsTrue(ex.ParamName == "key");
-				return;
-			}
+        public void GetEventsWithNoKey()
+        {
+            try
+            {
+                _orchestrate.GetEvents(CollectionName, string.Empty, "comment");
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "key");
+                return;
+            }
 
-			Assert.Fail("No Exception Thrown");
-		}
+            Assert.Fail("No Exception Thrown");
+        }
 
         [Test]
         public void GetEventsWithNoKeyAsync()
@@ -348,20 +348,20 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-		public void GetEventsWithNoType()
-		{
-			try
-			{
-				_orchestrate.GetEvents(CollectionName, "1", string.Empty);
-			}
-			catch (ArgumentNullException ex)
-			{
-				Assert.IsTrue(ex.ParamName == "type");
-				return;
-			}
+        public void GetEventsWithNoType()
+        {
+            try
+            {
+                _orchestrate.GetEvents(CollectionName, "1", string.Empty);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "type");
+                return;
+            }
 
-			Assert.Fail("No Exception Thrown");
-		}
+            Assert.Fail("No Exception Thrown");
+        }
 
         [Test]
         public void GetEventsWithNoTypeAsync()
