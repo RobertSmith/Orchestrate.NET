@@ -125,6 +125,41 @@ namespace Orchestrate.Net
             };
         }
 
+        public Result Post(string collectionName, string item)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(item))
+                throw new ArgumentNullException("item", "item cannot be empty");
+
+            var url = UrlBase + collectionName;
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "POST", item);
+
+            var key = baseResult.Location.Remove(0, 15).Remove(16);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
+        public Result Post(string collectionName, object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+            return Post(collectionName, json);
+        }
+
         public Result Put(string collectionName, string key, string item)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -582,6 +617,41 @@ namespace Orchestrate.Net
 
             var url = UrlBase + collectionName + "/" + key + "/refs/" + reference;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
+        public async Task<Result> PostAsync(string collectionName, object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+            return await PostAsync(collectionName, json);
+        }
+
+        public async Task<Result> PostAsync(string collectionName, string item)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(item))
+                throw new ArgumentNullException("item", "item cannot be empty");
+
+            var url = UrlBase + collectionName;
+            var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "POST", item);
+
+            var key = baseResult.Location.Remove(0, 15).Remove(16);
 
             return new Result
             {
