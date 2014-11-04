@@ -154,6 +154,120 @@ namespace Orchestrate.Net.Tests
 
         #endregion
 
+        #region Post Tests
+
+        [Test]
+        public void PostAsObject()
+        {
+            var item = new TestData { Id = 3, Value = "A successful object POST" };
+            var result = _orchestrate.Post(CollectionName, item);
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
+        public void PostAsObjectAsync()
+        {
+            var item = new TestData { Id = 3, Value = "A successful object POST" };
+            var result = _orchestrate.PostAsync(CollectionName, item).Result;
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
+        public void PostAsString()
+        {
+            var item = new TestData { Id = 4, Value = "A successful string POST" };
+            var json = JsonConvert.SerializeObject(item);
+            var result = _orchestrate.Post(CollectionName, json);
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
+        public void PostAsStringAsync()
+        {
+            var item = new TestData { Id = 4, Value = "A successful string POST" };
+            var json = JsonConvert.SerializeObject(item);
+            var result = _orchestrate.PostAsync(CollectionName, json).Result;
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
+        public void PostWithNoCollectionName()
+        {
+            var item = new TestData { Id = 5, Value = "An  unsuccessful string POST" };
+            var json = JsonConvert.SerializeObject(item);
+
+            try
+            {
+                _orchestrate.Post(string.Empty, json);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PostWithNoCollectionNameAsync()
+        {
+            var item = new TestData { Id = 5, Value = "An  unsuccessful string POST" };
+            var json = JsonConvert.SerializeObject(item);
+
+            try
+            {
+                var result = _orchestrate.PostAsync(string.Empty, json).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PostWithNoItem()
+        {
+            try
+            {
+                _orchestrate.Post(CollectionName, string.Empty);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "item");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PostWithNoItemAsync()
+        {
+            try
+            {
+                var result = _orchestrate.PostAsync(CollectionName, string.Empty).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "item");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        #endregion
+
         #region Put Tests
 
         [Test]
