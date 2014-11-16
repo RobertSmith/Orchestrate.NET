@@ -8,11 +8,12 @@ namespace Orchestrate.Net
     public class Orchestrate : IOrchestrate
     {
         private readonly string _apiKey;
-        private const string UrlBase = @"https://api.orchestrate.io/v0/";
+        private string UrlBase = @"https://api.orchestrate.io/";
 
-        public Orchestrate(string apiKey)
+        public Orchestrate(string apiKey, string host="https://api.orchestrate.io/")
         {
             _apiKey = apiKey;
+            UrlBase = host + "v0/";
         }
 
         #region IOrchestrate Sync Members
