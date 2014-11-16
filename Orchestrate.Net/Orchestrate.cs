@@ -136,7 +136,7 @@ namespace Orchestrate.Net
             var url = UrlBase + collectionName;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "POST", item);
 
-            var key = baseResult.Location.Remove(0, 15).Remove(16);
+            var key = ExtractKeyFromLocation(baseResult.Location);
 
             return new Result
             {
@@ -651,7 +651,7 @@ namespace Orchestrate.Net
             var url = UrlBase + collectionName;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "POST", item);
 
-            var key = baseResult.Location.Remove(0, 15).Remove(16);
+            var key = ExtractKeyFromLocation(baseResult.Location);
 
             return new Result
             {
@@ -1040,6 +1040,11 @@ namespace Orchestrate.Net
             var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             TimeSpan diff = date.ToUniversalTime() - origin;
             return Math.Floor(diff.TotalMilliseconds);
+        }
+
+        private static string ExtractKeyFromLocation(string location)
+        {
+            return location.Remove(0, 12).Remove(16);
         }
 
         #endregion
