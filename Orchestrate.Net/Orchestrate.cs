@@ -137,7 +137,7 @@ namespace Orchestrate.Net
             var url = UrlBase + collectionName;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "POST", item);
 
-            var key = ExtractKeyFromLocation(baseResult.Location);
+            var key = ExtractKeyFromLocation(baseResult, collectionName);
 
             return new Result
             {
@@ -652,7 +652,7 @@ namespace Orchestrate.Net
             var url = UrlBase + collectionName;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "POST", item);
 
-            var key = ExtractKeyFromLocation(baseResult.Location);
+            var key = ExtractKeyFromLocation(baseResult, collectionName);
 
             return new Result
             {
@@ -1043,9 +1043,13 @@ namespace Orchestrate.Net
             return Math.Floor(diff.TotalMilliseconds);
         }
 
-        private static string ExtractKeyFromLocation(string location)
+        private static string ExtractKeyFromLocation(BaseResult baseResult, string collection)
         {
-            return location.Remove(0, 12).Remove(16);
+            // Always in the format /v0/<collection>/<key>/refs/<ref>
+            // <ref> is included in BaseResult
+            string key = baseResult.Location.Replace("/v0/" +  collection + "/", "");
+            int index = key.IndexOf("/refs");
+            return key.Remove(index);
         }
 
         #endregion
