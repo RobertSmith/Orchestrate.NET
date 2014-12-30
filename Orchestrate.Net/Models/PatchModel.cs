@@ -14,7 +14,4 @@ namespace Orchestrate.Net.Models
 
     }
 
-    public class PatchList {
-        public List<PatchModel> Patches { get; set; }
-    }
 }
