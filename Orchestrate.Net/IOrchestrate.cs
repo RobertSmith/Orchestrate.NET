@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Orchestrate.Net.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace Orchestrate.Net
@@ -19,6 +20,8 @@ namespace Orchestrate.Net
         Result PutIfNoneMatch(string collectionName, string key, string item);
         Result Delete(string collectionName, string key, bool purge);
         Result DeleteIfMatch(string collectionName, string key, string ifMatch, bool purge);
+        Result Patch(string CollectionName,string key, PatchModel item);
+
 
         ListResult List(string collectionName, int limit, string startKey, string afterKey);
 
@@ -45,6 +48,8 @@ namespace Orchestrate.Net
         Task<Result> PutIfNoneMatchAsync(string collectionName, string key, string item);
         Task<Result> DeleteAsync(string collectionName, string key, bool purge);
         Task<Result> DeleteIfMatchAsync(string collectionName, string key, string ifMatch, bool purge);
+        Task<Result> PatchAsync(string CollectionName, string Operation, PatchModel item);
+
 
         Task<ListResult> ListAsync(string collectionName, int limit, string startKey, string afterKey);
 

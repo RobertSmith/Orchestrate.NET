@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Orchestrate.Net.Models;
+using System.Collections.Generic;
 
 namespace Orchestrate.Net
 {
@@ -9,6 +11,7 @@ namespace Orchestrate.Net
     {
         private readonly string _apiKey;
         private const string UrlBase = @"https://api.orchestrate.io/v0/";
+
 
         public Orchestrate(string apiKey)
         {
@@ -266,6 +269,36 @@ namespace Orchestrate.Net
             };
         }
 
+        public Result Patch(string collectionName, string key, PatchModel item)
+        {
+            if (item == null) { 
+                throw new ArgumentNullException("item", "item cannot be null");
+            }
+
+            List<PatchModel> patches = new List<PatchModel>();
+            patches.Add(item);
+
+            var json = JsonConvert.SerializeObject(patches);
+
+            var url = UrlBase + collectionName + "/" + key;
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PATCH", json);
+            
+            
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
+
+
         public ListResult List(string collectionName, int limit, string startKey, string afterKey)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -303,7 +336,7 @@ namespace Orchestrate.Net
 
             if (purge)
                 url += "?purge=true";
-            else 
+            else
                 url += "?purge=false";
 
             var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null, ifMatch);
@@ -605,6 +638,7 @@ namespace Orchestrate.Net
             return await PutAsync(collectionName, key, json);
         }
 
+
         public async Task<Result> PutAsync(string collectionName, string key, string item)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -768,6 +802,20 @@ namespace Orchestrate.Net
                 Score = 1,
                 Value = baseResult.Payload
             };
+        }
+
+        public async Task<Result> PatchAsync(string collectionName, string key, PatchModel item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+            return Put(collectionName, key, json);
+
+            var url = UrlBase + collectionName + "/" + key;
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PATCH", json);
+
+            return await PatchAsync(collectionName, key, item);
         }
 
         public async Task<ListResult> ListAsync(string collectionName, int limit, string startKey, string afterKey)

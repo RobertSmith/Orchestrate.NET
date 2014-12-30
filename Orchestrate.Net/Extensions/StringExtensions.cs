@@ -14,7 +14,8 @@ namespace Orchestrate.Net
 			{"OPTIONS",  HttpMethod.Options},
 			{"POST",  HttpMethod.Post},
 			{"PUT",  HttpMethod.Put},
-			{"TRACE",  HttpMethod.Trace}
+			{"TRACE",  HttpMethod.Trace},
+            {"PATCH",  new HttpMethod("PATCH")}
 		};
 
 		//TODO: (CV) This extension is temporary (to use System.Net.Http). Once Orchestarte class is rafactored this should go away.
