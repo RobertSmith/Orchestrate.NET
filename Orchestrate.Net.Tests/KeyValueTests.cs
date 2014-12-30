@@ -3,6 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using Newtonsoft.Json;
 using Orchestrate.Net.Tests.Helpers;
+using Orchestrate.Net.Models;
 
 namespace Orchestrate.Net.Tests
 {
@@ -994,5 +995,64 @@ namespace Orchestrate.Net.Tests
         }
 
         #endregion
+
+        #region Patch  Tests
+        [Test]
+        public void PatchAdd()
+        {
+            var item = new TestData { Id = 3, Value = "John" };
+
+            var putResult = _orchestrate.Put(CollectionName, "3", item);
+
+            Assert.IsTrue(putResult.Path.Ref.Length > 0);
+
+            var patchItem = new PatchModel {op ="add" , value ="Newly added value", path = "Value" };
+         
+            var patchResult = _orchestrate.Patch(CollectionName, "3", patchItem);
+            var getValue = _orchestrate.Get(CollectionName, "3");
+
+
+            Assert.IsTrue(patchResult.Value != null);
+        }
+
+        [Test]
+        public void PatchRemove()
+        {
+            var item = new TestData { Id = 3, Value = "John" };
+
+            var putResult = _orchestrate.Put(CollectionName, "3", item);
+
+            Assert.IsTrue(putResult.Path.Ref.Length > 0);
+
+            var patchItem = new PatchModel { op = "remove", path = "Value" };
+
+            var patchResult = _orchestrate.Patch(CollectionName, "3", patchItem);
+            var getValue = _orchestrate.Get(CollectionName, "3");
+
+
+            Assert.IsTrue(patchResult.Value != null);
+        }
+
+        [Test]
+        public void PatchReplace()
+        {
+            var item = new TestData { Id = 3, Value = "John" };
+
+            var putResult = _orchestrate.Put(CollectionName, "3", item);
+
+            Assert.IsTrue(putResult.Path.Ref.Length > 0);
+
+            var patchItem = new PatchModel { op = "replace", path = "Value", value = "Replaced John with this!" };
+
+            var patchResult = _orchestrate.Patch(CollectionName, "3", patchItem);
+            var getValue = _orchestrate.Get(CollectionName, "3");
+
+
+            Assert.IsTrue(patchResult.Value != null);
+        }
+
+        #endregion
+
+
     }
 }
