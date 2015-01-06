@@ -21,8 +21,8 @@ namespace Orchestrate.Net
         Result Delete(string collectionName, string key, bool purge);
         Result DeleteIfMatch(string collectionName, string key, string ifMatch, bool purge);
         Result Patch(string CollectionName,string key, PatchModel item);
-
-
+        Result Patch(string CollectionName, string key, object item);
+       
         ListResult List(string collectionName, int limit, string startKey, string afterKey);
 
         SearchResult Search(string collectionName, string query, int limit, int offset);

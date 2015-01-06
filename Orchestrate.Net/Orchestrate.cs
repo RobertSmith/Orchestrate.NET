@@ -297,6 +297,31 @@ namespace Orchestrate.Net
             };
         }
 
+        public Result Patch(string collectionName, string key, object item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException("item", "item cannot be null");
+            }
+
+            var json = JsonConvert.SerializeObject(item);
+
+            var url = UrlBase + collectionName + "/" + key;
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PATCH", json);
+
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
 
 
         public ListResult List(string collectionName, int limit, string startKey, string afterKey)

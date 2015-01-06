@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Newtonsoft.Json;
 using Orchestrate.Net.Tests.Helpers;
 using Orchestrate.Net.Models;
+using System.Collections.Generic;
 
 namespace Orchestrate.Net.Tests
 {
@@ -998,7 +999,7 @@ namespace Orchestrate.Net.Tests
 
         #region Patch  Tests
         [Test]
-        public void PatchAdd()
+        public void PatchAddModel()
         {
             var item = new TestData { Id = 3, Value = "John" };
 
@@ -1011,6 +1012,24 @@ namespace Orchestrate.Net.Tests
             var patchResult = _orchestrate.Patch(CollectionName, "3", patchItem);
             var getValue = _orchestrate.Get(CollectionName, "3");
 
+
+            Assert.IsTrue(patchResult.Value != null);
+        }
+
+        [Test]
+        public void PatchAddJsonObj()
+        {
+            var item = new TestData { Id = 3, Value = "John" };
+            var putResult = _orchestrate.Put(CollectionName, "3", item);
+
+            Assert.IsTrue(putResult.Path.Ref.Length > 0);
+
+            var patchObj = new List<object>(){
+                new { op = "replace", path = "Value", value="TestJSONPATCH"}
+            }; 
+
+            var patchResult = _orchestrate.Patch(CollectionName, "3", patchObj);
+            var getValue = _orchestrate.Get(CollectionName, "3");
 
             Assert.IsTrue(patchResult.Value != null);
         }
