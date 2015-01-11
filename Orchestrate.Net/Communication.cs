@@ -20,10 +20,15 @@ namespace Orchestrate.Net
 			var httpClient = new HttpClient();
 			var request = new HttpRequestMessage(httpMethod, url);
 
-			if (jsonPayload != null && httpMethod.CanHaveContent())
+			if (jsonPayload != null && httpMethod.CanHaveContent() && method != "PATCH")
 			{
 				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-			}
+
+			}else if(jsonPayload != null && httpMethod.CanHaveContent() && method.Equals("PATCH")){
+                
+                request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json-patch+json");
+
+            }
 			if (!string.IsNullOrEmpty(ifMatch))
 			{
 				request.Headers.Add(HttpRequestHeader.IfMatch.ToString(), ifMatch);
