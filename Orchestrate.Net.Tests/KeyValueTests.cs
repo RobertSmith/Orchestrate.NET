@@ -1002,18 +1002,155 @@ namespace Orchestrate.Net.Tests
         public void PatchAddModel()
         {
             var item = new TestData { Id = 3, Value = "John" };
-
             var putResult = _orchestrate.Put(CollectionName, "3", item);
 
             Assert.IsTrue(putResult.Path.Ref.Length > 0);
 
             var patchItem = new PatchModel {op ="add" , value ="Newly added value", path = "Value" };
-         
+            var patchResult = _orchestrate.Patch(CollectionName, "3", patchItem);
+            var testValue = JsonConvert.DeserializeObject<TestData>(_orchestrate.Get(CollectionName, "3").Value.ToString());
+
+            Assert.IsTrue(testValue.Value.Equals("TestJSONPATCH"));
+        }
+
+        [Test]
+        public void PatchRemove()
+        {
+            var item = new TestData { Id = 3, Value = "John" };
+            var putResult = _orchestrate.Put(CollectionName, "3", item);
+
+            Assert.IsTrue(putResult.Path.Ref.Length > 0);
+
+            var patchItem = new PatchModel { op = "remove", path = "Value" };
             var patchResult = _orchestrate.Patch(CollectionName, "3", patchItem);
             var getValue = _orchestrate.Get(CollectionName, "3");
 
+            Assert.IsTrue(getValue.Value != null);
+        }
 
-            Assert.IsTrue(patchResult.Value != null);
+        [Test]
+        public void PatchReplaceModel()
+        {
+            var item = new TestData { Id = 3, Value = "John" };
+            var putResult = _orchestrate.Put(CollectionName, "3", item);
+
+            Assert.IsTrue(putResult.Path.Ref.Length > 0);
+
+            var patchItem = new PatchModel { op = "replace", path = "Value", value = "Replaced John with this!" };
+            var patchResult = _orchestrate.Patch(CollectionName, "3", patchItem);
+            var testValue = JsonConvert.DeserializeObject<TestData>(_orchestrate.Get(CollectionName, "3").Value.ToString());
+
+            Assert.IsTrue(testValue.Value.Equals("Replaced John with this!"));
+
+        }
+
+        [Test]
+        public void PatchReplaceJsonObj()
+        {
+            var item = new TestData { Id = 3, Value = "John" };
+            var putResult = _orchestrate.Put(CollectionName, "3", item);
+
+            Assert.IsTrue(putResult.Path.Ref.Length > 0);
+
+            var patchObj = new List<object>(){
+                new { op = "replace", path = "Value", value="Replaced John with this!"}
+            };
+            var patchResult = _orchestrate.Patch(CollectionName, "3", patchObj);
+            var testValue = JsonConvert.DeserializeObject<TestData>(_orchestrate.Get(CollectionName, "3").Value.ToString());
+
+            Assert.IsTrue(testValue.Value.Equals("Replaced John with this!"));
+        }
+
+        [Test]
+        public void PatchMoveJsonObj()
+        {
+            var item = new { Id = 3, Value = "John", Value2 = "ItemToBeMoved" };
+            var putResult = _orchestrate.Put(CollectionName, "3", item);
+
+            Assert.IsTrue(putResult.Path.Ref.Length > 0);
+
+            var patchObj = new List<object>(){
+                new { op = "move", from="Value2", path = "Value"}
+            };
+            var patchResult = _orchestrate.Patch(CollectionName, "3", patchObj);
+            var testValue = JsonConvert.DeserializeObject<TestData>(_orchestrate.Get(CollectionName, "3").Value.ToString());
+
+            Assert.IsTrue(testValue.Value.Equals("ItemToBeMoved"));
+        }
+
+        [Test]
+        public void PatchCopyJsonObj()
+        {
+            var item = new { Id = 3, Value = "John", Value2 = "ItemToBeCopied" };
+            var putResult = _orchestrate.Put(CollectionName, "3", item);
+
+            Assert.IsTrue(putResult.Path.Ref.Length > 0);
+
+            var patchObj = new List<object>(){
+                new { op = "copy", from="Value2", path = "Value"}
+            };
+            var patchResult = _orchestrate.Patch(CollectionName, "3", patchObj);
+            var testValue = JsonConvert.DeserializeObject<TestData>(_orchestrate.Get(CollectionName, "3").Value.ToString());
+
+            Assert.IsTrue(testValue.Value.Equals("ItemToBeCopied"));
+        }
+
+        [Test]
+        public void PatchTestJsonObj()
+        {
+            var item = new { Id = 3, Value = "ValueToBeTested" };
+            var putResult = _orchestrate.Put(CollectionName, "3", item);
+
+            Assert.IsTrue(putResult.Path.Ref.Length > 0);
+
+            var patchObj = new List<object>(){
+                new { op = "test", path = "Value", value = "ValueToBeTested"}
+            };
+
+            _orchestrate.Patch(CollectionName, "3", patchObj);
+            Assert.IsTrue(true);
+        }
+
+        [Test]
+        public void PatchTestJsonObjFail()
+        {
+            var item = new { Id = 3, Value = "ValueToBeTested" };
+            var putResult = _orchestrate.Put(CollectionName, "3", item);
+
+            Assert.IsTrue(putResult.Path.Ref.Length > 0);
+
+            var patchObj = new List<object>(){
+                new { op = "test", path = "Value", value = "DifferentValue"}
+            };
+
+
+            try
+            {
+                _orchestrate.Patch(CollectionName, "3", patchObj);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex.InnerException.Message.Equals("Response status code does not indicate success: 409 (Conflict)."));
+            }
+            
+        }
+
+        [Test]
+        public void PatchIncJsonObj()
+        {
+            var item = new  { Id = 3, Value = 1 };
+            var putResult = _orchestrate.Put(CollectionName, "3", item);
+
+            Assert.IsTrue(putResult.Path.Ref.Length > 0);
+
+            var patchObj = new List<object>(){
+                new { op = "inc", path = "Value", value=3}
+            };
+
+            var patchResult = _orchestrate.Patch(CollectionName, "3", patchObj);
+            var testValue = JsonConvert.DeserializeObject<TestData>(_orchestrate.Get(CollectionName, "3").Value.ToString());
+
+            Assert.IsTrue(testValue.Value.Equals("4"));
         }
 
         [Test]
@@ -1025,51 +1162,31 @@ namespace Orchestrate.Net.Tests
             Assert.IsTrue(putResult.Path.Ref.Length > 0);
 
             var patchObj = new List<object>(){
-                new { op = "replace", path = "Value", value="TestJSONPATCH"}
-            }; 
-
+                new { op = "add", path = "Value", value="TestJSONPATCH"}
+            };
             var patchResult = _orchestrate.Patch(CollectionName, "3", patchObj);
-            var getValue = _orchestrate.Get(CollectionName, "3");
+            var testValue = JsonConvert.DeserializeObject<TestData>(_orchestrate.Get(CollectionName, "3").Value.ToString());
 
-            Assert.IsTrue(patchResult.Value != null);
+            Assert.IsTrue(testValue.Value.Equals("TestJSONPATCH"));
         }
 
         [Test]
-        public void PatchRemove()
+        public void PatchRemoveJsonObj()
         {
             var item = new TestData { Id = 3, Value = "John" };
-
             var putResult = _orchestrate.Put(CollectionName, "3", item);
 
             Assert.IsTrue(putResult.Path.Ref.Length > 0);
 
+            var patchObj = new List<object>(){
+                new { op = "remove", path = "Value"}
+            };
             var patchItem = new PatchModel { op = "remove", path = "Value" };
-
             var patchResult = _orchestrate.Patch(CollectionName, "3", patchItem);
-            var getValue = _orchestrate.Get(CollectionName, "3");
+            var testValue = Newtonsoft.Json.JsonConvert.DeserializeObject<TestData>(_orchestrate.Get(CollectionName, "3").Value.ToString());
 
-
-            Assert.IsTrue(patchResult.Value != null);
+            Assert.IsTrue(String.IsNullOrEmpty(testValue.Value));
         }
-
-        [Test]
-        public void PatchReplace()
-        {
-            var item = new TestData { Id = 3, Value = "John" };
-
-            var putResult = _orchestrate.Put(CollectionName, "3", item);
-
-            Assert.IsTrue(putResult.Path.Ref.Length > 0);
-
-            var patchItem = new PatchModel { op = "replace", path = "Value", value = "Replaced John with this!" };
-
-            var patchResult = _orchestrate.Patch(CollectionName, "3", patchItem);
-            var getValue = _orchestrate.Get(CollectionName, "3");
-
-
-            Assert.IsTrue(patchResult.Value != null);
-        }
-
         #endregion
 
 
