@@ -11,6 +11,8 @@ namespace Orchestrate.Net
 
         Result Get(string collectionName, string key);
         Result Get(string collectionName, string key, string reference);
+        Result Post(string collectionName, object item);
+        Result Post(string collectionName, string item);
         Result Put(string collectionName, string key, object item);
         Result Put(string collectionName, string key, string item);
         Result PutIfMatch(string collectionName, string key, object item, string ifMatch);
@@ -38,6 +40,8 @@ namespace Orchestrate.Net
 
         Task<Result> GetAsync(string collectionName, string key);
         Task<Result> GetAsync(string collectionName, string key, string reference);
+        Task<Result> PostAsync(string collectionName, object item);
+        Task<Result> PostAsync(string collectionName, string item);
         Task<Result> PutAsync(string collectionName, string key, object item);
         Task<Result> PutAsync(string collectionName, string key, string item);
         Task<Result> PutIfMatchAsync(string collectionName, string key, object item, string ifMatch);

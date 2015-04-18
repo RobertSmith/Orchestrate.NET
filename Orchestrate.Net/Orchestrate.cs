@@ -8,11 +8,12 @@ namespace Orchestrate.Net
     public class Orchestrate : IOrchestrate
     {
         private readonly string _apiKey;
-        private const string UrlBase = @"https://api.orchestrate.io/v0/";
+        private string UrlBase = @"https://api.orchestrate.io/";
 
-        public Orchestrate(string apiKey)
+        public Orchestrate(string apiKey, string host="https://api.orchestrate.io/")
         {
             _apiKey = apiKey;
+            UrlBase = host + "v0/";
         }
 
         #region IOrchestrate Sync Members
@@ -123,6 +124,41 @@ namespace Orchestrate.Net
                 Score = 1,
                 Value = baseResult.Payload
             };
+        }
+
+        public Result Post(string collectionName, string item)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(item))
+                throw new ArgumentNullException("item", "item cannot be empty");
+
+            var url = UrlBase + collectionName;
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "POST", item);
+
+            var key = ExtractKeyFromLocation(baseResult, collectionName);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
+        public Result Post(string collectionName, object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+            return Post(collectionName, json);
         }
 
         public Result Put(string collectionName, string key, string item)
@@ -602,6 +638,41 @@ namespace Orchestrate.Net
             };
         }
 
+        public async Task<Result> PostAsync(string collectionName, object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+            return await PostAsync(collectionName, json);
+        }
+
+        public async Task<Result> PostAsync(string collectionName, string item)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(item))
+                throw new ArgumentNullException("item", "item cannot be empty");
+
+            var url = UrlBase + collectionName;
+            var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "POST", item);
+
+            var key = ExtractKeyFromLocation(baseResult, collectionName);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
         public async Task<Result> PutAsync(string collectionName, string key, object item)
         {
             if (item == null)
@@ -982,6 +1053,15 @@ namespace Orchestrate.Net
             var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             TimeSpan diff = date.ToUniversalTime() - origin;
             return Math.Floor(diff.TotalMilliseconds);
+        }
+
+        private static string ExtractKeyFromLocation(BaseResult baseResult, string collection)
+        {
+            // Always in the format /v0/<collection>/<key>/refs/<ref>
+            // <ref> is included in BaseResult
+            string key = baseResult.Location.Replace("/v0/" +  collection + "/", "");
+            int index = key.IndexOf("/refs");
+            return key.Remove(index);
         }
 
         #endregion
