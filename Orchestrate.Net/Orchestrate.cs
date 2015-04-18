@@ -364,7 +364,7 @@ namespace Orchestrate.Net
             return JsonConvert.DeserializeObject<EventResultList>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
         }
 
-        public Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, string msg)
+        public Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, string item)
         {
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
@@ -380,10 +380,7 @@ namespace Orchestrate.Net
             if (timeStamp != null)
                 url += "?timestamp=" + ConvertToUnixTimestamp(timeStamp.Value);
 
-            var message = new EventMessage { Msg = msg };
-            var json = JsonConvert.SerializeObject(message);
-
-            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", json);
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item);
 
             return new Result
             {
@@ -396,6 +393,15 @@ namespace Orchestrate.Net
                 Score = 1,
                 Value = baseResult.Payload
             };
+        }
+
+        public Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+            var json = JsonConvert.SerializeObject(item);
+
+            return PutEvent(collectionName, key, type, timeStamp, json);
         }
 
         public ListResult GetGraph(string collectionName, string key, string[] kinds)
@@ -840,7 +846,7 @@ namespace Orchestrate.Net
             return JsonConvert.DeserializeObject<EventResultList>(result.Payload);
         }
 
-        public async Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime? timeStamp, string msg)
+        public async Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime? timeStamp, string item)
         {
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
@@ -856,10 +862,7 @@ namespace Orchestrate.Net
             if (timeStamp != null)
                 url += "?timestamp=" + ConvertToUnixTimestamp(timeStamp.Value);
 
-            var message = new EventMessage { Msg = msg };
-            var json = JsonConvert.SerializeObject(message);
-
-            var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", json);
+            var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item);
 
             return new Result
             {
@@ -872,6 +875,15 @@ namespace Orchestrate.Net
                 Score = 1,
                 Value = baseResult.Payload
             };
+        }
+
+        public async Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime? timeStamp, object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+            var json = JsonConvert.SerializeObject(item);
+
+            return await PutEventAsync(collectionName, key, type, timeStamp, json);
         }
 
         public async Task<ListResult> GetGraphAsync(string collectionName, string key, string[] kinds)
