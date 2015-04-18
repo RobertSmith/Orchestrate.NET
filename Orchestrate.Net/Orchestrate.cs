@@ -34,17 +34,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public Result CreateCollection(string collectionName, string key, object item)
@@ -64,17 +54,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "?force=true";
             var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = string.Empty,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, string.Empty, baseResult);
         }
 
         #endregion
@@ -92,17 +72,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "GET", null);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public Result Get(string collectionName, string key, string reference)
@@ -119,17 +89,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key + "/refs/" + reference;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "GET", null);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         #endregion
@@ -148,17 +108,7 @@ namespace Orchestrate.Net
             var baseResult = Communication.CallWebRequest(_apiKey, url, "POST", item);
             var key = ExtractKeyFromLocation(baseResult);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public Result Post(string collectionName, object item)
@@ -188,17 +138,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public Result Put(string collectionName, string key, object item)
@@ -227,17 +167,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, ifMatch);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public Result PutIfMatch(string collectionName, string key, object item, string ifMatch)
@@ -263,17 +193,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, null, true);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public Result PutIfNoneMatch(string collectionName, string key, object item)
@@ -303,17 +223,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PATCH", item);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public Result Patch(string collectionName, string key, object item)
@@ -344,17 +254,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, ifMatch);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public Result PatchIfMatch(string collectionName, string key, object item, string ifMatch)
@@ -389,17 +289,7 @@ namespace Orchestrate.Net
 
             var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public Result DeleteIfMatch(string collectionName, string key, string ifMatch, bool purge)
@@ -422,17 +312,7 @@ namespace Orchestrate.Net
 
             var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null, ifMatch);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         #endregion
@@ -539,17 +419,7 @@ namespace Orchestrate.Net
 
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, object item)
@@ -604,17 +474,7 @@ namespace Orchestrate.Net
 
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", null);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public Result DeleteGraph(string collectionName, string key, string kind, string toCollectionName, string toKey)
@@ -638,17 +498,7 @@ namespace Orchestrate.Net
 
             var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         #endregion
@@ -682,17 +532,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public async Task<Result> DeleteCollectionAsync(string collectionName)
@@ -703,17 +543,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "?force=true";
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "DELETE", null);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = string.Empty,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, string.Empty, baseResult);
         }
 
         #endregion
@@ -731,17 +561,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public async Task<Result> GetAsync(string collectionName, string key, string reference)
@@ -758,17 +578,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key + "/refs/" + reference;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         #endregion
@@ -796,17 +606,7 @@ namespace Orchestrate.Net
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "POST", item);
             var key = ExtractKeyFromLocation(baseResult);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         #endregion
@@ -836,17 +636,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public async Task<Result> PutIfMatchAsync(string collectionName, string key, object item, string ifMatch)
@@ -875,17 +665,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item, ifMatch);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public async Task<Result> PutIfNoneMatchAsync(string collectionName, string key, object item)
@@ -911,17 +691,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item, null, true);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         #endregion
@@ -942,17 +712,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PATCH", item);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public async Task<Result> PatchAsync(string collectionName, string key, object item)
@@ -983,17 +743,7 @@ namespace Orchestrate.Net
             var url = _urlBase + collectionName + "/" + key;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item, ifMatch);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public async Task<Result> PatchIfMatchAsync(string collectionName, string key, object item, string ifMatch)
@@ -1028,17 +778,7 @@ namespace Orchestrate.Net
 
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "DELETE", null);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public async Task<Result> DeleteIfMatchAsync(string collectionName, string key, string ifMatch, bool purge)
@@ -1061,17 +801,7 @@ namespace Orchestrate.Net
 
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "DELETE", null, ifMatch);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         #endregion
@@ -1183,17 +913,7 @@ namespace Orchestrate.Net
 
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public async Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime? timeStamp, object item)
@@ -1249,17 +969,7 @@ namespace Orchestrate.Net
 
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", null);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         public async Task<Result> DeleteGraphAsync(string collectionName, string key, string kind, string toCollectionName, string toKey)
@@ -1283,17 +993,7 @@ namespace Orchestrate.Net
 
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "DELETE", null);
 
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
+            return BuildResult(collectionName, key, baseResult);
         }
 
         #endregion
@@ -1314,6 +1014,21 @@ namespace Orchestrate.Net
             // Always in the format /<api version>/<collection>/<key>/refs/<ref>
             var locationParts = baseResult.Location.Split('/');
             return locationParts[3];
+        }
+
+        private static Result BuildResult(string collectionName, string key, BaseResult baseResult)
+        {
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
         }
 
         #endregion

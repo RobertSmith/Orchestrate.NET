@@ -68,9 +68,10 @@ namespace Orchestrate.Net.Tests
             }
             catch (Exception ex)
             {
-                //TODO: (CV) Should change this to rely on the result rather than exception.
                 Assert.IsTrue(ex.ToString().Contains("404"));
             }
+
+            Assert.Fail("No Exception Thrown");
         }
 
         [Test]
@@ -82,9 +83,10 @@ namespace Orchestrate.Net.Tests
             }
             catch (Exception ex)
             {
-                //TODO: (CV) Should change this to rely on the result rather than exception.
                 Assert.IsTrue(ex.ToString().Contains("404"));
             }
+
+            Assert.Fail("No Exception Thrown");
         }
 
         [Test]

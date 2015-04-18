@@ -42,8 +42,7 @@ namespace Orchestrate.Net
 
 			var payload = response.Content.ReadAsStringAsync().Result;
 			var location = (response.Headers.Location != null) ? response.Headers.Location.ToString() : string.Empty;
-
-			var eTag = (response.Headers.ETag != null) ? response.Headers.ETag.Tag : string.Empty;
+            var eTag = (response.Headers.ETag != null) ? response.Headers.ETag.Tag : string.Empty;
 
 			var toReturn = new BaseResult
 			{
@@ -51,6 +50,7 @@ namespace Orchestrate.Net
 				ETag = eTag,
 				Payload = payload
 			};
+
 			return toReturn;
 		}
 
