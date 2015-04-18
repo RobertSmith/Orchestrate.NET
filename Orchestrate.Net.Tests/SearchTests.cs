@@ -14,7 +14,7 @@ namespace Orchestrate.Net.Tests
 		[TestFixtureSetUp]
         public static void ClassInitialize()
         {
-					var orchestrate = new Orchestrate(TestHelper.ApiKey);
+            var orchestrate = new Orchestrate(TestHelper.ApiKey);
 
             var item = new TestData { Id = 1, Value = "Inital Test Item" };
             var item2 = new TestData { Id = 2, Value = "Inital Test Item #2" };
@@ -35,7 +35,7 @@ namespace Orchestrate.Net.Tests
 		[SetUp]
         public void TestInitialize()
         {
-					_orchestrate = new Orchestrate(TestHelper.ApiKey);
+            _orchestrate = new Orchestrate(TestHelper.ApiKey);
         }
 
 		[TearDown]

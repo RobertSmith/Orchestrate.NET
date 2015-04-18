@@ -6,6 +6,8 @@ namespace Orchestrate.Net
     public class SearchResult
     {
         public int Count { get; set; }
+        public string Next { get; set; }
+        public string Prev { get; set; }
         [JsonProperty("total_count")]
         public int TotalCount { get; set; }
         public IEnumerable<Result> Results { get; set; } 
