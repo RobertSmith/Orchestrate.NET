@@ -19,6 +19,10 @@ namespace Orchestrate.Net
         Result PutIfMatch(string collectionName, string key, string item, string ifMatch);
         Result PutIfNoneMatch(string collectionName, string key, object item);
         Result PutIfNoneMatch(string collectionName, string key, string item);
+        Result Patch(string collectionName, string key, object item);
+        Result Patch(string collectionName, string key, string item);
+        Result PatchIfMatch(string collectionName, string key, object item, string ifMatch);
+        Result PatchIfMatch(string collectionName, string key, string item, string ifMatch);
         Result Delete(string collectionName, string key, bool purge);
         Result DeleteIfMatch(string collectionName, string key, string ifMatch, bool purge);
 
@@ -48,6 +52,10 @@ namespace Orchestrate.Net
         Task<Result> PutIfMatchAsync(string collectionName, string key, string item, string ifMatch);
         Task<Result> PutIfNoneMatchAsync(string collectionName, string key, object item);
         Task<Result> PutIfNoneMatchAsync(string collectionName, string key, string item);
+        Task<Result> PatchAsync(string collectionName, string key, object item);
+        Task<Result> PatchAsync(string collectionName, string key, string item);
+        Task<Result> PatchIfMatchAsync(string collectionName, string key, object item, string ifMatch);
+        Task<Result> PatchIfMatchAsync(string collectionName, string key, string item, string ifMatch);
         Task<Result> DeleteAsync(string collectionName, string key, bool purge);
         Task<Result> DeleteIfMatchAsync(string collectionName, string key, string ifMatch, bool purge);
 
