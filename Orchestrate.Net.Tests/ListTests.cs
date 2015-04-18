@@ -5,40 +5,40 @@ using Orchestrate.Net.Tests.Helpers;
 
 namespace Orchestrate.Net.Tests
 {
-	[TestFixture]
+    [TestFixture]
     public class ListTests
     {
         private const string CollectionName = "ListTestCollection";
         private Orchestrate _orchestrate;
 
-		[TestFixtureSetUp]
+        [TestFixtureSetUp]
         public static void ClassInitialize()
         {
             var orchestrate = new Orchestrate(TestHelper.ApiKey);
 
-            var item = new TestData { Id = 1, Value = "Inital Test Item" };
-            var item2 = new TestData { Id = 2, Value = "Inital Test Item #2" };
-            var item3 = new TestData { Id = 3, Value = "Inital Test Item #3" };
+            var item = new TestData {Id = 1, Value = "Inital Test Item"};
+            var item2 = new TestData {Id = 2, Value = "Inital Test Item #2"};
+            var item3 = new TestData {Id = 3, Value = "Inital Test Item #3"};
 
             orchestrate.CreateCollection(CollectionName, "1", item);
             orchestrate.Put(CollectionName, "2", item2);
             orchestrate.Put(CollectionName, "3", item3);
         }
 
-		[TestFixtureTearDown]
+        [TestFixtureTearDown]
         public static void ClassCleanUp()
         {
-					var orchestrate = new Orchestrate(TestHelper.ApiKey);
+            var orchestrate = new Orchestrate(TestHelper.ApiKey);
             orchestrate.DeleteCollection(CollectionName);
         }
 
-		[SetUp]
+        [SetUp]
         public void TestInitialize()
         {
-					_orchestrate = new Orchestrate(TestHelper.ApiKey);
+            _orchestrate = new Orchestrate(TestHelper.ApiKey);
         }
 
-		[TearDown]
+        [TearDown]
         public void TestCleanup()
         {
             // nothing to see here...
