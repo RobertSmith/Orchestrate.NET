@@ -21,17 +21,12 @@ namespace Orchestrate.Net
 			var request = new HttpRequestMessage(httpMethod, url);
 
 			if (jsonPayload != null && httpMethod.CanHaveContent())
-			{
 				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
-			}
-			if (!string.IsNullOrEmpty(ifMatch))
-			{
+
+            if (!string.IsNullOrEmpty(ifMatch))
 				request.Headers.Add(HttpRequestHeader.IfMatch.ToString(), ifMatch);
-			}
-			else if (ifNoneMatch)
-			{
+            else if (ifNoneMatch)
 				request.Headers.Add(HttpRequestHeader.IfNoneMatch.ToString(), "\"*\"");
-			}
 
 			var authorization =
 						Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}:", apiKey)));

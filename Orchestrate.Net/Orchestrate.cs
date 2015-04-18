@@ -8,12 +8,12 @@ namespace Orchestrate.Net
     public class Orchestrate : IOrchestrate
     {
         private readonly string _apiKey;
-        private string UrlBase = @"https://api.orchestrate.io/";
+        private readonly string _urlBase;
 
-        public Orchestrate(string apiKey, string host="https://api.orchestrate.io/")
+        public Orchestrate(string apiKey, string url = "https://api.orchestrate.io/v0/")
         {
             _apiKey = apiKey;
-            UrlBase = host + "v0/";
+            _urlBase = url;
         }
 
         #region IOrchestrate Sync Members
@@ -29,7 +29,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(item))
                 throw new ArgumentNullException("item", "item cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item);
 
             return new Result
@@ -59,7 +59,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
 
-            var url = UrlBase + collectionName + "?force=true";
+            var url = _urlBase + collectionName + "?force=true";
             var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null);
 
             return new Result
@@ -83,7 +83,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException("key", "key cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "GET", null);
 
             return new Result
@@ -110,7 +110,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(reference))
                 throw new ArgumentNullException("reference", "reference cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key + "/refs/" + reference;
+            var url = _urlBase + collectionName + "/" + key + "/refs/" + reference;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "GET", null);
 
             return new Result
@@ -134,10 +134,9 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(item))
                 throw new ArgumentNullException("item", "item cannot be empty");
 
-            var url = UrlBase + collectionName;
+            var url = _urlBase + collectionName;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "POST", item);
-
-            var key = ExtractKeyFromLocation(baseResult, collectionName);
+            var key = ExtractKeyFromLocation(baseResult);
 
             return new Result
             {
@@ -172,7 +171,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(item))
                 throw new ArgumentNullException("item", "item cannot be empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item);
 
             return new Result
@@ -211,7 +210,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(ifMatch))
                 throw new ArgumentNullException("ifMatch", "ifMatch cannot be empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, ifMatch);
 
             return new Result
@@ -247,7 +246,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(item))
                 throw new ArgumentNullException("item", "item cannot be empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, null, true);
 
             return new Result
@@ -280,7 +279,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException("key", "key cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
 
             if (purge)
                 url += "?purge=true";
@@ -313,7 +312,7 @@ namespace Orchestrate.Net
             if (!string.IsNullOrEmpty(startKey) && !string.IsNullOrEmpty(afterKey))
                 throw new ArgumentException("May only specify either a startKey or an afterKey", "startKey");
 
-            var url = UrlBase + collectionName + "?limit=" + limit;
+            var url = _urlBase + collectionName + "?limit=" + limit;
 
             if (!string.IsNullOrEmpty(startKey))
                 url += "&startKey=" + startKey;
@@ -335,7 +334,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(ifMatch))
                 throw new ArgumentNullException("ifMatch", "ifMatch cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
 
             if (purge)
                 url += "?purge=true";
@@ -371,7 +370,7 @@ namespace Orchestrate.Net
             if (offset < 0)
                 throw new ArgumentOutOfRangeException("offset", "offset must be at least 0");
 
-            var url = UrlBase + collectionName + "?query=" + query + "&limit=" + limit + "&offset=" + offset;
+            var url = _urlBase + collectionName + "?query=" + query + "&limit=" + limit + "&offset=" + offset;
 
             return JsonConvert.DeserializeObject<SearchResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
         }
@@ -387,7 +386,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(type))
                 throw new ArgumentNullException("type", "type cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key + "/events/" + type;
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type;
 
             if (start != null)
                 url += "?start=" + ConvertToUnixTimestamp(start.Value);
@@ -411,7 +410,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(type))
                 throw new ArgumentNullException("type", "type cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key + "/events/" + type;
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type;
 
             if (timeStamp != null)
                 url += "?timestamp=" + ConvertToUnixTimestamp(timeStamp.Value);
@@ -451,7 +450,7 @@ namespace Orchestrate.Net
             if (kinds == null || kinds.Length == 0)
                 throw new ArgumentNullException("kinds", "kinds cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key + "/relations";
+            var url = _urlBase + collectionName + "/" + key + "/relations";
 
             url = kinds.Aggregate(url, (current, kind) => current + ("/" + kind));
 
@@ -475,7 +474,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(toKey))
                 throw new ArgumentNullException("toKey", "toKey cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key + "/relation/" + kind + "/" + toCollectionName + "/" + toKey;
+            var url = _urlBase + collectionName + "/" + key + "/relation/" + kind + "/" + toCollectionName + "/" + toKey;
 
             var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", null);
 
@@ -509,7 +508,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(toKey))
                 throw new ArgumentNullException("toKey", "toKey cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key + "/relation/" + kind + "/" + toCollectionName + "/" + toKey + "?purge=true";
+            var url = _urlBase + collectionName + "/" + key + "/relation/" + kind + "/" + toCollectionName + "/" + toKey + "?purge=true";
 
             var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null);
 
@@ -550,7 +549,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(item))
                 throw new ArgumentNullException("item", "item cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item);
 
             return new Result
@@ -571,7 +570,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
 
-            var url = UrlBase + collectionName + "?force=true";
+            var url = _urlBase + collectionName + "?force=true";
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "DELETE", null);
 
             return new Result
@@ -595,7 +594,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException("key", "key cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
 
             return new Result
@@ -622,7 +621,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(reference))
                 throw new ArgumentNullException("reference", "reference cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key + "/refs/" + reference;
+            var url = _urlBase + collectionName + "/" + key + "/refs/" + reference;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
 
             return new Result
@@ -655,10 +654,9 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(item))
                 throw new ArgumentNullException("item", "item cannot be empty");
 
-            var url = UrlBase + collectionName;
+            var url = _urlBase + collectionName;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "POST", item);
-
-            var key = ExtractKeyFromLocation(baseResult, collectionName);
+            var key = ExtractKeyFromLocation(baseResult);
 
             return new Result
             {
@@ -693,7 +691,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(item))
                 throw new ArgumentNullException("item", "item cannot be empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item);
 
             return new Result
@@ -732,7 +730,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(ifMatch))
                 throw new ArgumentNullException("ifMatch", "ifMatch cannot be empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item, ifMatch);
 
             return new Result
@@ -768,7 +766,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(item))
                 throw new ArgumentNullException("item", "item cannot be empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item, null, true);
 
             return new Result
@@ -792,7 +790,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(key))
                 throw new ArgumentNullException("key", "key cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
 
             if (purge)
                 url += "?purge=true";
@@ -825,7 +823,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(ifMatch))
                 throw new ArgumentNullException("ifMatch", "ifMatch cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key;
+            var url = _urlBase + collectionName + "/" + key;
 
             if (purge)
                 url += "?purge=true";
@@ -858,7 +856,7 @@ namespace Orchestrate.Net
             if (!string.IsNullOrEmpty(startKey) && !string.IsNullOrEmpty(afterKey))
                 throw new ArgumentException("May only specify either a startKey or an afterKey", "startKey");
 
-            var url = UrlBase + collectionName + "?limit=" + limit;
+            var url = _urlBase + collectionName + "?limit=" + limit;
 
             if (!string.IsNullOrEmpty(startKey))
                 url += "&startKey=" + startKey;
@@ -885,7 +883,7 @@ namespace Orchestrate.Net
             if (offset < 0)
                 throw new ArgumentOutOfRangeException("offset", "offset must be at least 0");
 
-            var url = UrlBase + collectionName + "?query=" + query + "&limit=" + limit + "&offset=" + offset;
+            var url = _urlBase + collectionName + "?query=" + query + "&limit=" + limit + "&offset=" + offset;
             var result = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
 
             return JsonConvert.DeserializeObject<SearchResult>(result.Payload);
@@ -902,7 +900,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(type))
                 throw new ArgumentNullException("type", "type cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key + "/events/" + type;
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type;
 
             if (start != null)
                 url += "?start=" + ConvertToUnixTimestamp(start.Value);
@@ -928,7 +926,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(type))
                 throw new ArgumentNullException("type", "type cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key + "/events/" + type;
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type;
 
             if (timeStamp != null)
                 url += "?timestamp=" + ConvertToUnixTimestamp(timeStamp.Value);
@@ -968,7 +966,7 @@ namespace Orchestrate.Net
             if (kinds == null || kinds.Length == 0)
                 throw new ArgumentNullException("kinds", "kinds cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key + "/relations";
+            var url = _urlBase + collectionName + "/" + key + "/relations";
 
             url = kinds.Aggregate(url, (current, kind) => current + ("/" + kind));
             var result = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
@@ -993,7 +991,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(toKey))
                 throw new ArgumentNullException("toKey", "toKey cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key + "/relation/" + kind + "/" + toCollectionName + "/" + toKey;
+            var url = _urlBase + collectionName + "/" + key + "/relation/" + kind + "/" + toCollectionName + "/" + toKey;
 
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", null);
 
@@ -1027,7 +1025,7 @@ namespace Orchestrate.Net
             if (string.IsNullOrEmpty(toKey))
                 throw new ArgumentNullException("toKey", "toKey cannot be null or empty");
 
-            var url = UrlBase + collectionName + "/" + key + "/relation/" + kind + "/" + toCollectionName + "/" + toKey + "?purge=true";
+            var url = _urlBase + collectionName + "/" + key + "/relation/" + kind + "/" + toCollectionName + "/" + toKey + "?purge=true";
 
             var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "DELETE", null);
 
@@ -1055,13 +1053,11 @@ namespace Orchestrate.Net
             return Math.Floor(diff.TotalMilliseconds);
         }
 
-        private static string ExtractKeyFromLocation(BaseResult baseResult, string collection)
+        private static string ExtractKeyFromLocation(BaseResult baseResult)
         {
-            // Always in the format /v0/<collection>/<key>/refs/<ref>
-            // <ref> is included in BaseResult
-            string key = baseResult.Location.Replace("/v0/" +  collection + "/", "");
-            int index = key.IndexOf("/refs");
-            return key.Remove(index);
+            // Always in the format /<api version>/<collection>/<key>/refs/<ref>
+            var locationParts = baseResult.Location.Split('/');
+            return locationParts[3];
         }
 
         #endregion
