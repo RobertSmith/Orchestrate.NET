@@ -77,19 +77,7 @@ namespace Orchestrate.Net
 
         public Result Get(string collectionName, string key, string reference)
         {
-            if (string.IsNullOrEmpty(collectionName))
-                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
-
-            if (string.IsNullOrEmpty(key))
-                throw new ArgumentNullException("key", "key cannot be null or empty");
-
-            if (string.IsNullOrEmpty(reference))
-                throw new ArgumentNullException("reference", "reference cannot be null or empty");
-
-            var url = _urlBase + collectionName + "/" + key + "/refs/" + reference;
-            var baseResult = Communication.CallWebRequest(_apiKey, url, "GET", null);
-
-            return BuildResult(collectionName, key, baseResult);
+            return Ref(collectionName, key, reference);
         }
 
         #endregion
@@ -352,6 +340,46 @@ namespace Orchestrate.Net
 
         #endregion
 
+        #region Refs
+
+        public Result Ref(string collectionName, string key, string reference)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(reference))
+                throw new ArgumentNullException("reference", "reference cannot be null or empty");
+
+            var url = _urlBase + collectionName + "/" + key + "/refs/" + reference;
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "GET", null);
+
+            return BuildResult(collectionName, key, baseResult);
+        }
+
+        public ListResult RefList(string collectionName, string key, int limit = 10, int offset = 0, bool values = false)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (limit < 1 || limit > 100)
+                throw new ArgumentOutOfRangeException("limit", "limit must be between 1 and 100");
+
+            if (offset < 0)
+                throw new ArgumentOutOfRangeException("offset", "offset must be at least 0");
+
+            var url = _urlBase + collectionName + "/" + key + "/refs/?limit=" + limit + "&offset=" + offset + "&values=" + values;
+
+            return JsonConvert.DeserializeObject<ListResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
+        }
+
+        #endregion
+
         #region Searches
 
         public SearchResult Search(string collectionName, string query, int limit = 10, int offset = 0)
@@ -566,19 +594,7 @@ namespace Orchestrate.Net
 
         public async Task<Result> GetAsync(string collectionName, string key, string reference)
         {
-            if (string.IsNullOrEmpty(collectionName))
-                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
-
-            if (string.IsNullOrEmpty(key))
-                throw new ArgumentNullException("key", "key cannot be null or empty");
-
-            if (string.IsNullOrEmpty(reference))
-                throw new ArgumentNullException("reference", "reference cannot be null or empty");
-
-            var url = _urlBase + collectionName + "/" + key + "/refs/" + reference;
-            var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
-
-            return BuildResult(collectionName, key, baseResult);
+            return await RefAsync(collectionName, key, reference);
         }
 
         #endregion
@@ -836,6 +852,47 @@ namespace Orchestrate.Net
             if (!string.IsNullOrEmpty(beforeKey))
                 url += "&beforeKey=" + beforeKey;
 
+            var result = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
+
+            return JsonConvert.DeserializeObject<ListResult>(result.Payload);
+        }
+
+        #endregion
+
+        #region Refs
+
+        public async Task<Result> RefAsync(string collectionName, string key, string reference)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(reference))
+                throw new ArgumentNullException("reference", "reference cannot be null or empty");
+
+            var url = _urlBase + collectionName + "/" + key + "/refs/" + reference;
+            var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
+
+            return BuildResult(collectionName, key, baseResult);
+        }
+
+        public async Task<ListResult> RefListAsync(string collectionName, string key, int limit = 10, int offset = 0, bool values = false)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (limit < 1 || limit > 100)
+                throw new ArgumentOutOfRangeException("limit", "limit must be between 1 and 100");
+
+            if (offset < 0)
+                throw new ArgumentOutOfRangeException("offset", "offset must be at least 0");
+
+            var url = _urlBase + collectionName + "/" + key + "/refs/?limit=" + limit + "&offset=" + offset + "&values=" + values;
             var result = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
 
             return JsonConvert.DeserializeObject<ListResult>(result.Payload);

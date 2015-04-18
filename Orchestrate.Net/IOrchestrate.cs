@@ -28,6 +28,9 @@ namespace Orchestrate.Net
 
         ListResult List(string collectionName, int limit, string startKey, string afterKey, string endKey, string beforeKey);
 
+        Result Ref(string collectionName, string key, string reference);
+        ListResult RefList(string collectionName, string key, int limit, int offset, bool values);
+
         SearchResult Search(string collectionName, string query, int limit, int offset);
 
         EventResultList GetEvents(string collectionName, string key, string type, DateTime? start, DateTime? end);
@@ -60,6 +63,9 @@ namespace Orchestrate.Net
         Task<Result> DeleteIfMatchAsync(string collectionName, string key, string ifMatch, bool purge);
 
         Task<ListResult> ListAsync(string collectionName, int limit, string startKey, string afterKey, string endKey, string beforeKey);
+
+        Task<Result> RefAsync(string collectionName, string key, string reference);
+        Task<ListResult> RefListAsync(string collectionName, string key, int limit, int offset, bool values);
 
         Task<SearchResult> SearchAsync(string collectionName, string query, int limit, int offset);
 
