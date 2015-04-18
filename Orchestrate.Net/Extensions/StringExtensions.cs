@@ -12,6 +12,7 @@ namespace Orchestrate.Net
 			{"DELETE",  HttpMethod.Delete},
 			{"HEAD",  HttpMethod.Head},
 			{"OPTIONS",  HttpMethod.Options},
+            {"PATCH", new HttpMethod("PATCH")},
 			{"POST",  HttpMethod.Post},
 			{"PUT",  HttpMethod.Put},
 			{"TRACE",  HttpMethod.Trace}

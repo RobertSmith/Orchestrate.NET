@@ -18,6 +18,8 @@ namespace Orchestrate.Net
 
         #region IOrchestrate Sync Members
 
+        #region Collections
+
         public Result CreateCollection(string collectionName, string key, string item)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -75,6 +77,10 @@ namespace Orchestrate.Net
             };
         }
 
+        #endregion
+
+        #region Gets
+
         public Result Get(string collectionName, string key)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -126,6 +132,10 @@ namespace Orchestrate.Net
             };
         }
 
+        #endregion
+
+        #region Posts
+
         public Result Post(string collectionName, string item)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -159,6 +169,10 @@ namespace Orchestrate.Net
             var json = JsonConvert.SerializeObject(item);
             return Post(collectionName, json);
         }
+
+        #endregion
+
+        #region Puts
 
         public Result Put(string collectionName, string key, string item)
         {
@@ -271,6 +285,93 @@ namespace Orchestrate.Net
             return PutIfNoneMatch(collectionName, key, json);
         }
 
+        #endregion
+
+        #region Patches
+
+        public Result Patch(string collectionName, string key, string item)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(item))
+                throw new ArgumentNullException("item", "item cannot be empty");
+
+            var url = _urlBase + collectionName + "/" + key;
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PATCH", item);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
+        public Result Patch(string collectionName, string key, object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            var json = JsonConvert.SerializeObject(item, settings);
+
+            return Patch(collectionName, key, json);
+        }
+
+        public Result PatchIfMatch(string collectionName, string key, string item, string ifMatch)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(item))
+                throw new ArgumentNullException("item", "json cannot be empty");
+
+            if (string.IsNullOrEmpty(ifMatch))
+                throw new ArgumentNullException("ifMatch", "ifMatch cannot be empty");
+
+            var url = _urlBase + collectionName + "/" + key;
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, ifMatch);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
+        public Result PatchIfMatch(string collectionName, string key, object item, string ifMatch)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            var json = JsonConvert.SerializeObject(item, settings);
+
+            return PutIfMatch(collectionName, key, json, ifMatch);
+        }
+
+        #endregion
+
+        #region Deletes
+
         public Result Delete(string collectionName, string key, bool purge)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -301,6 +402,43 @@ namespace Orchestrate.Net
             };
         }
 
+        public Result DeleteIfMatch(string collectionName, string key, string ifMatch, bool purge)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(ifMatch))
+                throw new ArgumentNullException("ifMatch", "ifMatch cannot be null or empty");
+
+            var url = _urlBase + collectionName + "/" + key;
+
+            if (purge)
+                url += "?purge=true";
+            else
+                url += "?purge=false";
+
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null, ifMatch);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
+        #endregion
+
+        #region Lists
+
         public ListResult List(string collectionName, int limit, string startKey, string afterKey)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -323,38 +461,9 @@ namespace Orchestrate.Net
             return JsonConvert.DeserializeObject<ListResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
         }
 
-        public Result DeleteIfMatch(string collectionName, string key, string ifMatch, bool purge)
-        {
-            if (string.IsNullOrEmpty(collectionName))
-                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+        #endregion
 
-            if (string.IsNullOrEmpty(key))
-                throw new ArgumentNullException("key", "key cannot be null or empty");
-
-            if (string.IsNullOrEmpty(ifMatch))
-                throw new ArgumentNullException("ifMatch", "ifMatch cannot be null or empty");
-
-            var url = _urlBase + collectionName + "/" + key;
-
-            if (purge)
-                url += "?purge=true";
-            else 
-                url += "?purge=false";
-
-            var baseResult = Communication.CallWebRequest(_apiKey, url, "DELETE", null, ifMatch);
-
-            return new Result
-            {
-                Path = new OrchestratePath
-                {
-                    Collection = collectionName,
-                    Key = key,
-                    Ref = baseResult.ETag
-                },
-                Score = 1,
-                Value = baseResult.Payload
-            };
-        }
+        #region Searches
 
         public SearchResult Search(string collectionName, string query, int limit = 10, int offset = 0)
         {
@@ -374,6 +483,10 @@ namespace Orchestrate.Net
 
             return JsonConvert.DeserializeObject<SearchResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
         }
+
+        #endregion
+
+        #region Events
 
         public EventResultList GetEvents(string collectionName, string key, string type, DateTime? start = null, DateTime? end = null)
         {
@@ -438,6 +551,10 @@ namespace Orchestrate.Net
 
             return PutEvent(collectionName, key, type, timeStamp, json);
         }
+
+        #endregion
+
+        #region Graphs
 
         public ListResult GetGraph(string collectionName, string key, string[] kinds)
         {
@@ -526,8 +643,12 @@ namespace Orchestrate.Net
         }
 
         #endregion
+        
+        #endregion
 
         #region IOrchestrate Async Members
+
+        #region Collections
 
         public async Task<Result> CreateCollectionAsync(string collectionName, string key, object item)
         {
@@ -586,6 +707,10 @@ namespace Orchestrate.Net
             };
         }
 
+        #endregion
+
+        #region Gets
+
         public async Task<Result> GetAsync(string collectionName, string key)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -637,6 +762,10 @@ namespace Orchestrate.Net
             };
         }
 
+        #endregion
+
+        #region Posts
+
         public async Task<Result> PostAsync(string collectionName, object item)
         {
             if (item == null)
@@ -670,6 +799,10 @@ namespace Orchestrate.Net
                 Value = baseResult.Payload
             };
         }
+
+        #endregion
+
+        #region Puts
 
         public async Task<Result> PutAsync(string collectionName, string key, object item)
         {
@@ -782,6 +915,93 @@ namespace Orchestrate.Net
             };
         }
 
+        #endregion
+
+        #region Patches
+
+        public async Task<Result> PatchAsync(string collectionName, string key, string item)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(item))
+                throw new ArgumentNullException("item", "item cannot be empty");
+
+            var url = _urlBase + collectionName + "/" + key;
+            var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PATCH", item);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
+        public async Task<Result> PatchAsync(string collectionName, string key, object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            var json = JsonConvert.SerializeObject(item, settings);
+
+            return await PatchAsync(collectionName, key, json);
+        }
+
+        public async Task<Result> PatchIfMatchAsync(string collectionName, string key, string item, string ifMatch)
+        {
+            if (string.IsNullOrEmpty(collectionName))
+                throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
+
+            if (string.IsNullOrEmpty(key))
+                throw new ArgumentNullException("key", "key cannot be null or empty");
+
+            if (string.IsNullOrEmpty(item))
+                throw new ArgumentNullException("item", "json cannot be empty");
+
+            if (string.IsNullOrEmpty(ifMatch))
+                throw new ArgumentNullException("ifMatch", "ifMatch cannot be empty");
+
+            var url = _urlBase + collectionName + "/" + key;
+            var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item, ifMatch);
+
+            return new Result
+            {
+                Path = new OrchestratePath
+                {
+                    Collection = collectionName,
+                    Key = key,
+                    Ref = baseResult.ETag
+                },
+                Score = 1,
+                Value = baseResult.Payload
+            };
+        }
+
+        public async Task<Result> PatchIfMatchAsync(string collectionName, string key, object item, string ifMatch)
+        {
+            if (item == null)
+                throw new ArgumentNullException("item", "item cannot be null");
+
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            var json = JsonConvert.SerializeObject(item, settings);
+
+            return await PutIfMatchAsync(collectionName, key, json, ifMatch);
+        }
+
+        #endregion
+
+        #region Deletes
+
         public async Task<Result> DeleteAsync(string collectionName, string key, bool purge)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -845,6 +1065,10 @@ namespace Orchestrate.Net
             };
         }
 
+        #endregion
+
+        #region Lists
+
         public async Task<ListResult> ListAsync(string collectionName, int limit, string startKey, string afterKey)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -869,6 +1093,10 @@ namespace Orchestrate.Net
             return JsonConvert.DeserializeObject<ListResult>(result.Payload);
         }
 
+        #endregion
+
+        #region Searches
+
         public async Task<SearchResult> SearchAsync(string collectionName, string query, int limit = 10, int offset = 0)
         {
             if (string.IsNullOrEmpty(collectionName))
@@ -888,6 +1116,10 @@ namespace Orchestrate.Net
 
             return JsonConvert.DeserializeObject<SearchResult>(result.Payload);
         }
+
+        #endregion
+
+        #region Events
 
         public async Task<EventResultList> GetEventsAsync(string collectionName, string key, string type, DateTime? start = null, DateTime? end = null)
         {
@@ -954,6 +1186,10 @@ namespace Orchestrate.Net
 
             return await PutEventAsync(collectionName, key, type, timeStamp, json);
         }
+
+        #endregion
+
+        #region Graphs
 
         public async Task<ListResult> GetGraphAsync(string collectionName, string key, string[] kinds)
         {
@@ -1041,6 +1277,8 @@ namespace Orchestrate.Net
                 Value = baseResult.Payload
             };
         }
+
+        #endregion
 
         #endregion
 

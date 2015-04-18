@@ -2,6 +2,7 @@
 using System.Linq;
 using NUnit.Framework;
 using Newtonsoft.Json;
+using Orchestrate.Net.Models;
 using Orchestrate.Net.Tests.Helpers;
 
 namespace Orchestrate.Net.Tests
@@ -16,7 +17,7 @@ namespace Orchestrate.Net.Tests
         public static void ClassInitialize()
         {
             var orchestrate = new Orchestrate(TestHelper.ApiKey);
-            var item = new TestData {Id = 1, Value = "Inital Test Item"};
+            var item = new TestData { Id = 1, Value = "Inital Test Item" };
 
             orchestrate.CreateCollection(CollectionName, "1", item);
         }
@@ -197,7 +198,7 @@ namespace Orchestrate.Net.Tests
         [Test]
         public void PostWithNoCollectionName()
         {
-            var item = new TestData { Id = 5, Value = "An  unsuccessful string POST" };
+            var item = new TestData { Id = 5, Value = "An unsuccessful string POST" };
             var json = JsonConvert.SerializeObject(item);
 
             try
@@ -216,7 +217,7 @@ namespace Orchestrate.Net.Tests
         [Test]
         public void PostWithNoCollectionNameAsync()
         {
-            var item = new TestData { Id = 5, Value = "An  unsuccessful string POST" };
+            var item = new TestData { Id = 5, Value = "An unsuccessful string POST" };
             var json = JsonConvert.SerializeObject(item);
 
             try
@@ -311,7 +312,7 @@ namespace Orchestrate.Net.Tests
         [Test]
         public void PutWithNoCollectionName()
         {
-            var item = new TestData {Id = 5, Value = "An  unsuccessful string PUT"};
+            var item = new TestData {Id = 5, Value = "An unsuccessful string PUT"};
             var json = JsonConvert.SerializeObject(item);
 
             try
@@ -330,7 +331,7 @@ namespace Orchestrate.Net.Tests
         [Test]
         public void PutWithNoCollectionNameAsync()
         {
-            var item = new TestData { Id = 5, Value = "An  unsuccessful string PUT" };
+            var item = new TestData { Id = 5, Value = "An unsuccessful string PUT" };
             var json = JsonConvert.SerializeObject(item);
 
             try
@@ -350,7 +351,7 @@ namespace Orchestrate.Net.Tests
         [Test]
         public void PutWithNoKey()
         {
-            var item = new TestData {Id = 6, Value = "An  unsuccessful string PUT"};
+            var item = new TestData {Id = 6, Value = "An unsuccessful string PUT"};
             var json = JsonConvert.SerializeObject(item);
 
             try
@@ -369,7 +370,7 @@ namespace Orchestrate.Net.Tests
         [Test]
         public void PutWithNoKeyAsync()
         {
-            var item = new TestData { Id = 6, Value = "An  unsuccessful string PUT" };
+            var item = new TestData { Id = 6, Value = "An unsuccessful string PUT" };
             var json = JsonConvert.SerializeObject(item);
 
             try
@@ -776,6 +777,417 @@ namespace Orchestrate.Net.Tests
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
                 Assert.IsTrue(inner.ParamName == "item");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        #endregion
+
+        #region Patch Tests
+
+        [Test]
+        public void PatchAsObject()
+        {
+            var item = new PatchTestData { Id = 3, FirstName = "John", Phone = "404-555-1212", NickName = "Big John", WorkPhone = "404-555-8989", LogIns = 1 };
+            var key = Guid.NewGuid();
+            _orchestrate.Put(CollectionName, key.ToString(), item);
+
+            var patchItems = new object[7];
+
+            patchItems[0] = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+            patchItems[1] = new PatchItemString { Op = "remove", Path = "/Phone" };
+            patchItems[2] = new PatchItemString { Op = "replace", Path = "/FirstName", Value = "Jane" };
+            patchItems[3] = new PatchItemString { Op = "move", From = "/WorkPhone", Path = "/Phone" };
+            patchItems[4] = new PatchItemString { Op = "copy", From = "/NickName", Path = "/LastName" };
+            patchItems[5] = new PatchItemInt { Op = "test", Path = "/LogIns", Value = 1 };
+            patchItems[6] = new PatchItemInt { Op = "inc", Path = "/LogIns", Value = -10 };
+
+            var result = _orchestrate.Patch(CollectionName, key.ToString(), patchItems);
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
+        public void PatchAsObjectAsync()
+        {
+            var item = new PatchTestData { Id = 3, FirstName = "John", Phone = "404-555-1212", NickName = "Big John", WorkPhone = "404-555-8989", LogIns = 1 };
+            var key = Guid.NewGuid();
+            _orchestrate.Put(CollectionName, key.ToString(), item);
+
+            var patchItems = new object[7];
+
+            patchItems[0] = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+            patchItems[1] = new PatchItemString { Op = "remove", Path = "/Phone" };
+            patchItems[2] = new PatchItemString { Op = "replace", Path = "/FirstName", Value = "Jane" };
+            patchItems[3] = new PatchItemString { Op = "move", From = "/WorkPhone", Path = "/Phone" };
+            patchItems[4] = new PatchItemString { Op = "copy", From = "/NickName", Path = "/LastName" };
+            patchItems[5] = new PatchItemInt { Op = "test", Path = "/LogIns", Value = 1 };
+            patchItems[6] = new PatchItemInt { Op = "inc", Path = "/LogIns", Value = -10 };
+
+            var result = _orchestrate.PatchAsync(CollectionName, key.ToString(), patchItems).Result;
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
+        public void PatchAsString()
+        {
+            var item = new PatchTestData { Id = 3, FirstName = "John", Phone = "404-555-1212", NickName = "Big John", WorkPhone = "404-555-8989", LogIns = 1 };
+            var key = Guid.NewGuid();
+            _orchestrate.Put(CollectionName, key.ToString(), item);
+
+            var patchItems = new object[7];
+
+            patchItems[0] = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+            patchItems[1] = new PatchItemString { Op = "remove", Path = "/Phone" };
+            patchItems[2] = new PatchItemString { Op = "replace", Path = "/FirstName", Value = "Jane" };
+            patchItems[3] = new PatchItemString { Op = "move", From = "/WorkPhone", Path = "/Phone" };
+            patchItems[4] = new PatchItemString { Op = "copy", From = "/NickName", Path = "/LastName" };
+            patchItems[5] = new PatchItemInt { Op = "test", Path = "/LogIns", Value = 1 };
+            patchItems[6] = new PatchItemInt { Op = "inc", Path = "/LogIns", Value = -10 };
+
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            var json = JsonConvert.SerializeObject(item, settings);
+
+            var result = _orchestrate.Patch(CollectionName, key.ToString(), json);
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
+        public void PatchAsStringAsync()
+        {
+            var item = new PatchTestData { Id = 3, FirstName = "John", Phone = "404-555-1212", NickName = "Big John", WorkPhone = "404-555-8989", LogIns = 1 };
+            var key = Guid.NewGuid();
+            _orchestrate.Put(CollectionName, key.ToString(), item);
+
+            var patchItems = new object[7];
+
+            patchItems[0] = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+            patchItems[1] = new PatchItemString { Op = "remove", Path = "/Phone" };
+            patchItems[2] = new PatchItemString { Op = "replace", Path = "/FirstName", Value = "Jane" };
+            patchItems[3] = new PatchItemString { Op = "move", From = "/WorkPhone", Path = "/Phone" };
+            patchItems[4] = new PatchItemString { Op = "copy", From = "/NickName", Path = "/LastName" };
+            patchItems[5] = new PatchItemInt { Op = "test", Path = "/LogIns", Value = 1 };
+            patchItems[6] = new PatchItemInt { Op = "inc", Path = "/LogIns", Value = -10 };
+
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            var json = JsonConvert.SerializeObject(item, settings);
+
+            var result = _orchestrate.PatchAsync(CollectionName, key.ToString(), json).Result;
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
+        public void PatchWithNoCollectionName()
+        {
+            var patchItem = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+
+            try
+            {
+                _orchestrate.Patch(string.Empty, Guid.NewGuid().ToString(), patchItem);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchWithNoCollectionNameAsync()
+        {
+            var patchItem = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+
+            try
+            {
+                var result = _orchestrate.PatchAsync(string.Empty, Guid.NewGuid().ToString(), patchItem).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchWithNoKey()
+        {
+            var patchItem = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+
+            try
+            {
+                _orchestrate.Patch(CollectionName, string.Empty, patchItem);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "key");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchWithNoKeyAsync()
+        {
+            var patchItem = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+
+            try
+            {
+                var result = _orchestrate.PatchAsync(CollectionName, string.Empty, patchItem).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "key");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchWithNoItem()
+        {
+            try
+            {
+                _orchestrate.Patch(CollectionName, Guid.NewGuid().ToString(), string.Empty);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "item");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchWithNoItemAsync()
+        {
+            try
+            {
+                var result = _orchestrate.PatchAsync(CollectionName, Guid.NewGuid().ToString(), string.Empty).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "item");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchIfMatchSuccess()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new PatchItemString { Op = "replace", Path = "Valie", Value = "New and improved value!" };
+
+            var result = _orchestrate.PatchIfMatch(CollectionName, "1", item, match.Path.Ref);
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
+        public void PatchIfMatchSuccessAsync()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new PatchItemString { Op = "replace", Path = "Valie", Value = "New and improved value!" };
+
+            var result = _orchestrate.PatchIfMatchAsync(CollectionName, "1", item, match.Path.Ref).Result;
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
+        public void PatchIfMatchFail()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new PatchItemString { Op = "replace", Path = "Valie", Value = "New and improved value!" };
+
+            try
+            {
+                _orchestrate.PatchIfMatch(CollectionName, "2", item, match.Path.Ref);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex.Message.Contains("412"));
+            }
+        }
+
+        [Test]
+        public void PatchIfMatchFailAsync()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new PatchItemString { Op = "replace", Path = "Valie", Value = "New and improved value!" };
+
+            try
+            {
+                var result = _orchestrate.PatchIfMatchAsync(CollectionName, "2", item, match.Path.Ref).Result;
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex.Message.Contains("412"));
+            }
+        }
+
+        [Test]
+        public void PatchIfMatchWithNoCollectionName()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var patchItem = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+
+            try
+            {
+                _orchestrate.PatchIfMatch(string.Empty, "2", patchItem, match.Path.Ref);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchIfMatchWithNoCollectionNameAsync()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var patchItem = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+
+            try
+            {
+                var result = _orchestrate.PatchIfMatchAsync(string.Empty, "2", patchItem, match.Path.Ref).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchIfMatchWithNoKey()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var patchItem = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+
+            try
+            {
+                _orchestrate.PatchIfMatch(CollectionName, string.Empty, patchItem, match.Path.Ref);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "key");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchIfMatchWithNoKeyAsync()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var patchItem = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+
+            try
+            {
+                var result = _orchestrate.PatchIfMatchAsync(CollectionName, string.Empty, patchItem, match.Path.Ref).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "key");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchIfMatchWithNoItem()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+
+            try
+            {
+                _orchestrate.PatchIfMatch(CollectionName, "2", null, match.Path.Ref);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "item");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchIfMatchWithNoItemAsync()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+
+            try
+            {
+                var result = _orchestrate.PatchIfMatchAsync(CollectionName, "2", null, match.Path.Ref).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "item");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchIfMatchWithNoIfMatch()
+        {
+            var patchItem = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+
+            try
+            {
+                _orchestrate.PatchIfMatch(CollectionName, "2", patchItem, string.Empty);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "ifMatch");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void PatchIfMatchWithNoIfMatchAsync()
+        {
+            var patchItem = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
+
+            try
+            {
+                var result = _orchestrate.PatchIfMatchAsync(CollectionName, "2", patchItem, string.Empty).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner.ParamName == "ifMatch");
                 return;
             }
 

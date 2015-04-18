@@ -69,6 +69,9 @@
     <Compile Include="Helpers\TestHelper.cs" />
     <Compile Include="KeyValueTests.cs" />
     <Compile Include="ListTests.cs" />
+    <Compile Include="PatchItemInt.cs" />
+    <Compile Include="PatchItemString.cs" />
+    <Compile Include="PatchTestData.cs" />
     <Compile Include="RefTests.cs" />
     <Compile Include="SearchTests.cs" />
     <Compile Include="TestData.cs" />
