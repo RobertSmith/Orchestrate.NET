@@ -432,7 +432,7 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void PutIfMatchSuccessAsync()
+        public void PutIfMatchAsyncSuccess()
         {
             var match = _orchestrate.Get(CollectionName, "1");
             var item = new TestData { Id = 1, Value = "New and improved value!" };
@@ -785,7 +785,7 @@ namespace Orchestrate.Net.Tests
 
         #endregion
 
-        #region Patch Tests
+        #region Patch/Merge Tests
 
         [Test]
         public void PatchAsObject()
@@ -810,6 +810,17 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
+        public void MergeAsObject()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new MergeTestData { NewValue = "This is a merged value" };
+
+            var result = _orchestrate.Patch(CollectionName, match.Path.Key, item);
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
         public void PatchAsObjectAsync()
         {
             var item = new PatchTestData { Id = 3, FirstName = "John", Phone = "404-555-1212", NickName = "Big John", WorkPhone = "404-555-8989", LogIns = 1 };
@@ -827,6 +838,17 @@ namespace Orchestrate.Net.Tests
             patchItems[6] = new PatchItemInt { Op = "inc", Path = "/LogIns", Value = -10 };
 
             var result = _orchestrate.PatchAsync(CollectionName, key.ToString(), patchItems).Result;
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
+        public void MergeAsObjectAsync()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new MergeTestData { NewValue = "This is a merged value" };
+
+            var result = _orchestrate.PatchAsync(CollectionName, match.Path.Key, item).Result;
 
             Assert.IsTrue(result.Path.Ref.Length > 0);
         }
@@ -857,6 +879,20 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
+        public void MergeAsString()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new MergeTestData { NewValue = "This is a merged value" };
+
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            var json = JsonConvert.SerializeObject(item, settings);
+
+            var result = _orchestrate.Patch(CollectionName, match.Path.Key, json);
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
         public void PatchAsStringAsync()
         {
             var item = new PatchTestData { Id = 3, FirstName = "John", Phone = "404-555-1212", NickName = "Big John", WorkPhone = "404-555-8989", LogIns = 1 };
@@ -877,6 +913,20 @@ namespace Orchestrate.Net.Tests
             var json = JsonConvert.SerializeObject(item, settings);
 
             var result = _orchestrate.PatchAsync(CollectionName, key.ToString(), json).Result;
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
+        public void MergeAsStringAsync()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new MergeTestData { NewValue = "This is a merged value" };
+
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            var json = JsonConvert.SerializeObject(item, settings);
+
+            var result = _orchestrate.PatchAsync(CollectionName, match.Path.Key, json).Result;
 
             Assert.IsTrue(result.Path.Ref.Length > 0);
         }
@@ -1000,7 +1050,21 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void PatchIfMatchSuccessAsync()
+        public void MergeIfMatchSuccess()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new MergeTestData { NewValue = "This is a merged value" };
+
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            var json = JsonConvert.SerializeObject(item, settings);
+
+            var result = _orchestrate.PatchIfMatch(CollectionName, match.Path.Key, json, match.Path.Ref);
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
+        }
+
+        [Test]
+        public void PatchIfMatchAsyncSuccess()
         {
             var match = _orchestrate.Get(CollectionName, "1");
             var item = new PatchItemString { Op = "replace", Path = "Valie", Value = "New and improved value!" };
@@ -1008,6 +1072,20 @@ namespace Orchestrate.Net.Tests
             var result = _orchestrate.PatchIfMatchAsync(CollectionName, "1", item, match.Path.Ref).Result;
 
             Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
+        public void MergeIfMatchAsyncSuccess()
+        {
+            var match = _orchestrate.Get(CollectionName, "1");
+            var item = new MergeTestData { NewValue = "This is a merged value" };
+
+            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            var json = JsonConvert.SerializeObject(item, settings);
+
+            var result = _orchestrate.PatchIfMatchAsync(CollectionName, match.Path.Key, json, match.Path.Ref).Result;
+
+            Assert.IsTrue(result.Path.Ref.Length > 0);
         }
 
         [Test]

@@ -74,6 +74,7 @@
     <Compile Include="PatchTestData.cs" />
     <Compile Include="RefTests.cs" />
     <Compile Include="SearchTests.cs" />
+    <Compile Include="MergeTestData.cs" />
     <Compile Include="TestData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
