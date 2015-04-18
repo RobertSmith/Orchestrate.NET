@@ -26,7 +26,7 @@ namespace Orchestrate.Net
         Result Delete(string collectionName, string key, bool purge);
         Result DeleteIfMatch(string collectionName, string key, string ifMatch, bool purge);
 
-        ListResult List(string collectionName, int limit, string startKey, string afterKey);
+        ListResult List(string collectionName, int limit, string startKey, string afterKey, string endKey, string beforeKey);
 
         SearchResult Search(string collectionName, string query, int limit, int offset);
 
@@ -59,7 +59,7 @@ namespace Orchestrate.Net
         Task<Result> DeleteAsync(string collectionName, string key, bool purge);
         Task<Result> DeleteIfMatchAsync(string collectionName, string key, string ifMatch, bool purge);
 
-        Task<ListResult> ListAsync(string collectionName, int limit, string startKey, string afterKey);
+        Task<ListResult> ListAsync(string collectionName, int limit, string startKey, string afterKey, string endKey, string beforeKey);
 
         Task<SearchResult> SearchAsync(string collectionName, string query, int limit, int offset);
 

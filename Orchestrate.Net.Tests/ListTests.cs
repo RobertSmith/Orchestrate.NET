@@ -122,6 +122,123 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
+        public void ListWithEndKey()
+        {
+            var result = _orchestrate.List(CollectionName, 10, null, null, "2");
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void ListWithEndKeyAsync()
+        {
+            var result = _orchestrate.ListAsync(CollectionName, 10, null, null, "2").Result;
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void ListWithBeforeKey()
+        {
+            var result = _orchestrate.List(CollectionName, 10, null, null, null, "2");
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void ListWithBeforeKeyAsync()
+        {
+            var result = _orchestrate.ListAsync(CollectionName, 10, null, null, null, "2").Result;
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void ListWithBeforeKeyAndEndKey()
+        {
+            try
+            {
+                var result = _orchestrate.List(CollectionName, 10, null, null, "1", "2");
+            }
+            catch (ArgumentException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "endKey");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void ListWithBeforeKeyAndEndKeyAsync()
+        {
+            try
+            {
+                var result = _orchestrate.ListAsync(CollectionName, 10, null, null, "1", "2").Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentException;
+                Assert.IsTrue(inner.ParamName == "endKey");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void ListWithStartKeyAndEndKey()
+        {
+            var result = _orchestrate.List(CollectionName, 10, "1", null, "2");
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void ListWithStartKeyAndEndKeyAsync()
+        {
+            var result = _orchestrate.ListAsync(CollectionName, 10, "1", null, "2").Result;
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void ListWithStartKeyAndBeforeKey()
+        {
+            var result = _orchestrate.List(CollectionName, 10, "1", null, null, "2");
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void ListWithStartKeyAndBeforeKeyAsync()
+        {
+            var result = _orchestrate.ListAsync(CollectionName, 10, "1", null, null, "2").Result;
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void ListWithAfterKeyAndEndKey()
+        {
+            var result = _orchestrate.List(CollectionName, 10, null, "1", "2");
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void ListWithAfterKeyAndEndKeyAsync()
+        {
+            var result = _orchestrate.ListAsync(CollectionName, 10, null, "1", "2").Result;
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void ListWithAfterKeyAndBeforeKey()
+        {
+            var result = _orchestrate.List(CollectionName, 10, null, "1", null, "3");
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void ListWithAfterKeyAndBeforeKeyAsync()
+        {
+            var result = _orchestrate.ListAsync(CollectionName, 10, null, "1", null, "3").Result;
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
         public void ListWithNoCollectionName()
         {
             try

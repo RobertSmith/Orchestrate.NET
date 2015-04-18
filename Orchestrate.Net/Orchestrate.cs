@@ -439,7 +439,7 @@ namespace Orchestrate.Net
 
         #region Lists
 
-        public ListResult List(string collectionName, int limit, string startKey, string afterKey)
+        public ListResult List(string collectionName, int limit, string startKey, string afterKey, string endKey = "", string beforeKey = "")
         {
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
@@ -450,6 +450,9 @@ namespace Orchestrate.Net
             if (!string.IsNullOrEmpty(startKey) && !string.IsNullOrEmpty(afterKey))
                 throw new ArgumentException("May only specify either a startKey or an afterKey", "startKey");
 
+            if (!string.IsNullOrEmpty(endKey) && !string.IsNullOrEmpty(beforeKey))
+                throw new ArgumentException("May only specify either a endKey or an beforeKey", "endKey");
+
             var url = _urlBase + collectionName + "?limit=" + limit;
 
             if (!string.IsNullOrEmpty(startKey))
@@ -457,6 +460,12 @@ namespace Orchestrate.Net
 
             if (!string.IsNullOrEmpty(afterKey))
                 url += "&afterKey=" + afterKey;
+
+            if (!string.IsNullOrEmpty(endKey))
+                url += "&endKey=" + endKey;
+
+            if (!string.IsNullOrEmpty(beforeKey))
+                url += "&beforeKey=" + beforeKey;
 
             return JsonConvert.DeserializeObject<ListResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
         }
@@ -1069,7 +1078,7 @@ namespace Orchestrate.Net
 
         #region Lists
 
-        public async Task<ListResult> ListAsync(string collectionName, int limit, string startKey, string afterKey)
+        public async Task<ListResult> ListAsync(string collectionName, int limit, string startKey, string afterKey, string endKey = "", string beforeKey = "")
         {
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
@@ -1080,6 +1089,9 @@ namespace Orchestrate.Net
             if (!string.IsNullOrEmpty(startKey) && !string.IsNullOrEmpty(afterKey))
                 throw new ArgumentException("May only specify either a startKey or an afterKey", "startKey");
 
+            if (!string.IsNullOrEmpty(endKey) && !string.IsNullOrEmpty(beforeKey))
+                throw new ArgumentException("May only specify either a endKey or an beforeKey", "endKey");
+
             var url = _urlBase + collectionName + "?limit=" + limit;
 
             if (!string.IsNullOrEmpty(startKey))
@@ -1087,6 +1099,12 @@ namespace Orchestrate.Net
 
             if (!string.IsNullOrEmpty(afterKey))
                 url += "&afterKey=" + afterKey;
+
+            if (!string.IsNullOrEmpty(endKey))
+                url += "&endKey=" + endKey;
+
+            if (!string.IsNullOrEmpty(beforeKey))
+                url += "&beforeKey=" + beforeKey;
 
             var result = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
 
