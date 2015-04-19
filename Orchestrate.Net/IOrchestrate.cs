@@ -31,11 +31,16 @@ namespace Orchestrate.Net
         Result Ref(string collectionName, string key, string reference);
         ListResult RefList(string collectionName, string key, int limit, int offset, bool values);
 
-        SearchResult Search(string collectionName, string query, int limit, int offset);
+        SearchResult Search(string collectionName, string query, int limit, int offset, string sort, string aggregate);
 
         EventResultList GetEvents(string collectionName, string key, string type, DateTime? start, DateTime? end);
-        Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, string item);
-        Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, object item);
+        EventResultList GetEvents(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal);
+        Result PostEvent(string collectionName, string key, string type, DateTime? timeStamp, string item);
+        Result PostEvent(string collectionName, string key, string type, DateTime? timeStamp, object item);
+        Result PutEvent(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal, string item);
+        Result PutEvent(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal, object item);
+        Result PutEventIfMatch(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal, string item, string ifMatch);
+        Result PutEventIfMatch(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal, object item, string ifMatch);
 
         ListResult GetGraph(string collectionName, string key, string[] kinds);
         Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
@@ -67,11 +72,16 @@ namespace Orchestrate.Net
         Task<Result> RefAsync(string collectionName, string key, string reference);
         Task<ListResult> RefListAsync(string collectionName, string key, int limit, int offset, bool values);
 
-        Task<SearchResult> SearchAsync(string collectionName, string query, int limit, int offset);
+        Task<SearchResult> SearchAsync(string collectionName, string query, int limit, int offset, string sort, string aggregate);
 
         Task<EventResultList> GetEventsAsync(string collectionName, string key, string type, DateTime? start, DateTime? end);
-        Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime? timeStamp, string item);
-        Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime? timeStamp, object item);
+        Task<EventResultList> GetEventsAsync(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal);
+        Task<Result> PostEventAsync(string collectionName, string key, string type, DateTime? timeStamp, string item);
+        Task<Result> PostEventAsync(string collectionName, string key, string type, DateTime? timeStamp, object item);
+        Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, string item);
+        Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, object item);
+        Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, string item, string ifMatch);
+        Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, object item, string ifMatch);
 
         Task<ListResult> GetGraphAsync(string collectionName, string key, string[] kinds);
         Task<Result> PutGraphAsync(string collectionName, string key, string kind, string toCollectionName, string toKey);
