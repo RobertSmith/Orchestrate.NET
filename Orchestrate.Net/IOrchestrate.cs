@@ -42,7 +42,7 @@ namespace Orchestrate.Net
         Result PutEventIfMatch(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal, string item, string ifMatch);
         Result PutEventIfMatch(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal, object item, string ifMatch);
 
-        ListResult GetGraph(string collectionName, string key, string[] kinds);
+        SearchResult GetGraph(string collectionName, string key, string[] kinds, int limit, int offset);
         Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
         Result DeleteGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
 

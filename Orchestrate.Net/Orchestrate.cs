@@ -609,7 +609,7 @@ namespace Orchestrate.Net
 
         #region Graphs
 
-        public ListResult GetGraph(string collectionName, string key, string[] kinds)
+        public SearchResult GetGraph(string collectionName, string key, string[] kinds, int limit = 10, int offset = 0)
         {
             if (string.IsNullOrEmpty(collectionName))
                 throw new ArgumentNullException("collectionName", "collectionName cannot be null or empty");
@@ -620,11 +620,17 @@ namespace Orchestrate.Net
             if (kinds == null || kinds.Length == 0)
                 throw new ArgumentNullException("kinds", "kinds cannot be null or empty");
 
+            if (limit < 1 || limit > 100)
+                throw new ArgumentOutOfRangeException("limit", "limit must be between 1 and 100");
+
+            if (offset < 0)
+                throw new ArgumentOutOfRangeException("offset", "offset must be at least 0");
+
             var url = _urlBase + collectionName + "/" + key + "/relations";
-
             url = kinds.Aggregate(url, (current, kind) => current + ("/" + kind));
+            url = url + "?limit=" + limit + "&offset=" + offset;
 
-            return JsonConvert.DeserializeObject<ListResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
+            return JsonConvert.DeserializeObject<SearchResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
         }
 
         public Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey)
