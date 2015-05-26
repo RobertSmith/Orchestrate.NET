@@ -64,14 +64,14 @@ namespace Orchestrate.Net.Tests
         {
             try
             {
-                _orchestrate.Get(CollectionName, "9999");
+                var result = _orchestrate.Get(CollectionName, "9999");
+
+                Assert.Fail("No Exception Thrown");
             }
             catch (Exception ex)
             {
                 Assert.IsTrue(ex.ToString().Contains("404"));
             }
-
-            Assert.Fail("No Exception Thrown");
         }
 
         [Test]
@@ -80,13 +80,13 @@ namespace Orchestrate.Net.Tests
             try
             {
                 var result = _orchestrate.GetAsync(CollectionName, "9999").Result;
+
+                Assert.Fail("No Exception Thrown");
             }
             catch (Exception ex)
             {
                 Assert.IsTrue(ex.ToString().Contains("404"));
             }
-
-            Assert.Fail("No Exception Thrown");
         }
 
         [Test]
@@ -95,14 +95,13 @@ namespace Orchestrate.Net.Tests
             try
             {
                 _orchestrate.Get(string.Empty, "9999");
+
+                Assert.Fail("No Exception Thrown");
             }
             catch (ArgumentNullException ex)
             {
                 Assert.IsTrue(ex.ParamName == "collectionName");
-                return;
             }
-
-            Assert.Fail("No Exception Thrown");
         }
 
         [Test]
@@ -111,15 +110,14 @@ namespace Orchestrate.Net.Tests
             try
             {
                 var result = _orchestrate.GetAsync(string.Empty, "9999").Result;
+
+                Assert.Fail("No Exception Thrown");
             }
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
                 Assert.IsTrue(inner.ParamName == "collectionName");
-                return;
             }
-
-            Assert.Fail("No Exception Thrown");
         }
 
         [Test]
@@ -128,14 +126,13 @@ namespace Orchestrate.Net.Tests
             try
             {
                 _orchestrate.Get(CollectionName, string.Empty);
+
+                Assert.Fail("No Exception Thrown");
             }
             catch (ArgumentNullException ex)
             {
                 Assert.IsTrue(ex.ParamName == "key");
-                return;
             }
-
-            Assert.Fail("No Exception Thrown");
         }
 
         [Test]
@@ -144,15 +141,14 @@ namespace Orchestrate.Net.Tests
             try
             {
                 var result = _orchestrate.GetAsync(CollectionName, string.Empty).Result;
+
+                Assert.Fail("No Exception Thrown");
             }
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
                 Assert.IsTrue(inner.ParamName == "key");
-                return;
             }
-
-            Assert.Fail("No Exception Thrown");
         }
 
         #endregion
@@ -796,15 +792,16 @@ namespace Orchestrate.Net.Tests
             var key = Guid.NewGuid();
             _orchestrate.Put(CollectionName, key.ToString(), item);
 
-            var patchItems = new object[7];
-
-            patchItems[0] = new PatchItemString { Op = "add", Path = "/LastName", Value = "Doe" };
-            patchItems[1] = new PatchItemString { Op = "remove", Path = "/Phone" };
-            patchItems[2] = new PatchItemString { Op = "replace", Path = "/FirstName", Value = "Jane" };
-            patchItems[3] = new PatchItemString { Op = "move", From = "/WorkPhone", Path = "/Phone" };
-            patchItems[4] = new PatchItemString { Op = "copy", From = "/NickName", Path = "/LastName" };
-            patchItems[5] = new PatchItemInt { Op = "test", Path = "/LogIns", Value = 1 };
-            patchItems[6] = new PatchItemInt { Op = "inc", Path = "/LogIns", Value = -10 };
+            var patchItems = new object[]
+            {
+                new PatchItemString {Op = "add", Path = "/LastName", Value = "Doe"},
+                new PatchItemString {Op = "remove", Path = "/Phone"},
+                new PatchItemString {Op = "replace", Path = "/FirstName", Value = "Jane"},
+                new PatchItemString {Op = "move", From = "/WorkPhone", Path = "/Phone"},
+                new PatchItemString {Op = "copy", From = "/NickName", Path = "/LastName"},
+                new PatchItemInt {Op = "test", Path = "/LogIns", Value = 1},
+                new PatchItemInt {Op = "inc", Path = "/LogIns", Value = -10}
+            };
 
             var result = _orchestrate.Patch(CollectionName, key.ToString(), patchItems);
 

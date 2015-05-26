@@ -219,8 +219,7 @@ namespace Orchestrate.Net
             if (item == null)
                 throw new ArgumentNullException("item", "item cannot be null");
 
-            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-            var json = JsonConvert.SerializeObject(item, settings);
+            var json = JsonConvert.SerializeObject(item);
 
             return Patch(collectionName, key, json);
         }
@@ -250,8 +249,7 @@ namespace Orchestrate.Net
             if (item == null)
                 throw new ArgumentNullException("item", "item cannot be null");
 
-            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-            var json = JsonConvert.SerializeObject(item, settings);
+            var json = JsonConvert.SerializeObject(item);
 
             return PutIfMatch(collectionName, key, json, ifMatch);
         }
@@ -888,8 +886,7 @@ namespace Orchestrate.Net
             if (item == null)
                 throw new ArgumentNullException("item", "item cannot be null");
 
-            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-            var json = JsonConvert.SerializeObject(item, settings);
+            var json = JsonConvert.SerializeObject(item);
 
             return await PatchAsync(collectionName, key, json);
         }
@@ -919,8 +916,7 @@ namespace Orchestrate.Net
             if (item == null)
                 throw new ArgumentNullException("item", "item cannot be null");
 
-            var settings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
-            var json = JsonConvert.SerializeObject(item, settings);
+            var json = JsonConvert.SerializeObject(item);
 
             return await PutIfMatchAsync(collectionName, key, json, ifMatch);
         }
