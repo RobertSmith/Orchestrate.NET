@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using Orchestrate.Net.Tests.Helpers;
 
+// ReSharper disable UnusedVariable
+
 namespace Orchestrate.Net.Tests
 {
 	[TestFixture]
@@ -143,7 +145,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "collectionName");
+                Assert.IsTrue(inner?.ParamName == "collectionName");
                 return;
             }
 
@@ -187,7 +189,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "key");
+                Assert.IsTrue(inner?.ParamName == "key");
                 return;
             }
 
@@ -230,7 +232,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "item");
+                Assert.IsTrue(inner?.ParamName == "item");
                 return;
             }
 
@@ -359,7 +361,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "collectionName");
+                Assert.IsTrue(inner?.ParamName == "collectionName");
                 orchestration.DeleteCollection(collectionName);
                 return;
             }

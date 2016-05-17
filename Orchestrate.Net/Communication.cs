@@ -29,10 +29,10 @@ namespace Orchestrate.Net
 				request.Headers.Add(HttpRequestHeader.IfNoneMatch.ToString(), "\"*\"");
 
 			var authorization =
-						Convert.ToBase64String(Encoding.UTF8.GetBytes(string.Format("{0}:", apiKey)));
+						Convert.ToBase64String(Encoding.UTF8.GetBytes($"{ apiKey }:"));
 
 			request.Headers.Authorization = new AuthenticationHeaderValue("Basic", authorization);
-			return httpClient.SendAsync(request).ContinueWith<BaseResult>(BuildResult);
+			return httpClient.SendAsync(request).ContinueWith(BuildResult);
 		}
 
 		private static BaseResult BuildResult(Task<HttpResponseMessage> responseMessageTask)
@@ -41,8 +41,8 @@ namespace Orchestrate.Net
 			response.EnsureSuccessStatusCode();
 
 			var payload = response.Content.ReadAsStringAsync().Result;
-			var location = (response.Headers.Location != null) ? response.Headers.Location.ToString() : string.Empty;
-            var eTag = (response.Headers.ETag != null) ? response.Headers.ETag.Tag : string.Empty;
+			var location = response.Headers.Location?.ToString() ?? string.Empty;
+            var eTag = response.Headers.ETag != null ? response.Headers.ETag.Tag : string.Empty;
 
 			var toReturn = new BaseResult
 			{

@@ -3,6 +3,8 @@ using System.Linq;
 using NUnit.Framework;
 using Orchestrate.Net.Tests.Helpers;
 
+// ReSharper disable UnusedVariable
+
 namespace Orchestrate.Net.Tests
 {
     [TestFixture]
@@ -114,7 +116,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentException;
-                Assert.IsTrue(inner.ParamName == "startKey");
+                Assert.IsTrue(inner?.ParamName == "startKey");
                 return;
             }
 
@@ -175,7 +177,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentException;
-                Assert.IsTrue(inner.ParamName == "endKey");
+                Assert.IsTrue(inner?.ParamName == "endKey");
                 return;
             }
 
@@ -264,7 +266,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "collectionName");
+                Assert.IsTrue(inner?.ParamName == "collectionName");
                 return;
             }
 
@@ -297,7 +299,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentOutOfRangeException;
-                Assert.IsTrue(inner.ParamName == "limit");
+                Assert.IsTrue(inner?.ParamName == "limit");
                 return;
             }
 

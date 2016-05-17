@@ -69,13 +69,13 @@
     <Compile Include="Helpers\TestHelper.cs" />
     <Compile Include="KeyValueTests.cs" />
     <Compile Include="ListTests.cs" />
-    <Compile Include="PatchItemInt.cs" />
-    <Compile Include="PatchItemString.cs" />
-    <Compile Include="PatchTestData.cs" />
+    <Compile Include="Helpers\PatchItemInt.cs" />
+    <Compile Include="Helpers\PatchItemString.cs" />
+    <Compile Include="Helpers\PatchTestData.cs" />
     <Compile Include="RefTests.cs" />
     <Compile Include="SearchTests.cs" />
-    <Compile Include="MergeTestData.cs" />
-    <Compile Include="TestData.cs" />
+    <Compile Include="Helpers\MergeTestData.cs" />
+    <Compile Include="Helpers\TestData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

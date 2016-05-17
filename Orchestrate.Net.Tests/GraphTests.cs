@@ -3,6 +3,8 @@ using System.Linq;
 using NUnit.Framework;
 using Orchestrate.Net.Tests.Helpers;
 
+// ReSharper disable UnusedVariable
+
 namespace Orchestrate.Net.Tests
 {
     [TestFixture]
@@ -90,7 +92,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "collectionName");
+                Assert.IsTrue(inner?.ParamName == "collectionName");
                 return;
             }
 
@@ -123,7 +125,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "key");
+                Assert.IsTrue(inner?.ParamName == "key");
                 return;
             }
 
@@ -156,7 +158,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "kind");
+                Assert.IsTrue(inner?.ParamName == "kind");
                 return;
             }
 
@@ -189,7 +191,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "toCollectionName");
+                Assert.IsTrue(inner?.ParamName == "toCollectionName");
                 return;
             }
 
@@ -222,7 +224,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "toKey");
+                Assert.IsTrue(inner?.ParamName == "toKey");
                 return;
             }
 
@@ -327,7 +329,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "collectionName");
+                Assert.IsTrue(inner?.ParamName == "collectionName");
                 return;
             }
 
@@ -370,7 +372,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "key");
+                Assert.IsTrue(inner?.ParamName == "key");
                 return;
             }
 
@@ -411,7 +413,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "kinds");
+                Assert.IsTrue(inner?.ParamName == "kinds");
                 return;
             }
 
@@ -504,7 +506,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "collectionName");
+                Assert.IsTrue(inner?.ParamName == "collectionName");
                 return;
             }
 
@@ -537,7 +539,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "key");
+                Assert.IsTrue(inner?.ParamName == "key");
                 return;
             }
 
@@ -570,7 +572,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "kind");
+                Assert.IsTrue(inner?.ParamName == "kind");
                 return;
             }
 
@@ -603,7 +605,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "toCollectionName");
+                Assert.IsTrue(inner?.ParamName == "toCollectionName");
                 return;
             }
 
@@ -636,7 +638,7 @@ namespace Orchestrate.Net.Tests
             catch (AggregateException ex)
             {
                 var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner.ParamName == "toKey");
+                Assert.IsTrue(inner?.ParamName == "toKey");
                 return;
             }
 
