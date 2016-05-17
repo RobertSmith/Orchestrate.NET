@@ -28,8 +28,7 @@ namespace Orchestrate.Net
             else if (ifNoneMatch)
 				request.Headers.Add(HttpRequestHeader.IfNoneMatch.ToString(), "\"*\"");
 
-			var authorization =
-						Convert.ToBase64String(Encoding.UTF8.GetBytes($"{ apiKey }:"));
+			var authorization = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{ apiKey }:"));
 
 			request.Headers.Authorization = new AuthenticationHeaderValue("Basic", authorization);
 			return httpClient.SendAsync(request).ContinueWith(BuildResult);
