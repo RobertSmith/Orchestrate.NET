@@ -20,7 +20,7 @@ namespace Orchestrate.Net.Tests
             var orchestrate = new Orchestrate(TestHelper.ApiKey);
             var item = new TestData { Id = 1, Value = "Inital Test Item" };
 
-            orchestrate.CreateCollection(CollectionName, "1", item);
+            orchestrate.Put(CollectionName, "1", item);
         }
 
         [TestFixtureTearDown]

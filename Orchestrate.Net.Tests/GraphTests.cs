@@ -19,7 +19,7 @@ namespace Orchestrate.Net.Tests
             var orchestrate = new Orchestrate(TestHelper.ApiKey);
             var item = new TestData {Id = 1, Value = "Inital Test Item"};
 
-            orchestrate.CreateCollection(CollectionName, "1", item);
+            orchestrate.Put(CollectionName, "1", item);
         }
 
         [TestFixtureTearDown]
@@ -46,7 +46,7 @@ namespace Orchestrate.Net.Tests
         public void AddGraph()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
 
             var result = _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
 
@@ -57,7 +57,7 @@ namespace Orchestrate.Net.Tests
         public void AddGraphAsync()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
 
             var result =
                 _orchestrate.PutGraphAsync(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2").Result;
@@ -235,7 +235,7 @@ namespace Orchestrate.Net.Tests
         public void GetSingleGraph()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
             var kinds = new[] {"toplevelgraph"};
 
@@ -248,7 +248,7 @@ namespace Orchestrate.Net.Tests
         public void GetSingleGraphAsync()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
             var kinds = new[] {"toplevelgraph"};
 
@@ -261,11 +261,11 @@ namespace Orchestrate.Net.Tests
         public void GetMultipleLevleGraph()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
 
             data = new TestData {Id = 3, Value = "This is collection 3 data"};
-            _orchestrate.CreateCollection("GraphTestCollection3", "3", data);
+            _orchestrate.Put("GraphTestCollection3", "3", data);
             _orchestrate.PutGraph("GraphTestCollection2", "2", "sublevelgraph", "GraphTestCollection3", "3");
 
             var kinds = new[] {"toplevelgraph", "sublevelgraph"};
@@ -279,11 +279,11 @@ namespace Orchestrate.Net.Tests
         public void GetMultipleLevleGraphAsync()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
 
             data = new TestData {Id = 3, Value = "This is collection 3 data"};
-            _orchestrate.CreateCollection("GraphTestCollection3", "3", data);
+            _orchestrate.Put("GraphTestCollection3", "3", data);
             _orchestrate.PutGraph("GraphTestCollection2", "2", "sublevelgraph", "GraphTestCollection3", "3");
 
             var kinds = new[] {"toplevelgraph", "sublevelgraph"};
@@ -297,7 +297,7 @@ namespace Orchestrate.Net.Tests
         public void GetSingleGraphWithNoCollectionName()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
             var kinds = new[] {"toplevelgraph"};
 
@@ -318,7 +318,7 @@ namespace Orchestrate.Net.Tests
         public void GetSingleGraphWithNoCollectionNameAsync()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
             var kinds = new[] {"toplevelgraph"};
 
@@ -340,7 +340,7 @@ namespace Orchestrate.Net.Tests
         public void GetSingleGraphWithNoKey()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
             var kinds = new[] {"toplevelgraph"};
 
@@ -361,7 +361,7 @@ namespace Orchestrate.Net.Tests
         public void GetSingleGraphWithNoKeyAsync()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
             var kinds = new[] {"toplevelgraph"};
 
@@ -383,7 +383,7 @@ namespace Orchestrate.Net.Tests
         public void GetSingleGraphWithNoKinds()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
 
             try
@@ -403,7 +403,7 @@ namespace Orchestrate.Net.Tests
         public void GetSingleGraphWithNoKindsAsync()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
 
             try
@@ -424,7 +424,7 @@ namespace Orchestrate.Net.Tests
         public void DeleteGraph()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
             _orchestrate.DeleteGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
             var kinds = new[] {"toplevelgraph"};
@@ -443,7 +443,7 @@ namespace Orchestrate.Net.Tests
         public void DeleteGraphAsync()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
             var result = _orchestrate.DeleteGraphAsync(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2").Result;
             var kinds = new[] {"toplevelgraph"};
@@ -462,7 +462,7 @@ namespace Orchestrate.Net.Tests
         public void DeleteGraphPurge()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
             var result = _orchestrate.DeleteGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
 
@@ -473,7 +473,7 @@ namespace Orchestrate.Net.Tests
         public void DeleteGraphPurgeAsync()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
-            _orchestrate.CreateCollection("GraphTestCollection2", "2", data);
+            _orchestrate.Put("GraphTestCollection2", "2", data);
             _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
             var result = _orchestrate.DeleteGraphAsync(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2").Result;
 

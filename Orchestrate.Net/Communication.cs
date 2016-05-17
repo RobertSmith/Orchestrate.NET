@@ -23,7 +23,7 @@ namespace Orchestrate.Net
 			if (jsonPayload != null && httpMethod.CanHaveContent())
 				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-            if (!string.IsNullOrEmpty(ifMatch))
+            if (!string.IsNullOrWhiteSpace(ifMatch))
 				request.Headers.Add(HttpRequestHeader.IfMatch.ToString(), ifMatch);
             else if (ifNoneMatch)
 				request.Headers.Add(HttpRequestHeader.IfNoneMatch.ToString(), "\"*\"");

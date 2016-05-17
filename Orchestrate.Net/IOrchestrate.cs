@@ -5,9 +5,30 @@ namespace Orchestrate.Net
 {
     public interface IOrchestrate
     {
+        #region Authentication
+
+        bool Authenticate(string key);
+        Task<bool> AuthenticateAsync(string key);
+
+        #endregion
+
+        #region Collections
+
+        [Obsolete ("You can create collections from the Orchestrate Dashboard. You can also perform a Key/Value PUT to a non-existent collection. If a collection does not exist, one will be created.")]
         Result CreateCollection(string collectionName, string key, object item);
+        [Obsolete("You can create collections from the Orchestrate Dashboard. You can also perform a Key/Value PUT to a non-existent collection. If a collection does not exist, one will be created.")]
         Result CreateCollection(string collectionName, string key, string item);
         Result DeleteCollection(string collectionName);
+
+        [Obsolete("You can create collections from the Orchestrate Dashboard. You can also perform a Key/Value PUT to a non-existent collection. If a collection does not exist, one will be created.")]
+        Task<Result> CreateCollectionAsync(string collectionName, string key, object item);
+        [Obsolete("You can create collections from the Orchestrate Dashboard. You can also perform a Key/Value PUT to a non-existent collection. If a collection does not exist, one will be created.")]
+        Task<Result> CreateCollectionAsync(string collectionName, string key, string item);
+        Task<Result> DeleteCollectionAsync(string collectionName);
+
+        #endregion
+
+        #region Key/Value
 
         Result Get(string collectionName, string key);
         Result Get(string collectionName, string key, string reference);
@@ -25,8 +46,28 @@ namespace Orchestrate.Net
         Result PatchIfMatch(string collectionName, string key, string item, string ifMatch);
         Result Delete(string collectionName, string key, bool purge);
         Result DeleteIfMatch(string collectionName, string key, string ifMatch, bool purge);
-
         ListResult List(string collectionName, int limit, string startKey, string afterKey, string endKey, string beforeKey);
+
+        Task<Result> GetAsync(string collectionName, string key);
+        Task<Result> GetAsync(string collectionName, string key, string reference);
+        Task<Result> PostAsync(string collectionName, object item);
+        Task<Result> PostAsync(string collectionName, string item);
+        Task<Result> PutAsync(string collectionName, string key, object item);
+        Task<Result> PutAsync(string collectionName, string key, string item);
+        Task<Result> PutIfMatchAsync(string collectionName, string key, object item, string ifMatch);
+        Task<Result> PutIfMatchAsync(string collectionName, string key, string item, string ifMatch);
+        Task<Result> PutIfNoneMatchAsync(string collectionName, string key, object item);
+        Task<Result> PutIfNoneMatchAsync(string collectionName, string key, string item);
+        Task<Result> PatchAsync(string collectionName, string key, object item);
+        Task<Result> PatchAsync(string collectionName, string key, string item);
+        Task<Result> PatchIfMatchAsync(string collectionName, string key, object item, string ifMatch);
+        Task<Result> PatchIfMatchAsync(string collectionName, string key, string item, string ifMatch);
+        Task<Result> DeleteAsync(string collectionName, string key, bool purge);
+        Task<Result> DeleteIfMatchAsync(string collectionName, string key, string ifMatch, bool purge);
+        Task<ListResult> ListAsync(string collectionName, int limit, string startKey, string afterKey, string endKey, string beforeKey);
+
+        #endregion
+
 
         Result Ref(string collectionName, string key, string reference);
         ListResult RefList(string collectionName, string key, int limit, int offset, bool values);
@@ -45,30 +86,6 @@ namespace Orchestrate.Net
         SearchResult GetGraph(string collectionName, string key, string[] kinds, int limit, int offset);
         Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
         Result DeleteGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
-
-        Task<Result> CreateCollectionAsync(string collectionName, string key, object item);
-        Task<Result> CreateCollectionAsync(string collectionName, string key, string item);
-        Task<Result> DeleteCollectionAsync(string collectionName);
-
-        Task<Result> GetAsync(string collectionName, string key);
-        Task<Result> GetAsync(string collectionName, string key, string reference);
-        Task<Result> PostAsync(string collectionName, object item);
-        Task<Result> PostAsync(string collectionName, string item);
-        Task<Result> PutAsync(string collectionName, string key, object item);
-        Task<Result> PutAsync(string collectionName, string key, string item);
-        Task<Result> PutIfMatchAsync(string collectionName, string key, object item, string ifMatch);
-        Task<Result> PutIfMatchAsync(string collectionName, string key, string item, string ifMatch);
-        Task<Result> PutIfNoneMatchAsync(string collectionName, string key, object item);
-        Task<Result> PutIfNoneMatchAsync(string collectionName, string key, string item);
-        Task<Result> PatchAsync(string collectionName, string key, object item);
-        Task<Result> PatchAsync(string collectionName, string key, string item);
-        Task<Result> PatchIfMatchAsync(string collectionName, string key, object item, string ifMatch);
-        Task<Result> PatchIfMatchAsync(string collectionName, string key, string item, string ifMatch);
-        Task<Result> DeleteAsync(string collectionName, string key, bool purge);
-        Task<Result> DeleteIfMatchAsync(string collectionName, string key, string ifMatch, bool purge);
-
-        Task<ListResult> ListAsync(string collectionName, int limit, string startKey, string afterKey, string endKey, string beforeKey);
-
         Task<Result> RefAsync(string collectionName, string key, string reference);
         Task<ListResult> RefListAsync(string collectionName, string key, int limit, int offset, bool values);
 

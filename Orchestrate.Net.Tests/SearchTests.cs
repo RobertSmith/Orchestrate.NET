@@ -22,7 +22,7 @@ namespace Orchestrate.Net.Tests
             var item2 = new TestData { Id = 2, Value = "Inital Test Item #2" };
             var item3 = new TestData { Id = 3, Value = "Inital Test Item #3" };
 
-            orchestrate.CreateCollection(CollectionName, "1", item);
+            orchestrate.Put(CollectionName, "1", item);
             orchestrate.Put(CollectionName, "2", item2);
             orchestrate.Put(CollectionName, "3", item3);
         }

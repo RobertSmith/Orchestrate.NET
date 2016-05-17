@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AuthenticationTests.cs" />
     <Compile Include="CollectionTests.cs" />
     <Compile Include="EventTests.cs" />
     <Compile Include="GraphTests.cs" />

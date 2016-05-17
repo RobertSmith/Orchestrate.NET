@@ -21,7 +21,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                var result = orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), item);
+                var result = orchestration.Put(collectionName, Guid.NewGuid().ToString(), item);
 
                 Assert.IsTrue(result.Path.Ref.Length > 0);
             }
@@ -45,7 +45,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                var result = orchestration.CreateCollectionAsync(collectionName, Guid.NewGuid().ToString(), item).Result;
+                var result = orchestration.PutAsync(collectionName, Guid.NewGuid().ToString(), item).Result;
 
                 Assert.IsTrue(result.Path.Ref.Length > 0);
             }
@@ -70,7 +70,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                var result = orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), json);
+                var result = orchestration.Put(collectionName, Guid.NewGuid().ToString(), json);
 
                 Assert.IsTrue(result.Path.Ref.Length > 0);
             }
@@ -95,7 +95,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                var result = orchestration.CreateCollectionAsync(collectionName, Guid.NewGuid().ToString(), json).Result;
+                var result = orchestration.PutAsync(collectionName, Guid.NewGuid().ToString(), json).Result;
 
                 Assert.IsTrue(result.Path.Ref.Length > 0);
             }
@@ -119,7 +119,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), item);
+                orchestration.Put(collectionName, Guid.NewGuid().ToString(), item);
             }
             catch (ArgumentNullException ex)
             {
@@ -140,7 +140,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                var result = orchestration.CreateCollectionAsync(collectionName, Guid.NewGuid().ToString(), item).Result;
+                var result = orchestration.PutAsync(collectionName, Guid.NewGuid().ToString(), item).Result;
             }
             catch (AggregateException ex)
             {
@@ -162,7 +162,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                orchestration.CreateCollection(collectionName, string.Empty, item);
+                orchestration.Put(collectionName, string.Empty, item);
             }
             catch (ArgumentNullException ex)
             {
@@ -184,7 +184,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                var result = orchestration.CreateCollectionAsync(collectionName, string.Empty, item).Result;
+                var result = orchestration.PutAsync(collectionName, string.Empty, item).Result;
             }
             catch (AggregateException ex)
             {
@@ -206,7 +206,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), (object)null);
+                orchestration.Put(collectionName, Guid.NewGuid().ToString(), (object)null);
             }
             catch (ArgumentNullException ex)
             {
@@ -227,7 +227,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                var result = orchestration.CreateCollectionAsync(collectionName, Guid.NewGuid().ToString(), (object)null).Result;
+                var result = orchestration.PutAsync(collectionName, Guid.NewGuid().ToString(), (object)null).Result;
             }
             catch (AggregateException ex)
             {
@@ -251,7 +251,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), json);
+                orchestration.Put(collectionName, Guid.NewGuid().ToString(), json);
                 var result = orchestration.DeleteCollection(collectionName);
 
                 Assert.IsTrue(result.Path.Collection.Length > 0);
@@ -273,7 +273,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), json);
+                orchestration.Put(collectionName, Guid.NewGuid().ToString(), json);
                 var result = orchestration.DeleteCollectionAsync(collectionName).Result;
 
                 Assert.IsTrue(result.Path.Collection.Length > 0);
@@ -331,7 +331,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), json);
+                orchestration.Put(collectionName, Guid.NewGuid().ToString(), json);
                 orchestration.DeleteCollection(string.Empty);
             }
             catch (ArgumentNullException ex)
@@ -355,7 +355,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                var result = orchestration.CreateCollectionAsync(collectionName, Guid.NewGuid().ToString(), json).Result;
+                var result = orchestration.PutAsync(collectionName, Guid.NewGuid().ToString(), json).Result;
                 var deleteResult = orchestration.DeleteCollectionAsync(string.Empty).Result;
             }
             catch (AggregateException ex)

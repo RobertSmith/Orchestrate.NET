@@ -76,8 +76,15 @@
     <Compile Include="Models\EventResult.cs" />
     <Compile Include="Models\EventResultList.cs" />
     <Compile Include="Models\ListResult.cs" />
+    <Compile Include="Orchestrate.Authentication.cs" />
+    <Compile Include="Orchestrate.Collections.cs" />
     <Compile Include="Orchestrate.cs" />
     <Compile Include="Models\OrchestratePath.cs" />
+    <Compile Include="Orchestrate.Events.cs" />
+    <Compile Include="Orchestrate.Graphs.cs" />
+    <Compile Include="Orchestrate.KeyValue.cs" />
+    <Compile Include="Orchestrate.Refs.cs" />
+    <Compile Include="Orchestrate.Search.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Models\SearchResult.cs" />
