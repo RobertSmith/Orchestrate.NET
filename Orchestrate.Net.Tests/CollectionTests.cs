@@ -8,10 +8,10 @@ using Orchestrate.Net.Tests.Helpers;
 
 namespace Orchestrate.Net.Tests
 {
-	[TestFixture]
+    [TestFixture]
     public class CollectionTests
     {
-		[Test]
+        [Test]
         public void CreateCollectionWithItemAsObject()
         {
             // Set up
@@ -41,7 +41,7 @@ namespace Orchestrate.Net.Tests
             // Set up
             const string collectionName = "TestCollection01";
             var orchestration = new Orchestrate(TestHelper.ApiKey);
-            var item = new TestData { Id = 1, Value = "CreateCollectionWithItemAsObject" };
+            var item = new TestData {Id = 1, Value = "CreateCollectionWithItemAsObject"};
 
             try
             {
@@ -64,8 +64,8 @@ namespace Orchestrate.Net.Tests
         {
             // Set up
             const string collectionName = "TestCollection02";
-			var orchestration = new Orchestrate(TestHelper.ApiKey);
-            var item = new TestData { Id = 1, Value = "CreateCollectionWithItemAsJsonString" };
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "CreateCollectionWithItemAsJsonString"};
             var json = JsonConvert.SerializeObject(item);
 
             try
@@ -90,7 +90,7 @@ namespace Orchestrate.Net.Tests
             // Set up
             const string collectionName = "TestCollection02";
             var orchestration = new Orchestrate(TestHelper.ApiKey);
-            var item = new TestData { Id = 1, Value = "CreateCollectionWithItemAsJsonString" };
+            var item = new TestData {Id = 1, Value = "CreateCollectionWithItemAsJsonString"};
             var json = JsonConvert.SerializeObject(item);
 
             try
@@ -114,8 +114,8 @@ namespace Orchestrate.Net.Tests
         {
             // Set up
             const string collectionName = "";
-			var orchestration = new Orchestrate(TestHelper.ApiKey);
-            var item = new TestData { Id = 1, Value = "CreateCollectionNoCollectionName" };
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "CreateCollectionNoCollectionName"};
 
             try
             {
@@ -136,7 +136,7 @@ namespace Orchestrate.Net.Tests
             // Set up
             const string collectionName = "";
             var orchestration = new Orchestrate(TestHelper.ApiKey);
-            var item = new TestData { Id = 1, Value = "CreateCollectionNoCollectionName" };
+            var item = new TestData {Id = 1, Value = "CreateCollectionNoCollectionName"};
 
             try
             {
@@ -157,8 +157,8 @@ namespace Orchestrate.Net.Tests
         {
             // Set up
             const string collectionName = "TestCollection04";
-			var orchestration = new Orchestrate(TestHelper.ApiKey);
-            var item = new TestData { Id = 1, Value = "CreateCollectionNoCollectionName" };
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "CreateCollectionNoCollectionName"};
 
             try
             {
@@ -180,7 +180,7 @@ namespace Orchestrate.Net.Tests
             // Set up
             const string collectionName = "TestCollection04";
             var orchestration = new Orchestrate(TestHelper.ApiKey);
-            var item = new TestData { Id = 1, Value = "CreateCollectionNoCollectionName" };
+            var item = new TestData {Id = 1, Value = "CreateCollectionNoCollectionName"};
 
             try
             {
@@ -202,11 +202,11 @@ namespace Orchestrate.Net.Tests
         {
             // Set up
             const string collectionName = "TestCollection05";
-			var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
 
             try
             {
-                orchestration.Put(collectionName, Guid.NewGuid().ToString(), (object)null);
+                orchestration.Put(collectionName, Guid.NewGuid().ToString(), (object) null);
             }
             catch (ArgumentNullException ex)
             {
@@ -227,7 +227,7 @@ namespace Orchestrate.Net.Tests
 
             try
             {
-                var result = orchestration.PutAsync(collectionName, Guid.NewGuid().ToString(), (object)null).Result;
+                var result = orchestration.PutAsync(collectionName, Guid.NewGuid().ToString(), (object) null).Result;
             }
             catch (AggregateException ex)
             {
@@ -245,8 +245,8 @@ namespace Orchestrate.Net.Tests
         {
             // Set up
             const string collectionName = "TestCollection03";
-			var orchestration = new Orchestrate(TestHelper.ApiKey);
-            var item = new TestData { Id = 1, Value = "DeleteCollection" };
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "DeleteCollection"};
             var json = JsonConvert.SerializeObject(item);
 
             try
@@ -268,7 +268,7 @@ namespace Orchestrate.Net.Tests
             // Set up
             const string collectionName = "TestCollection03";
             var orchestration = new Orchestrate(TestHelper.ApiKey);
-            var item = new TestData { Id = 1, Value = "DeleteCollection" };
+            var item = new TestData {Id = 1, Value = "DeleteCollection"};
             var json = JsonConvert.SerializeObject(item);
 
             try
@@ -288,7 +288,7 @@ namespace Orchestrate.Net.Tests
         public void DeleteNonExistantCollection()
         {
             // Set up
-			var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
 
             try
             {
@@ -325,8 +325,8 @@ namespace Orchestrate.Net.Tests
         {
             // Set up
             const string collectionName = "TestCollection04";
-			var orchestration = new Orchestrate(TestHelper.ApiKey);
-            var item = new TestData { Id = 1, Value = "DeleteCollection" };
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "DeleteCollection"};
             var json = JsonConvert.SerializeObject(item);
 
             try
@@ -350,7 +350,7 @@ namespace Orchestrate.Net.Tests
             // Set up
             const string collectionName = "TestCollection04";
             var orchestration = new Orchestrate(TestHelper.ApiKey);
-            var item = new TestData { Id = 1, Value = "DeleteCollection" };
+            var item = new TestData {Id = 1, Value = "DeleteCollection"};
             var json = JsonConvert.SerializeObject(item);
 
             try
@@ -368,5 +368,242 @@ namespace Orchestrate.Net.Tests
 
             Assert.Fail("No Exception Thrown");
         }
+
+        #region Old Style Creation - Depreciated
+
+        #pragma warning disable CS0618 // Type or member is obsolete
+
+        [Test]
+        public void Old_CreateCollectionWithItemAsObject()
+        {
+            // Set up
+            const string collectionName = "TestCollection01";
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "CreateCollectionWithItemAsObject"};
+
+            try
+            {
+                var result = orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), item);
+
+                Assert.IsTrue(result.Path.Ref.Length > 0);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                orchestration.DeleteCollection(collectionName);
+            }
+        }
+
+        [Test]
+        public void Old_CreateCollectionWithItemAsObjectAsync()
+        {
+            // Set up
+            const string collectionName = "TestCollection01";
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "CreateCollectionWithItemAsObject"};
+
+            try
+            {
+                var result = orchestration.CreateCollectionAsync(collectionName, Guid.NewGuid().ToString(), item).Result;
+
+                Assert.IsTrue(result.Path.Ref.Length > 0);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                orchestration.DeleteCollection(collectionName);
+            }
+        }
+
+        [Test]
+        public void Old_CreateCollectionWithItemAsJsonString()
+        {
+            // Set up
+            const string collectionName = "TestCollection02";
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "CreateCollectionWithItemAsJsonString"};
+            var json = JsonConvert.SerializeObject(item);
+
+            try
+            {
+                var result = orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), json);
+
+                Assert.IsTrue(result.Path.Ref.Length > 0);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                orchestration.DeleteCollection(collectionName);
+            }
+        }
+
+        [Test]
+        public void Old_CreateCollectionWithItemAsJsonStringAsync()
+        {
+            // Set up
+            const string collectionName = "TestCollection02";
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "CreateCollectionWithItemAsJsonString"};
+            var json = JsonConvert.SerializeObject(item);
+
+            try
+            {
+                var result = orchestration.CreateCollectionAsync(collectionName, Guid.NewGuid().ToString(), json).Result;
+
+                Assert.IsTrue(result.Path.Ref.Length > 0);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
+            }
+            finally
+            {
+                orchestration.DeleteCollection(collectionName);
+            }
+        }
+
+        [Test]
+        public void Old_CreateCollectionNoCollectionName()
+        {
+            // Set up
+            const string collectionName = "";
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "CreateCollectionNoCollectionName"};
+
+            try
+            {
+                orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), item);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void Old_CreateCollectionNoCollectionNameAsync()
+        {
+            // Set up
+            const string collectionName = "";
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "CreateCollectionNoCollectionName"};
+
+            try
+            {
+                var result = orchestration.CreateCollectionAsync(collectionName, Guid.NewGuid().ToString(), item).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner?.ParamName == "collectionName");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void Old_CreateCollectionNoKey()
+        {
+            // Set up
+            const string collectionName = "TestCollection04";
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "CreateCollectionNoCollectionName"};
+
+            try
+            {
+                orchestration.CreateCollection(collectionName, string.Empty, item);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "key");
+                return;
+            }
+
+            orchestration.DeleteCollection(collectionName);
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void Old_CreateCollectionNoKeyAsync()
+        {
+            // Set up
+            const string collectionName = "TestCollection04";
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+            var item = new TestData {Id = 1, Value = "CreateCollectionNoCollectionName"};
+
+            try
+            {
+                var result = orchestration.CreateCollectionAsync(collectionName, string.Empty, item).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner?.ParamName == "key");
+                return;
+            }
+
+            orchestration.DeleteCollection(collectionName);
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void Old_CreateCollectionNoItem()
+        {
+            // Set up
+            const string collectionName = "TestCollection05";
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+
+            try
+            {
+                orchestration.CreateCollection(collectionName, Guid.NewGuid().ToString(), (object) null);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "item");
+                return;
+            }
+
+            orchestration.DeleteCollection(collectionName);
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void Old_CreateCollectionNoItemAsync()
+        {
+            // Set up
+            const string collectionName = "TestCollection05";
+            var orchestration = new Orchestrate(TestHelper.ApiKey);
+
+            try
+            {
+                var result = orchestration.CreateCollectionAsync(collectionName, Guid.NewGuid().ToString(), (object) null).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner?.ParamName == "item");
+                return;
+            }
+
+            orchestration.DeleteCollection(collectionName);
+            Assert.Fail("No Exception Thrown");
+        }
+
+        #pragma warning restore CS0618 // Type or member is obsolete
+
+        #endregion
     }
 }
