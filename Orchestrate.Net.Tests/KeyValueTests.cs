@@ -274,7 +274,7 @@ namespace Orchestrate.Net.Tests
         [Test]
         public void PutAsObject()
         {
-            var item = new TestData {Id = 3, Value = "A successful object PUT"};
+            var item = new TestData { Id = 3, Value = "A successful object PUT" };
             var result = _orchestrate.Put(CollectionName, Guid.NewGuid().ToString(), item);
 
             Assert.IsTrue(result.Path.Ref.Length > 0);
@@ -424,7 +424,7 @@ namespace Orchestrate.Net.Tests
         public void PutIfMatchSuccess()
         {
             var match = _orchestrate.Get(CollectionName, "1");
-            var item = new TestData {Id = 1, Value = "New and improved value!"};
+            var item = new TestData { Id = 1, Value = "New and improved value!" };
 
             var result = _orchestrate.PutIfMatch(CollectionName, "1", item, match.Path.Ref);
 
@@ -446,7 +446,7 @@ namespace Orchestrate.Net.Tests
         public void PutIfMatchFail()
         {
             var match = _orchestrate.Get(CollectionName, "1");
-            var item = new TestData {Id = 1, Value = "Value, now with more moxie!"};
+            var item = new TestData { Id = 1, Value = "Value, now with more moxie!" };
 
             try
             {

@@ -95,44 +95,11 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void SearchWithNoCollectionName()
-        {
-            try
-            {
-                _orchestrate.Search(string.Empty, "9999");
-            }
-            catch (ArgumentNullException ex)
-            {
-                Assert.IsTrue(ex.ParamName == "collectionName");
-                return;
-            }
-
-            Assert.Fail("No Exception Thrown");
-        }
-
-        [Test]
-        public void SearchWithNoCollectionNameAsync()
-        {
-            try
-            {
-                var result = _orchestrate.SearchAsync(string.Empty, "9999").Result;
-            }
-            catch (AggregateException ex)
-            {
-                var inner = ex.InnerExceptions.First() as ArgumentNullException;
-                Assert.IsTrue(inner?.ParamName == "collectionName");
-                return;
-            }
-
-            Assert.Fail("No Exception Thrown");
-        }
-
-        [Test]
         public void SearchWithNoQuery()
         {
             try
             {
-                _orchestrate.Search(CollectionName, string.Empty);
+                var result = _orchestrate.Search(CollectionName, string.Empty);
             }
             catch (ArgumentNullException ex)
             {
@@ -165,7 +132,7 @@ namespace Orchestrate.Net.Tests
         {
             try
             {
-                _orchestrate.Search(CollectionName, "*", -100);
+                var result = _orchestrate.Search(CollectionName, "*", -100);
             }
             catch (ArgumentOutOfRangeException ex)
             {
@@ -198,7 +165,7 @@ namespace Orchestrate.Net.Tests
         {
             try
             {
-                _orchestrate.Search(CollectionName, "*", 10, -1);
+                var result = _orchestrate.Search(CollectionName, "*", 10, -1);
             }
             catch (ArgumentOutOfRangeException ex)
             {
@@ -226,5 +193,69 @@ namespace Orchestrate.Net.Tests
             Assert.Fail("No Exception Thrown");
         }
 
+        [Test]
+        public void RootSearch()
+        {
+            var result = _orchestrate.Search(string.Empty, "3");
+
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void RootSearchAsync()
+        {
+            var result = _orchestrate.SearchAsync(string.Empty, "3").Result;
+
+            Assert.IsTrue(result.Count > 0);
+        }
+
+        [Test]
+        public void RootSearchNotFound()
+        {
+            var result = _orchestrate.Search(string.Empty, "999999999999999999");
+
+            Assert.IsTrue(result.Count == 0);
+        }
+
+        [Test]
+        public void RootSearchAsyncNotFound()
+        {
+            var result = _orchestrate.SearchAsync(string.Empty, "999999999999999999").Result;
+
+            Assert.IsTrue(result.Count == 0);
+        }
+
+        [Test]
+        public void RootSearchNotFounNoQuery()
+        {
+            try
+            {
+                var result = _orchestrate.Search(string.Empty, string.Empty);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.IsTrue(ex.ParamName == "query");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
+
+        [Test]
+        public void RootSearchAsyncNoQuery()
+        {
+            try
+            {
+                var result = _orchestrate.SearchAsync(string.Empty, string.Empty).Result;
+            }
+            catch (AggregateException ex)
+            {
+                var inner = ex.InnerExceptions.First() as ArgumentNullException;
+                Assert.IsTrue(inner?.ParamName == "query");
+                return;
+            }
+
+            Assert.Fail("No Exception Thrown");
+        }
     }
 }
