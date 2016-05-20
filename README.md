@@ -11,7 +11,7 @@ PM> Install-Package Orchestrate.NET
 
 Running Tests
 -------------
-Orchestrate.NET runs against the actual Orchestrate API. Go to Orchestrate.io and set up an account. Create a new application and use the API key provided. See the Contributing section below on where to place the key.
+Orchestrate.NET runs against the actual Orchestrate API. Go to Orchestrate.io and set up an account. Create a new application and use the API key provided.
 
 Docs
 ----
