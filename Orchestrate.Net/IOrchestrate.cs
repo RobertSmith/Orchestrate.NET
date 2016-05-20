@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Orchestrate.Net.Models;
 
 namespace Orchestrate.Net
 {
@@ -136,6 +137,13 @@ namespace Orchestrate.Net
         Task<Result> PutGraphIfNoneMatchAsync(string collectionName, string key, string kind, string toCollectionName, string toKey, object properties);
         Task<Result> PutGraphIfNoneMatchAsync(string collectionName, string key, string kind, string toCollectionName, string toKey, string properties);
         Task<Result> DeleteGraphAsync(string collectionName, string key, string kind, string toCollectionName, string toKey);
+
+        #endregion
+
+        #region Aggregates
+
+        AggregateResult Aggregate(string collectionName, string query, string aggregate);
+        Task<AggregateResult> AggregateAsync(string collectionName, string query, string aggregate);
 
         #endregion
     }

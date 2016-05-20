@@ -63,10 +63,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AggregateTests.cs" />
     <Compile Include="AuthenticationTests.cs" />
     <Compile Include="CollectionTests.cs" />
     <Compile Include="EventTests.cs" />
     <Compile Include="GraphTests.cs" />
+    <Compile Include="Helpers\AggregateTestData.cs" />
+    <Compile Include="Helpers\Location.cs" />
     <Compile Include="Helpers\TestHelper.cs" />
     <Compile Include="KeyValueTests.cs" />
     <Compile Include="ListTests.cs" />

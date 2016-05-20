@@ -72,10 +72,16 @@
     <Compile Include="Extensions\HttpMethodExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="IOrchestrate.cs" />
+    <Compile Include="Models\AggregateBuckets.cs" />
+    <Compile Include="Models\AggregateEntries.cs" />
+    <Compile Include="Models\AggregateResult.cs" />
+    <Compile Include="Models\Aggregates.cs" />
+    <Compile Include="Models\AggregateStatistics.cs" />
     <Compile Include="Models\BaseResult.cs" />
     <Compile Include="Models\EventResult.cs" />
     <Compile Include="Models\EventResultList.cs" />
     <Compile Include="Models\ListResult.cs" />
+    <Compile Include="Orchestrate.Aggregates.cs" />
     <Compile Include="Orchestrate.Authentication.cs" />
     <Compile Include="Orchestrate.Collections.cs" />
     <Compile Include="Orchestrate.cs" />
