@@ -11,7 +11,7 @@ PM> Install-Package Orchestrate.NET
 
 Running Tests
 -------------
-Orchestrate.NET runs against the actual Orchestrate API. Go to Orchestrate.io and set up an account. Create a new application and use the API key provided.
+Orchestrate.NET runs against the actual Orchestrate API. Go to Orchestrate.io and set up an account. Create a new application and use the API key provided. See the Contributing section below on where to place the key.
 
 Docs
 ----
@@ -25,11 +25,11 @@ Creating a collection
 ---------------------
 Creating a collection requires an object to be placed in the collection. No empty collections allowed.
 
-var collection = orchestrate.CreateCollection(collectionName, key, item);
+var collection = orchestrate.Put(collectionName, key, <object>);
 
 or you can pass in a json string:
 
-var collection = orchestrate.CreateCollection(collectionName, key, json);
+var collection = orchestrate.Put(collectionName, key, <json>);
 
 Get
 ---
@@ -39,15 +39,25 @@ Result result = orchestrate.Get(collectionName, key);
 
 var item = result.Value;
 
+Post
+---
+You can add items to your collection with the Post command. This will add the item and generate a unique key:
+
+Result result = orchestrate.Post(collectionName, <object>);
+
+or use a json string:
+
+Result result = orchestrate.Post(collectionName, <json>);
+
 Put
 ---
-You can add items to your collection via the Put method:
+You can add/update items to your collection via the Put method. This will not create a new key, but use the one provided:
 
-Result result = orchestrate.Put(collectionName, key, item);
+Result result = orchestrate.Put(collectionName, key, <object>);
 
 or you can pass in a json string:
 
-var collection = orchestrate.Put(collectionName, key, json);
+var collection = orchestrate.Put(collectionName, key, <json>);
 
 Search
 ------
