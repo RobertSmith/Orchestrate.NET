@@ -19,7 +19,7 @@ Please refer to the docs at orchestrate.io for more details.
 
 Creating a Client
 -----------------
-var orchestrate = new Orchestrate.Net.Orchestrate(<api key>);
+var orchestrate = new Orchestrate.Net.Orchestrate(api key);
 
 Creating a collection
 ---------------------
