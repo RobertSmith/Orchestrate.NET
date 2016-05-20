@@ -15,11 +15,28 @@ namespace Orchestrate.Net
 
         #region Helper Functions
 
-        private static double ConvertToUnixTimestamp(DateTime date)
+        public static long ConvertToUnixTimestamp(DateTime date)
         {
             var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             TimeSpan diff = date.ToUniversalTime() - origin;
-            return Math.Floor(diff.TotalMilliseconds);
+            return (long)Math.Floor(diff.TotalMilliseconds);
+        }
+
+        public static DateTime ConvertFromUnixTimeStamp(double unixTimeStamp)
+        {
+            // Unix timestamp is seconds past epoch
+            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddMilliseconds(unixTimeStamp).ToUniversalTime();
+            return dtDateTime;
+        }
+
+        public static DateTime ConvertFromUnixTimeStamp(string unixTimeStamp)
+        {
+            // Unix timestamp is seconds past epoch
+            double ts = double.Parse(unixTimeStamp);
+            DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddMilliseconds(ts).ToUniversalTime();
+            return dtDateTime;
         }
 
         private static string ExtractKeyFromLocation(BaseResult baseResult)
@@ -33,7 +50,7 @@ namespace Orchestrate.Net
         {
             return new Result
             {
-                Path = new OrchestratePath
+                Path = new Path
                 {
                     Collection = collectionName,
                     Key = key,

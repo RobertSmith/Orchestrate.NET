@@ -79,7 +79,7 @@
     <Compile Include="Orchestrate.Authentication.cs" />
     <Compile Include="Orchestrate.Collections.cs" />
     <Compile Include="Orchestrate.cs" />
-    <Compile Include="Models\OrchestratePath.cs" />
+    <Compile Include="Models\Path.cs" />
     <Compile Include="Orchestrate.Events.cs" />
     <Compile Include="Orchestrate.Graphs.cs" />
     <Compile Include="Orchestrate.KeyValue.cs" />

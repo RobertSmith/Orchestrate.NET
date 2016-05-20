@@ -6,7 +6,39 @@ namespace Orchestrate.Net
 {
     public partial class Orchestrate
     {
-        public EventResultList GetEvents(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal)
+        #region Get Event
+
+        public EventResult GetEvent(string collectionName, string key, string type, DateTime timestamp, long ordinal)
+        {
+            var ts = ConvertToUnixTimestamp(timestamp);
+
+            return GetEvent(collectionName, key, type, ts, ordinal);
+        }
+
+        public EventResult GetEvent(string collectionName, string key, string type, long timestamp, long ordinal)
+        {
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
+
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "/" + timestamp + "/" + ordinal;
+
+            return JsonConvert.DeserializeObject<EventResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
+        }
+
+        public async Task<EventResult> GetEventAsync(string collectionName, string key, string type, DateTime timestamp, long ordinal)
+        {
+            var ts = ConvertToUnixTimestamp(timestamp);
+
+            return await GetEventAsync(collectionName, key, type, ts, ordinal);
+        }
+
+        public async Task<EventResult> GetEventAsync(string collectionName, string key, string type, long timestamp, long ordinal)
         {
             if (string.IsNullOrWhiteSpace(collectionName))
                 throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
@@ -23,42 +55,25 @@ namespace Orchestrate.Net
             if (string.IsNullOrWhiteSpace(type))
                 throw new ArgumentNullException(nameof(ordinal), "ordinal cannot be null or empty");
 
-            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "/" + ConvertToUnixTimestamp(timestamp) + "/" + ordinal;
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "/" + timestamp + "/" + ordinal;
 
-            return JsonConvert.DeserializeObject<EventResultList>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
+            var result = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
+
+            return JsonConvert.DeserializeObject<EventResult>(result.Payload);
         }
 
-        /// <summary>
-        /// Depreciated
-        /// </summary>
-        /// <param name="collectionName"></param>
-        /// <param name="key"></param>
-        /// <param name="type"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        public EventResultList GetEvents(string collectionName, string key, string type, DateTime? start = null, DateTime? end = null)
+        #endregion
+
+        #region Post Event
+
+        public Result PostEvent(string collectionName, string key, string type, DateTime? timeStamp, object item)
         {
-            if (string.IsNullOrWhiteSpace(collectionName))
-                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
+            if (item == null)
+                throw new ArgumentNullException(nameof(item), "item cannot be null");
 
-            if (string.IsNullOrWhiteSpace(key))
-                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
+            var json = JsonConvert.SerializeObject(item);
 
-            if (string.IsNullOrWhiteSpace(type))
-                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
-
-            var url = _urlBase + collectionName + "/" + key + "/events/" + type;
-
-            if (start != null)
-                url += "?start=" + ConvertToUnixTimestamp(start.Value);
-
-            if (end != null && start != null)
-                url += "&end=" + ConvertToUnixTimestamp(end.Value);
-            else if (end != null)
-                url += "?end=" + ConvertToUnixTimestamp(end.Value);
-
-            return JsonConvert.DeserializeObject<EventResultList>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
+            return PostEvent(collectionName, key, type, timeStamp, json);
         }
 
         public Result PostEvent(string collectionName, string key, string type, DateTime? timeStamp, string item)
@@ -82,181 +97,14 @@ namespace Orchestrate.Net
             return BuildResult(collectionName, key, baseResult);
         }
 
-        public Result PostEvent(string collectionName, string key, string type, DateTime? timeStamp, object item)
+        public async Task<Result> PostEventAsync(string collectionName, string key, string type, DateTime? timeStamp, object item)
         {
             if (item == null)
                 throw new ArgumentNullException(nameof(item), "item cannot be null");
 
             var json = JsonConvert.SerializeObject(item);
 
-            return PostEvent(collectionName, key, type, timeStamp, json);
-        }
-
-        public Result PutEvent(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, string item)
-        {
-            if (string.IsNullOrWhiteSpace(collectionName))
-                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(key))
-                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(type))
-                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
-
-            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "/" + timeStamp + "/" + ordinal;
-
-            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item);
-
-            return BuildResult(collectionName, key, baseResult);
-        }
-
-        public Result PutEvent(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, object item)
-        {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item), "item cannot be null");
-
-            var json = JsonConvert.SerializeObject(item);
-
-            return PutEvent(collectionName, key, type, timeStamp, ordinal, json);
-        }
-
-        public Result PutEventIfMatch(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, string item, string ifMatch)
-        {
-            if (string.IsNullOrWhiteSpace(collectionName))
-                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(key))
-                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(type))
-                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(ifMatch))
-                throw new ArgumentNullException(nameof(ifMatch), "ifMatch cannot be empty");
-
-            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "/" + timeStamp + "/" + ordinal;
-
-            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, ifMatch);
-
-            return BuildResult(collectionName, key, baseResult);
-        }
-
-        public Result PutEventIfMatch(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, object item, string ifMatch)
-        {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item), "item cannot be null");
-
-            var json = JsonConvert.SerializeObject(item);
-
-            return PutEventIfMatch(collectionName, key, type, timeStamp, ordinal, json, ifMatch);
-        }
-
-        /// <summary>
-        /// Depreciated
-        /// </summary>
-        /// <param name="collectionName"></param>
-        /// <param name="key"></param>
-        /// <param name="type"></param>
-        /// <param name="timeStamp"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, string item)
-        {
-            if (string.IsNullOrWhiteSpace(collectionName))
-                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(key))
-                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(type))
-                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
-
-            var url = _urlBase + collectionName + "/" + key + "/events/" + type;
-
-            if (timeStamp != null)
-                url += "?timestamp=" + ConvertToUnixTimestamp(timeStamp.Value);
-
-            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item);
-
-            return BuildResult(collectionName, key, baseResult);
-        }
-
-        /// <summary>
-        /// Depreciated
-        /// </summary>
-        /// <param name="collectionName"></param>
-        /// <param name="key"></param>
-        /// <param name="type"></param>
-        /// <param name="timeStamp"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public Result PutEvent(string collectionName, string key, string type, DateTime? timeStamp, object item)
-        {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item), "item cannot be null");
-
-            var json = JsonConvert.SerializeObject(item);
-
-            return PutEvent(collectionName, key, type, timeStamp, json);
-        }
-
-        public async Task<EventResultList> GetEventsAsync(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal)
-        {
-            if (string.IsNullOrWhiteSpace(collectionName))
-                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(key))
-                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(type))
-                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(type))
-                throw new ArgumentNullException(nameof(timestamp), "timestamp cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(type))
-                throw new ArgumentNullException(nameof(ordinal), "ordinal cannot be null or empty");
-
-            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "/" + ConvertToUnixTimestamp(timestamp) + "/" + ordinal;
-
-            var result = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
-
-            return JsonConvert.DeserializeObject<EventResultList>(result.Payload);
-        }
-
-        /// <summary>
-        /// Depreciated
-        /// </summary>
-        /// <param name="collectionName"></param>
-        /// <param name="key"></param>
-        /// <param name="type"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
-        public async Task<EventResultList> GetEventsAsync(string collectionName, string key, string type, DateTime? start = null, DateTime? end = null)
-        {
-            if (string.IsNullOrWhiteSpace(collectionName))
-                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(key))
-                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
-
-            if (string.IsNullOrWhiteSpace(type))
-                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
-
-            var url = _urlBase + collectionName + "/" + key + "/events/" + type;
-
-            if (start != null)
-                url += "?start=" + ConvertToUnixTimestamp(start.Value);
-
-            if (end != null && start != null)
-                url += "&end=" + ConvertToUnixTimestamp(end.Value);
-            else if (end != null)
-                url += "?end=" + ConvertToUnixTimestamp(end.Value);
-
-            var result = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
-
-            return JsonConvert.DeserializeObject<EventResultList>(result.Payload);
+            return await PostEventAsync(collectionName, key, type, timeStamp, json);
         }
 
         public async Task<Result> PostEventAsync(string collectionName, string key, string type, DateTime? timeStamp, string item)
@@ -280,17 +128,105 @@ namespace Orchestrate.Net
             return BuildResult(collectionName, key, baseResult);
         }
 
-        public async Task<Result> PostEventAsync(string collectionName, string key, string type, DateTime? timeStamp, object item)
+        #endregion
+
+        #region Put Event
+
+        public Result PutEvent(string collectionName, string key, string type, DateTime timeStamp, long ordinal, object item)
         {
             if (item == null)
                 throw new ArgumentNullException(nameof(item), "item cannot be null");
 
             var json = JsonConvert.SerializeObject(item);
 
-            return await PostEventAsync(collectionName, key, type, timeStamp, json);
+            return PutEvent(collectionName, key, type, timeStamp, ordinal, json);
         }
 
-        public async Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, string item)
+        public Result PutEvent(string collectionName, string key, string type, DateTime timeStamp, long ordinal, string item)
+        {
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
+
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "/" + ConvertToUnixTimestamp(timeStamp) + "/" + ordinal;
+
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item);
+
+            return BuildResult(collectionName, key, baseResult);
+        }
+
+        public Result PutEvent(string collectionName, string key, string type, long timeStamp, long ordinal, object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException(nameof(item), "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+
+            return PutEvent(collectionName, key, type, timeStamp, ordinal, json);
+        }
+
+        public Result PutEvent(string collectionName, string key, string type, long timeStamp, long ordinal, string item)
+        {
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
+
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "/" + timeStamp + "/" + ordinal;
+
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item);
+
+            return BuildResult(collectionName, key, baseResult);
+        }
+
+        public async Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime timeStamp, long ordinal, object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException(nameof(item), "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+
+            return await PutEventAsync(collectionName, key, type, timeStamp, ordinal, json);
+        }
+
+        public async Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime timeStamp, long ordinal, string item)
+        {
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
+
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "/" + ConvertToUnixTimestamp(timeStamp) + "/" + ordinal;
+
+            var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item);
+
+            return BuildResult(collectionName, key, baseResult);
+        }
+
+        public async Task<Result> PutEventAsync(string collectionName, string key, string type, long timeStamp, long ordinal, object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException(nameof(item), "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+
+            return await PutEventAsync(collectionName, key, type, timeStamp, ordinal, json);
+        }
+
+        public async Task<Result> PutEventAsync(string collectionName, string key, string type, long timeStamp, long ordinal, string item)
         {
             if (string.IsNullOrWhiteSpace(collectionName))
                 throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
@@ -308,17 +244,110 @@ namespace Orchestrate.Net
             return BuildResult(collectionName, key, baseResult);
         }
 
-        public async Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, object item)
+        public Result PutEventIfMatch(string collectionName, string key, string type, DateTime timeStamp, long ordinal, object item, string ifMatch)
         {
             if (item == null)
                 throw new ArgumentNullException(nameof(item), "item cannot be null");
 
             var json = JsonConvert.SerializeObject(item);
 
-            return await PutEventAsync(collectionName, key, type, timeStamp, json);
+            return PutEventIfMatch(collectionName, key, type, timeStamp, ordinal, json, ifMatch);
         }
 
-        public async Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, string item, string ifMatch)
+        public Result PutEventIfMatch(string collectionName, string key, string type, DateTime timeStamp, long ordinal, string item, string ifMatch)
+        {
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(ifMatch))
+                throw new ArgumentNullException(nameof(ifMatch), "ifMatch cannot be empty");
+
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "/" + ConvertToUnixTimestamp(timeStamp) + "/" + ordinal;
+
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, ifMatch);
+
+            return BuildResult(collectionName, key, baseResult);
+        }
+
+        public Result PutEventIfMatch(string collectionName, string key, string type, long timeStamp, long ordinal, object item, string ifMatch)
+        {
+            if (item == null)
+                throw new ArgumentNullException(nameof(item), "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+
+            return PutEventIfMatch(collectionName, key, type, timeStamp, ordinal, json, ifMatch);
+        }
+
+        public Result PutEventIfMatch(string collectionName, string key, string type, long timeStamp, long ordinal, string item, string ifMatch)
+        {
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(ifMatch))
+                throw new ArgumentNullException(nameof(ifMatch), "ifMatch cannot be empty");
+
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "/" + timeStamp + "/" + ordinal;
+
+            var baseResult = Communication.CallWebRequest(_apiKey, url, "PUT", item, ifMatch);
+
+            return BuildResult(collectionName, key, baseResult);
+        }
+
+        public async Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, DateTime timeStamp, long ordinal, object item, string ifMatch)
+        {
+            if (item == null)
+                throw new ArgumentNullException(nameof(item), "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+
+            return await PutEventIfMatchAsync(collectionName, key, type, timeStamp, ordinal, json, ifMatch);
+        }
+
+        public async Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, DateTime timeStamp, long ordinal, string item, string ifMatch)
+        {
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(ifMatch))
+                throw new ArgumentNullException(nameof(ifMatch), "ifMatch cannot be empty");
+
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "/" + ConvertToUnixTimestamp(timeStamp) + "/" + ordinal;
+
+            var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item, ifMatch);
+
+            return BuildResult(collectionName, key, baseResult);
+        }
+
+        public async Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, long timeStamp, long ordinal, object item, string ifMatch)
+        {
+            if (item == null)
+                throw new ArgumentNullException(nameof(item), "item cannot be null");
+
+            var json = JsonConvert.SerializeObject(item);
+
+            return await PutEventIfMatchAsync(collectionName, key, type, timeStamp, ordinal, json, ifMatch);
+        }
+
+        public async Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, long timeStamp, long ordinal, string item, string ifMatch)
         {
             if (string.IsNullOrWhiteSpace(collectionName))
                 throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
@@ -339,26 +368,11 @@ namespace Orchestrate.Net
             return BuildResult(collectionName, key, baseResult);
         }
 
-        public async Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, object item, string ifMatch)
-        {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item), "item cannot be null");
+        #endregion
 
-            var json = JsonConvert.SerializeObject(item);
+        #region List Events
 
-            return await PutEventIfMatchAsync(collectionName, key, type, timeStamp, ordinal, json, ifMatch);
-        }
-
-        /// <summary>
-        /// Depreciated
-        /// </summary>
-        /// <param name="collectionName"></param>
-        /// <param name="key"></param>
-        /// <param name="type"></param>
-        /// <param name="timeStamp"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public async Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime? timeStamp, string item)
+        public EventResultList ListEvents(string collectionName, string key, string type, int limit)
         {
             if (string.IsNullOrWhiteSpace(collectionName))
                 throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
@@ -369,33 +383,189 @@ namespace Orchestrate.Net
             if (string.IsNullOrWhiteSpace(type))
                 throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
 
-            var url = _urlBase + collectionName + "/" + key + "/events/" + type;
+            if (limit < 1)
+                throw new ArgumentException("Limit must be greater than 0", nameof(limit));
 
-            if (timeStamp != null)
-                url += "?timestamp=" + ConvertToUnixTimestamp(timeStamp.Value);
+            if (limit > 100)
+                throw new ArgumentException("Max Limit is 100", nameof(limit));
 
-            var baseResult = await Communication.CallWebRequestAsync(_apiKey, url, "PUT", item);
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "?limit=" + limit;
 
-            return BuildResult(collectionName, key, baseResult);
+            return JsonConvert.DeserializeObject<EventResultList>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
         }
 
-        /// <summary>
-        /// Depreciated
-        /// </summary>
-        /// <param name="collectionName"></param>
-        /// <param name="key"></param>
-        /// <param name="type"></param>
-        /// <param name="timeStamp"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public async Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime? timeStamp, object item)
+        public EventResultList ListEvents(string collectionName, string key, string type, 
+            int? limit = 100, DateTime? startEvent = null, DateTime? endEvent = null, 
+            DateTime? afterEvent = null, DateTime? beforeEvent = null)
         {
-            if (item == null)
-                throw new ArgumentNullException(nameof(item), "item cannot be null");
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
 
-            var json = JsonConvert.SerializeObject(item);
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
 
-            return await PutEventAsync(collectionName, key, type, timeStamp, json);
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
+
+            if (limit < 1)
+                throw new ArgumentException("Limit must be greater than 0", nameof(limit));
+
+            if (limit > 100)
+                throw new ArgumentException("Max Limit is 100", nameof(limit));
+
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "?limit=" + limit;
+
+            if (startEvent != null)
+                url += "&startEvent=" + ConvertToUnixTimestamp(startEvent.Value);
+
+            if (endEvent != null)
+                url += "&endEvent=" + ConvertToUnixTimestamp(endEvent.Value);
+
+            if (afterEvent != null)
+                url += "&afterEvent=" + ConvertToUnixTimestamp(afterEvent.Value);
+
+            if (beforeEvent != null)
+                url += "&beforeEvent=" + ConvertToUnixTimestamp(beforeEvent.Value);
+
+            return JsonConvert.DeserializeObject<EventResultList>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
         }
+
+        public EventResultList ListEvents(string collectionName, string key, string type, 
+            int? limit = 100, long? startEvent = null, long? endEvent = null, long? afterEvent = null, 
+            long? beforeEvent = null)
+        {
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
+
+            if (limit < 1)
+                throw new ArgumentException("Limit must be greater than 0", nameof(limit));
+
+            if (limit > 100)
+                throw new ArgumentException("Max Limit is 100", nameof(limit));
+
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "?limit=" + limit;
+
+            if (startEvent != null)
+                url += "&startEvent=" + startEvent.Value;
+
+            if (endEvent != null)
+                url += "&endEvent=" + endEvent.Value;
+
+            if (afterEvent != null)
+                url += "&afterEvent=" + afterEvent.Value;
+
+            if (beforeEvent != null)
+                url += "&beforeEvent=" + beforeEvent.Value;
+
+            return JsonConvert.DeserializeObject<EventResultList>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
+        }
+
+        public async Task<EventResultList> ListEventsAsync(string collectionName, string key, string type, int limit)
+        {
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
+
+            if (limit < 1)
+                throw new ArgumentException("Limit must be greater than 0", nameof(limit));
+
+            if (limit > 100)
+                throw new ArgumentException("Max Limit is 100", nameof(limit));
+
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "?limit=" + limit;
+
+            var result = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
+
+            return JsonConvert.DeserializeObject<EventResultList>(result.Payload);
+        }
+
+        public async Task<EventResultList> ListEventsAsync(string collectionName, string key,
+            string type, int? limit = 100, DateTime? startEvent = null, DateTime? endEvent = null,
+            DateTime? afterEvent = null, DateTime? beforeEvent = null)
+        {
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
+
+            if (limit < 1)
+                throw new ArgumentException("Limit must be greater than 0", nameof(limit));
+
+            if (limit > 100)
+                throw new ArgumentException("Max Limit is 100", nameof(limit));
+
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "?limit=" + limit;
+
+            if (startEvent != null)
+                url += "&startEvent=" + ConvertToUnixTimestamp(startEvent.Value);
+
+            if (endEvent != null)
+                url += "&endEvent=" + ConvertToUnixTimestamp(endEvent.Value);
+
+            if (afterEvent != null)
+                url += "&afterEvent=" + ConvertToUnixTimestamp(afterEvent.Value);
+
+            if (beforeEvent != null)
+                url += "&beforeEvent=" + ConvertToUnixTimestamp(beforeEvent.Value);
+
+            var result = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
+
+            return JsonConvert.DeserializeObject<EventResultList>(result.Payload);
+        }
+
+        public async Task<EventResultList> ListEventsAsync(string collectionName, string key, 
+            string type, int? limit = 100, long? startEvent = null, long? endEvent = null, 
+            long? afterEvent = null, long? beforeEvent = null)
+        {
+            if (string.IsNullOrWhiteSpace(collectionName))
+                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key), "key cannot be null or empty");
+
+            if (string.IsNullOrWhiteSpace(type))
+                throw new ArgumentNullException(nameof(type), "type cannot be null or empty");
+
+            if (limit < 1)
+                throw new ArgumentException("Limit must be greater than 0", nameof(limit));
+
+            if (limit > 100)
+                throw new ArgumentException("Max Limit is 100", nameof(limit));
+
+            var url = _urlBase + collectionName + "/" + key + "/events/" + type + "?limit=" + limit;
+
+            if (startEvent != null)
+                url += "&startEvent=" + startEvent.Value;
+
+            if (endEvent != null)
+                url += "&endEvent=" + endEvent.Value;
+
+            if (afterEvent != null)
+                url += "&afterEvent=" + afterEvent.Value;
+
+            if (beforeEvent != null)
+                url += "&beforeEvent=" + beforeEvent.Value;
+
+            var result = await Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
+
+            return JsonConvert.DeserializeObject<EventResultList>(result.Payload);
+        }
+
+        #endregion
     }
 }

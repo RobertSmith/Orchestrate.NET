@@ -14,16 +14,7 @@ namespace Orchestrate.Net
 
         #region Collections
 
-        [Obsolete ("You can create collections from the Orchestrate Dashboard. You can also perform a Key/Value PUT to a non-existent collection. If a collection does not exist, one will be created.")]
-        Result CreateCollection(string collectionName, string key, object item);
-        [Obsolete("You can create collections from the Orchestrate Dashboard. You can also perform a Key/Value PUT to a non-existent collection. If a collection does not exist, one will be created.")]
-        Result CreateCollection(string collectionName, string key, string item);
         Result DeleteCollection(string collectionName);
-
-        [Obsolete("You can create collections from the Orchestrate Dashboard. You can also perform a Key/Value PUT to a non-existent collection. If a collection does not exist, one will be created.")]
-        Task<Result> CreateCollectionAsync(string collectionName, string key, object item);
-        [Obsolete("You can create collections from the Orchestrate Dashboard. You can also perform a Key/Value PUT to a non-existent collection. If a collection does not exist, one will be created.")]
-        Task<Result> CreateCollectionAsync(string collectionName, string key, string item);
         Task<Result> DeleteCollectionAsync(string collectionName);
 
         #endregion
@@ -68,40 +59,68 @@ namespace Orchestrate.Net
 
         #endregion
 
+        #region Refs
 
         Result Ref(string collectionName, string key, string reference);
         ListResult RefList(string collectionName, string key, int limit, int offset, bool values);
+        Task<Result> RefAsync(string collectionName, string key, string reference);
+        Task<ListResult> RefListAsync(string collectionName, string key, int limit, int offset, bool values);
+
+        #endregion
+
+        #region Search
 
         SearchResult Search(string collectionName, string query, int limit, int offset, string sort, string aggregate);
+        Task<SearchResult> SearchAsync(string collectionName, string query, int limit, int offset, string sort, string aggregate);
 
-        EventResultList GetEvents(string collectionName, string key, string type, DateTime? start, DateTime? end);
-        EventResultList GetEvents(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal);
+        #endregion
+
+        #region Events
+
+        EventResult GetEvent(string collectionName, string key, string type, DateTime timestamp, long ordinal);
+        EventResult GetEvent(string collectionName, string key, string type, long timestamp, long ordinal);
         Result PostEvent(string collectionName, string key, string type, DateTime? timeStamp, string item);
         Result PostEvent(string collectionName, string key, string type, DateTime? timeStamp, object item);
-        Result PutEvent(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal, string item);
-        Result PutEvent(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal, object item);
-        Result PutEventIfMatch(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal, string item, string ifMatch);
-        Result PutEventIfMatch(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal, object item, string ifMatch);
+        Result PutEvent(string collectionName, string key, string type, DateTime timestamp, long ordinal, string item);
+        Result PutEvent(string collectionName, string key, string type, DateTime timestamp, long ordinal, object item);
+        Result PutEvent(string collectionName, string key, string type, long timestamp, long ordinal, string item);
+        Result PutEvent(string collectionName, string key, string type, long timestamp, long ordinal, object item);
+        Result PutEventIfMatch(string collectionName, string key, string type, DateTime timestamp, long ordinal, string item, string ifMatch);
+        Result PutEventIfMatch(string collectionName, string key, string type, DateTime timestamp, long ordinal, object item, string ifMatch);
+        Result PutEventIfMatch(string collectionName, string key, string type, long timestamp, long ordinal, string item, string ifMatch);
+        Result PutEventIfMatch(string collectionName, string key, string type, long timestamp, long ordinal, object item, string ifMatch);
+        EventResultList ListEvents(string collectionName, string key, string type, int limit);
+        EventResultList ListEvents(string collectionName, string key, string type, int? limit, DateTime? startEvent, DateTime? endEvent, DateTime? afterEvent, DateTime? beforeEvent);
+        EventResultList ListEvents(string collectionName, string key, string type, int? limit, long? startEvent, long? endEvent, long? afterEvent, long? beforeEvent);
+
+        Task<EventResult> GetEventAsync(string collectionName, string key, string type, DateTime timestamp, long ordinal);
+        Task<EventResult> GetEventAsync(string collectionName, string key, string type, long timestamp, long ordinal);
+        Task<Result> PostEventAsync(string collectionName, string key, string type, DateTime? timeStamp, string item);
+        Task<Result> PostEventAsync(string collectionName, string key, string type, DateTime? timeStamp, object item);
+        Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime timeStamp, long ordinal, string item);
+        Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime timeStamp, long ordinal, object item);
+        Task<Result> PutEventAsync(string collectionName, string key, string type, long timeStamp, long ordinal, string item);
+        Task<Result> PutEventAsync(string collectionName, string key, string type, long timeStamp, long ordinal, object item);
+        Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, DateTime timeStamp, long ordinal, string item, string ifMatch);
+        Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, DateTime timeStamp, long ordinal, object item, string ifMatch);
+        Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, long timeStamp, long ordinal, string item, string ifMatch);
+        Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, long timeStamp, long ordinal, object item, string ifMatch);
+        Task<EventResultList> ListEventsAsync(string collectionName, string key, string type, int limit);
+        Task<EventResultList> ListEventsAsync(string collectionName, string key, string type, int? limit, DateTime? startEvent, DateTime? endEvent, DateTime? afterEvent, DateTime? beforeEvent);
+        Task<EventResultList> ListEventsAsync(string collectionName, string key, string type, int? limit, long? startEvent, long? endEvent, long? afterEvent, long? beforeEvent);
+
+        #endregion
+
+        #region Graphs
 
         SearchResult GetGraph(string collectionName, string key, string[] kinds, int limit, int offset);
         Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
         Result DeleteGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
-        Task<Result> RefAsync(string collectionName, string key, string reference);
-        Task<ListResult> RefListAsync(string collectionName, string key, int limit, int offset, bool values);
-
-        Task<SearchResult> SearchAsync(string collectionName, string query, int limit, int offset, string sort, string aggregate);
-
-        Task<EventResultList> GetEventsAsync(string collectionName, string key, string type, DateTime? start, DateTime? end);
-        Task<EventResultList> GetEventsAsync(string collectionName, string key, string type, DateTime timestamp, Int64 ordinal);
-        Task<Result> PostEventAsync(string collectionName, string key, string type, DateTime? timeStamp, string item);
-        Task<Result> PostEventAsync(string collectionName, string key, string type, DateTime? timeStamp, object item);
-        Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, string item);
-        Task<Result> PutEventAsync(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, object item);
-        Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, string item, string ifMatch);
-        Task<Result> PutEventIfMatchAsync(string collectionName, string key, string type, DateTime timeStamp, Int64 ordinal, object item, string ifMatch);
 
         Task<ListResult> GetGraphAsync(string collectionName, string key, string[] kinds);
         Task<Result> PutGraphAsync(string collectionName, string key, string kind, string toCollectionName, string toKey);
         Task<Result> DeleteGraphAsync(string collectionName, string key, string kind, string toCollectionName, string toKey);
+
+        #endregion
     }
 }

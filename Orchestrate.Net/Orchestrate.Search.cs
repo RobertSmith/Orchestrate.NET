@@ -10,7 +10,6 @@ namespace Orchestrate.Net
         {
             if (string.IsNullOrWhiteSpace(collectionName))
                 collectionName = string.Empty;
-//                throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
 
             if (string.IsNullOrWhiteSpace(query))
                 throw new ArgumentNullException(nameof(query), "query cannot be null or empty");
@@ -36,7 +35,6 @@ namespace Orchestrate.Net
         {
             if (string.IsNullOrWhiteSpace(collectionName))
                 collectionName = string.Empty;
-//            throw new ArgumentNullException(nameof(collectionName), "collectionName cannot be null or empty");
 
             if (string.IsNullOrWhiteSpace(query))
                 throw new ArgumentNullException(nameof(query), "query cannot be null or empty");

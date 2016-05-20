@@ -504,7 +504,9 @@ namespace Orchestrate.Net
             if (!string.IsNullOrWhiteSpace(beforeKey))
                 url += "&beforeKey=" + beforeKey;
 
-            return JsonConvert.DeserializeObject<ListResult>(Communication.CallWebRequest(_apiKey, url, "GET", null).Payload);
+            var result = Communication.CallWebRequestAsync(_apiKey, url, "GET", null);
+
+            return JsonConvert.DeserializeObject<ListResult>(result.Result.Payload);
         }
 
         public async Task<ListResult> ListAsync(string collectionName, int limit, string startKey, string afterKey, string endKey = "", string beforeKey = "")
