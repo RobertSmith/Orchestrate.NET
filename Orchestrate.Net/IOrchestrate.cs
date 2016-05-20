@@ -62,8 +62,8 @@ namespace Orchestrate.Net
         #region Refs
 
         Result Ref(string collectionName, string key, string reference);
-        ListResult RefList(string collectionName, string key, int limit, int offset, bool values);
         Task<Result> RefAsync(string collectionName, string key, string reference);
+        ListResult RefList(string collectionName, string key, int limit, int offset, bool values);
         Task<ListResult> RefListAsync(string collectionName, string key, int limit, int offset, bool values);
 
         #endregion
@@ -115,10 +115,26 @@ namespace Orchestrate.Net
 
         SearchResult GetGraph(string collectionName, string key, string[] kinds, int limit, int offset);
         Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
+        Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey, object properties);
+        Result PutGraph(string collectionName, string key, string kind, string toCollectionName, string toKey, string properties);
+        Result PutGraphIfMatch(string collectionName, string key, string kind, string toCollectionName, string toKey, string ifMatch);
+        Result PutGraphIfMatch(string collectionName, string key, string kind, string toCollectionName, string toKey, string ifMatch, object properties);
+        Result PutGraphIfMatch(string collectionName, string key, string kind, string toCollectionName, string toKey, string ifMatch, string properties);
+        Result PutGraphIfNoneMatch(string collectionName, string key, string kind, string toCollectionName, string toKey);
+        Result PutGraphIfNoneMatch(string collectionName, string key, string kind, string toCollectionName, string toKey, object properties);
+        Result PutGraphIfNoneMatch(string collectionName, string key, string kind, string toCollectionName, string toKey, string properties);
         Result DeleteGraph(string collectionName, string key, string kind, string toCollectionName, string toKey);
 
         Task<ListResult> GetGraphAsync(string collectionName, string key, string[] kinds);
         Task<Result> PutGraphAsync(string collectionName, string key, string kind, string toCollectionName, string toKey);
+        Task<Result> PutGraphAsync(string collectionName, string key, string kind, string toCollectionName, string toKey, object properties);
+        Task<Result> PutGraphAsync(string collectionName, string key, string kind, string toCollectionName, string toKey, string properties);
+        Task<Result> PutGraphIfMatchAsync(string collectionName, string key, string kind, string toCollectionName, string toKey, string ifMatch);
+        Task<Result> PutGraphIfMatchAsync(string collectionName, string key, string kind, string toCollectionName, string toKey, string ifMatch, object properties);
+        Task<Result> PutGraphIfMatchAsync(string collectionName, string key, string kind, string toCollectionName, string toKey, string ifMatch, string properties);
+        Task<Result> PutGraphIfNoneMatchAsync(string collectionName, string key, string kind, string toCollectionName, string toKey);
+        Task<Result> PutGraphIfNoneMatchAsync(string collectionName, string key, string kind, string toCollectionName, string toKey, object properties);
+        Task<Result> PutGraphIfNoneMatchAsync(string collectionName, string key, string kind, string toCollectionName, string toKey, string properties);
         Task<Result> DeleteGraphAsync(string collectionName, string key, string kind, string toCollectionName, string toKey);
 
         #endregion

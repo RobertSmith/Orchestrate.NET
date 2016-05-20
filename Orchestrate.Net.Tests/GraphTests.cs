@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using Orchestrate.Net.Tests.Helpers;
 
@@ -42,8 +43,10 @@ namespace Orchestrate.Net.Tests
         {
         }
 
+        #region Put Graph
+
         [Test]
-        public void AddGraph()
+        public void PutGraph()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
             _orchestrate.Put("GraphTestCollection2", "2", data);
@@ -54,7 +57,7 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void AddGraphAsync()
+        public void PutGraphAsync()
         {
             var data = new TestData {Id = 2, Value = "This is collection 2 data"};
             _orchestrate.Put("GraphTestCollection2", "2", data);
@@ -66,7 +69,57 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void AddGraphWithNoCollectionName()
+        public void PutGraph_Properties_Object()
+        {
+            var data = new TestData { Id = 2, Value = "This is collection 2 data" };
+            _orchestrate.Put("GraphTestCollection2", "2", data);
+
+            var result = _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2", data);
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
+        public void PutGraphAsync_Properties_Object()
+        {
+            var data = new TestData { Id = 2, Value = "This is collection 2 data" };
+            _orchestrate.Put("GraphTestCollection2", "2", data);
+
+            var result =
+                _orchestrate.PutGraphAsync(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2", data).Result;
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
+        public void PutGraph_Properties_String()
+        {
+            var data = new TestData { Id = 2, Value = "This is collection 2 data" };
+            _orchestrate.Put("GraphTestCollection2", "2", data);
+
+            var json = JsonConvert.SerializeObject(data);
+
+            var result = _orchestrate.PutGraph(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2", json);
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
+        public void PutGraphAsync_Properties_String()
+        {
+            var data = new TestData { Id = 2, Value = "This is collection 2 data" };
+            _orchestrate.Put("GraphTestCollection2", "2", data);
+
+            var json = JsonConvert.SerializeObject(data);
+
+            var result =
+                _orchestrate.PutGraphAsync(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2", json).Result;
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
+        public void PutGraphWithNoCollectionName()
         {
             try
             {
@@ -82,7 +135,7 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void AddGraphWithNoCollectionNameAsync()
+        public void PutGraphWithNoCollectionNameAsync()
         {
             try
             {
@@ -100,7 +153,7 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void AddGraphWithNoKey()
+        public void PutGraphWithNoKey()
         {
             try
             {
@@ -116,7 +169,7 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void AddGraphWithNoKeyAsync()
+        public void PutGraphWithNoKeyAsync()
         {
             try
             {
@@ -133,7 +186,7 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void AddGraphWithNoKind()
+        public void PutGraphWithNoKind()
         {
             try
             {
@@ -149,7 +202,7 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void AddGraphWithNoKindAsync()
+        public void PutGraphWithNoKindAsync()
         {
             try
             {
@@ -166,7 +219,7 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void AddGraphWithNoToCollectionName()
+        public void PutGraphWithNoToCollectionName()
         {
             try
             {
@@ -182,7 +235,7 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void AddGraphWithNoToCollectionNameAsync()
+        public void PutGraphWithNoToCollectionNameAsync()
         {
             try
             {
@@ -199,7 +252,7 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void AddGraphWithNoToKey()
+        public void PutGraphWithNoToKey()
         {
             try
             {
@@ -215,7 +268,7 @@ namespace Orchestrate.Net.Tests
         }
 
         [Test]
-        public void AddGraphWithNoToKeyAsync()
+        public void PutGraphWithNoToKeyAsync()
         {
             try
             {
@@ -230,6 +283,64 @@ namespace Orchestrate.Net.Tests
 
             Assert.Fail("No Exception Thrown");
         }
+
+        [Test]
+        public void PutGraphIfMatch()
+        {
+            var data = new TestData { Id = 2, Value = "This is collection 2 data" };
+            _orchestrate.Put("GraphTestCollection2", "2", data);
+            var kinds = new[] { "toplevelgraph" };
+
+            var graph = _orchestrate.GetGraph(CollectionName, "1", kinds);
+            var ref1 = graph.Results.First().Path.Ref;
+
+            var result = _orchestrate.PutGraphIfMatch(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2", ref1);
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
+        public void PutGraphIfMatchAsync()
+        {
+            var data = new TestData { Id = 2, Value = "This is collection 2 data" };
+            _orchestrate.Put("GraphTestCollection2", "2", data);
+            var kinds = new[] { "toplevelgraph" };
+
+            var graph = _orchestrate.GetGraph(CollectionName, "1", kinds);
+            var ref1 = graph.Results.First().Path.Ref;
+
+            var result =
+                _orchestrate.PutGraphIfMatchAsync(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2", ref1).Result;
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
+        public void PutGraphIfNoneMatch()
+        {
+            var data = new TestData { Id = 2, Value = "This is collection 2 data" };
+            _orchestrate.Put("GraphTestCollection2", "2", data);
+
+            var result = _orchestrate.PutGraphIfNoneMatch(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2");
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        [Test]
+        public void PutGraphIfNoneMatchAsync()
+        {
+            var data = new TestData { Id = 2, Value = "This is collection 2 data" };
+            _orchestrate.Put("GraphTestCollection2", "2", data);
+
+            var result =
+                _orchestrate.PutGraphIfNoneMatchAsync(CollectionName, "1", "toplevelgraph", "GraphTestCollection2", "2").Result;
+
+            Assert.IsTrue(result.Value == null || result.Value.ToString() == string.Empty);
+        }
+
+        #endregion
+
+        #region Get Graph
 
         [Test]
         public void GetSingleGraph()
@@ -419,6 +530,10 @@ namespace Orchestrate.Net.Tests
 
             Assert.Fail("No Exception Thrown");
         }
+
+        #endregion
+
+        #region Delete Graph
 
         [Test]
         public void DeleteGraph()
@@ -644,5 +759,7 @@ namespace Orchestrate.Net.Tests
 
             Assert.Fail("No Exception Thrown");
         }
+
+        #endregion
     }
 }
