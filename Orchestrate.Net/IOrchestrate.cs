@@ -146,5 +146,14 @@ namespace Orchestrate.Net
         Task<AggregateResult> AggregateAsync(string collectionName, string query, string aggregate);
 
         #endregion
+
+        #region Bulk Operations
+
+        BulkResult BulkOperation(string collectionName, string items, bool stream = false);
+        BulkResult BulkOperation(string collectionName, object items, bool stream = false);
+        Task<BulkResult> BulkOperationAsync(string collectionName, string items, bool stream = false);
+        Task<BulkResult> BulkOperationAsync(string collectionName, object items, bool stream = false);
+
+        #endregion
     }
 }

@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="AggregateTests.cs" />
     <Compile Include="AuthenticationTests.cs" />
+    <Compile Include="BulkOperationTests.cs" />
     <Compile Include="CollectionTests.cs" />
     <Compile Include="EventTests.cs" />
     <Compile Include="GraphTests.cs" />

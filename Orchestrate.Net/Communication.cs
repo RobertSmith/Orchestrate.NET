@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Orchestrate.Net.Models;
 
 namespace Orchestrate.Net
 {
@@ -64,5 +65,41 @@ namespace Orchestrate.Net
 			Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
 			return bytes;
 		}
-	}
+        internal static string CallBulkWebRequest(string apiKey, string url, string jsonPayload, bool stream = false)
+        {
+            return CallBulkOrchestrate(apiKey, url, jsonPayload, stream);
+        }
+
+        internal static Task<string> CallBulkWebRequestAsync(string apiKey, string url, string jsonPayload, bool stream = false)
+        {
+            var httpMethod = "POST".ToHttpMethod();
+            var httpClient = new HttpClient();
+            var request = new HttpRequestMessage(httpMethod, url);
+
+            if (stream)
+                request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/orchestrate-export-stream+json");
+            else
+                request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/orchestrate-export+json");
+
+            var authorization = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{ apiKey }:"));
+
+            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", authorization);
+            return httpClient.SendAsync(request).ContinueWith(BuildBulkResult);
+        }
+
+        private static string CallBulkOrchestrate(string apiKey, string url,string jsonPayload, bool stream = false)
+        {
+            return CallBulkWebRequestAsync(apiKey, url, jsonPayload, stream).Result;
+        }
+
+        private static string BuildBulkResult(Task<HttpResponseMessage> responseMessageTask)
+        {
+            var response = responseMessageTask.Result;
+            response.EnsureSuccessStatusCode();
+
+            var payload = response.Content.ReadAsStringAsync().Result;
+
+            return payload;
+        }
+    }
 }

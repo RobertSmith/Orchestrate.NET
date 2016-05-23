@@ -78,11 +78,16 @@
     <Compile Include="Models\Aggregates.cs" />
     <Compile Include="Models\AggregateStatistics.cs" />
     <Compile Include="Models\BaseResult.cs" />
+    <Compile Include="Models\BulkError.cs" />
+    <Compile Include="Models\BulkInfo.cs" />
+    <Compile Include="Models\BulkItemResult.cs" />
+    <Compile Include="Models\BulkResult.cs" />
     <Compile Include="Models\EventResult.cs" />
     <Compile Include="Models\EventResultList.cs" />
     <Compile Include="Models\ListResult.cs" />
     <Compile Include="Orchestrate.Aggregates.cs" />
     <Compile Include="Orchestrate.Authentication.cs" />
+    <Compile Include="Orchestrate.BulkOperations.cs" />
     <Compile Include="Orchestrate.Collections.cs" />
     <Compile Include="Orchestrate.cs" />
     <Compile Include="Models\Path.cs" />
